@@ -273,7 +273,7 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
                 type="number"
                 value={b.transfusiBags || ''}
                 onChange={(e) => handleTransfusiBagsChange(Number(e.target.value))}
-                placeholder="0"
+                placeholder="3 kantong"
                 className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
               />
             </div>
@@ -299,7 +299,7 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
                 type="number"
                 value={b.syringePumpCc || ''}
                 onChange={(e) => handleSyringePumpChange(Number(e.target.value))}
-                placeholder="0"
+                placeholder="400 cc"
                 className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
               />
             </div>
@@ -344,7 +344,7 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
                 type="number"
                 value={b.babCount || ''}
                 onChange={(e) => handleBabCountChange(Number(e.target.value))}
-                placeholder="0"
+                placeholder="3 Kali"
                 className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
               />
             </div>
@@ -399,7 +399,7 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
                 type="number"
                 value={b.muntahCount || ''}
                 onChange={(e) => handleMuntahChange(Number(e.target.value))}
-                placeholder="0"
+                placeholder="2"
                 className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
               />
             </div>

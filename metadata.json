@@ -1,6 +1,8 @@
 {
   "name": "EZKOAS - TTV Pasien Gampang",
-  "description": "Asisten klinis modern untuk dokter muda (koas) dalam pencatatan TTV, perhitungan GCS, balance cairan, dan protokol medis klinis.",
+  "description": "Buat pencatatan koas jadi Gampang",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

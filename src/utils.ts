@@ -122,6 +122,10 @@ export function formatVitalsEntry(v: VitalsEntry): string {
     }
   }
 
+  if (v.isUopChecked && v.uopValue) {
+    lines.push(`UOP: ${v.uopValue} cc/24j`);
+  }
+
   let base = lines.join('\n');
 
   if (v.balanceCairan) {
@@ -208,6 +212,14 @@ export function formatPatientRecord(p: PatientRecord): string {
       ? p.age
       : `${p.age} thn`;
     headerParts.push(ageStr);
+  }
+
+  if (p.weight) {
+    headerParts.push(`${p.weight} kg`);
+  }
+
+  if (p.height) {
+    headerParts.push(`${p.height} cm`);
   }
 
   const followSummary = buildFollowKetatSummary(p);

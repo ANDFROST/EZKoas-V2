@@ -10,33 +10,30 @@ export const MedicalProtocolsRef: React.FC = () => {
       <div className="bg-slate-50 border-b border-slate-100 p-2 flex flex-wrap gap-1">
         <button
           onClick={() => setActiveTab('hyper')}
-          className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold font-sans transition flex items-center justify-center gap-1.5 ${
-            activeTab === 'hyper'
-              ? 'bg-rose-500 text-white shadow-md shadow-rose-500/10'
-              : 'hover:bg-slate-100 text-slate-600'
-          }`}
+          className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold font-sans transition flex items-center justify-center gap-1.5 ${activeTab === 'hyper'
+            ? 'bg-rose-500 text-white shadow-md shadow-rose-500/10'
+            : 'hover:bg-slate-100 text-slate-600'
+            }`}
         >
           <Activity className="w-3.5 h-3.5" />
           <span>Protokol Hiperglikemia</span>
         </button>
         <button
           onClick={() => setActiveTab('hypo')}
-          className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold font-sans transition flex items-center justify-center gap-1.5 ${
-            activeTab === 'hypo'
-              ? 'bg-sky-500 text-white shadow-md shadow-sky-500/10'
-              : 'hover:bg-slate-100 text-slate-600'
-          }`}
+          className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold font-sans transition flex items-center justify-center gap-1.5 ${activeTab === 'hypo'
+            ? 'bg-sky-500 text-white shadow-md shadow-sky-500/10'
+            : 'hover:bg-slate-100 text-slate-600'
+            }`}
         >
           <Droplet className="w-3.5 h-3.5" />
           <span>Protokol Hipoglikemia</span>
         </button>
         <button
           onClick={() => setActiveTab('gcs')}
-          className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold font-sans transition flex items-center justify-center gap-1.5 ${
-            activeTab === 'gcs'
-              ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/10'
-              : 'hover:bg-slate-100 text-slate-600'
-          }`}
+          className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl text-xs font-bold font-sans transition flex items-center justify-center gap-1.5 ${activeTab === 'gcs'
+            ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/10'
+            : 'hover:bg-slate-100 text-slate-600'
+            }`}
         >
           <ShieldAlert className="w-3.5 h-3.5" />
           <span>Skala Trauma GCS</span>
@@ -52,7 +49,7 @@ export const MedicalProtocolsRef: React.FC = () => {
                 ⚠️
               </span>
               <div>
-                <h4 className="text-sm font-black text-rose-950 font-sans">Drip Sliding Scale Novorapid (KGD &gt; 200)</h4>
+                <h4 className="text-sm font-black text-rose-950 font-sans">Protokol Novorapid (Mulai Drip jika KGD &gt; 200)</h4>
                 <p className="text-xs text-rose-800 mt-1">
                   Encerkan 50 unit Novorapid dalam 50cc NaCl 0.9% dalam syringe pump (Konsentrasi: 1 Unit / 1 cc).
                 </p>
@@ -120,7 +117,7 @@ export const MedicalProtocolsRef: React.FC = () => {
                 💧
               </span>
               <div>
-                <h4 className="text-sm font-black text-sky-950">Rencana Terapi Hipoglikemia (KGDs &lt; 70)</h4>
+                <h4 className="text-sm font-black text-sky-950">Protokol Hipoglikemia (Ketika KGDs &lt; 70)</h4>
                 <p className="text-xs text-sky-800 mt-1">
                   Koreksi cepat diperlukan demi mencegah kerusakan sel neuron otak permanen akibat neuropenia.
                 </p>

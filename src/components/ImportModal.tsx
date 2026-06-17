@@ -358,19 +358,17 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       <div className="bg-slate-50 border-b border-slate-200/60 p-2 flex">
         <button
           onClick={() => setActiveTab('sheet')}
-          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
-            activeTab === 'sheet' ? 'bg-white shadow text-teal-700' : 'text-slate-500 hover:text-slate-700'
-          }`}
+          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${activeTab === 'sheet' ? 'bg-white shadow text-teal-700' : 'text-slate-500 hover:text-slate-700'
+            }`}
         >
           <Cloud className="w-4 h-4 shrink-0 text-teal-500" />
-          <span className="hidden sm:inline">Google Spreadsheet Server</span>
-          <span className="sm:hidden">Google Sheets</span>
+          <span className="hidden sm:inline">Database Server</span>
+          <span className="sm:hidden">Database</span>
         </button>
         <button
           onClick={() => setActiveTab('clipboard')}
-          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${
-            activeTab === 'clipboard' ? 'bg-white shadow text-teal-700' : 'text-slate-500 hover:text-slate-700'
-          }`}
+          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${activeTab === 'clipboard' ? 'bg-white shadow text-teal-700' : 'text-slate-500 hover:text-slate-700'
+            }`}
         >
           <ClipboardList className="w-4 h-4 shrink-0 text-teal-500" />
           <span className="hidden sm:inline">Analisis Teks Clipboard</span>
@@ -550,7 +548,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               <div>
                 <h4 className="font-bold">Format Penguraian Teks Clipboard</h4>
                 <p className="leading-relaxed opacity-90 mt-0.5">
-                  Salinkan teks over-shift klinis langsung dari aplikasi rujukan atau chat messenger.
+                  Salinkan TTV klinis langsung dari aplikasi rujukan atau chat messenger.
                   Pengurai EZKOAS akan otomatis mendeteksi baris identitas pasien, alarms follow-up, serta catatan vitals (TTV) trend log.
                   Jika ingin mengimpor multi-pasien sekaligus, pisahkan setiap blok pasien menggunakan garis pemisah putus-putus minimal 3 karakter (misal: <code>---</code>).
                 </p>
@@ -586,9 +584,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             <button
               onClick={executeSheetImport}
               disabled={isLoadingSheet || sheetRows.length === 0}
-              className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-sans text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-2 ${
-                sheetRows.length > 0 ? 'bg-teal-600 hover:bg-teal-700 active:bg-teal-800 shadow shadow-teal-600/15 cursor-pointer' : 'bg-slate-300 cursor-not-allowed'
-              }`}
+              className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-sans text-xs sm:text-sm font-bold text-white transition flex items-center justify-center gap-2 ${sheetRows.length > 0 ? 'bg-teal-600 hover:bg-teal-700 active:bg-teal-800 shadow shadow-teal-600/15 cursor-pointer' : 'bg-slate-300 cursor-not-allowed'
+                }`}
             >
               <UserCheck className="w-4 h-4 shrink-0" />
               <span>Import Terpilih</span>

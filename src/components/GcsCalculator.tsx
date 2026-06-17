@@ -98,7 +98,7 @@ export const GcsCalculator: React.FC<GcsCalculatorProps> = ({ initialGcs, onSave
       <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-6 text-white flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold font-sans tracking-tight">Kalkulator GCS</h2>
-          <p className="text-emerald-100 text-sm mt-1">Glasgow Coma Scale - Dinilai berdasarkan tanggapan pasien</p>
+          <p className="text-emerald-100 text-sm mt-1">Glasgow Coma Scale</p>
         </div>
         <button
           onClick={handleReset}
@@ -123,11 +123,10 @@ export const GcsCalculator: React.FC<GcsCalculatorProps> = ({ initialGcs, onSave
                   <button
                     key={`eye-${opt.value}`}
                     onClick={() => setEye(opt.value)}
-                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-sans flex items-center justify-between transition-all ${
-                      selected
-                        ? 'border-emerald-600 bg-emerald-50/50 text-emerald-900 font-medium shadow-sm'
-                        : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-sans flex items-center justify-between transition-all ${selected
+                      ? 'border-emerald-600 bg-emerald-50/50 text-emerald-900 font-medium shadow-sm'
+                      : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
+                      }`}
                   >
                     <span>{opt.label}</span>
                     {selected && <Check className="w-4 h-4 text-emerald-600 shrink-0 ml-2" />}
@@ -149,11 +148,10 @@ export const GcsCalculator: React.FC<GcsCalculatorProps> = ({ initialGcs, onSave
                   <button
                     key={`verbal-${opt.value}`}
                     onClick={() => setVerbal(opt.value)}
-                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-sans flex items-center justify-between transition-all ${
-                      selected
-                        ? 'border-emerald-600 bg-emerald-50/50 text-emerald-900 font-medium shadow-sm'
-                        : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-sans flex items-center justify-between transition-all ${selected
+                      ? 'border-emerald-600 bg-emerald-50/50 text-emerald-900 font-medium shadow-sm'
+                      : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
+                      }`}
                   >
                     <span>{opt.label}</span>
                     {selected && <Check className="w-4 h-4 text-emerald-600 shrink-0 ml-2" />}
@@ -175,11 +173,10 @@ export const GcsCalculator: React.FC<GcsCalculatorProps> = ({ initialGcs, onSave
                   <button
                     key={`motor-${opt.value}`}
                     onClick={() => setMotor(opt.value)}
-                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-sans flex items-center justify-between transition-all ${
-                      selected
-                        ? 'border-emerald-600 bg-emerald-50/50 text-emerald-900 font-medium shadow-sm'
-                        : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-sans flex items-center justify-between transition-all ${selected
+                      ? 'border-emerald-600 bg-emerald-50/50 text-emerald-900 font-medium shadow-sm'
+                      : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50 text-slate-700'
+                      }`}
                   >
                     <span>{opt.label}</span>
                     {selected && <Check className="w-4 h-4 text-emerald-600 shrink-0 ml-2" />}
@@ -245,11 +242,10 @@ export const GcsCalculator: React.FC<GcsCalculatorProps> = ({ initialGcs, onSave
         <button
           onClick={handleSave}
           disabled={!isAllSelected}
-          className={`px-6 py-2.5 rounded-xl font-sans text-sm font-semibold text-white transition flex items-center gap-2 ${
-            isAllSelected
-              ? 'bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/10 active:scale-[0.98]'
-              : 'bg-slate-300 cursor-not-allowed'
-          }`}
+          className={`px-6 py-2.5 rounded-xl font-sans text-sm font-semibold text-white transition flex items-center gap-2 ${isAllSelected
+            ? 'bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/10 active:scale-[0.98]'
+            : 'bg-slate-300 cursor-not-allowed'
+            }`}
         >
           Simpan / Hitung GCS
         </button>

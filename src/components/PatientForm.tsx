@@ -30,8 +30,8 @@ import {
 } from 'lucide-react';
 
 interface PatientFormProps {
-  patientIndex: number | null; 
-  vitalsIndex: number | null; 
+  patientIndex: number | null;
+  vitalsIndex: number | null;
   savedPatients: PatientRecord[];
   onSave: (patient: PatientRecord, updatedVitals: VitalsEntry) => void;
   onCancel: () => void;
@@ -492,7 +492,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             <h1 className="text-lg font-extrabold text-slate-800 font-sans tracking-tight">
               {patientIndex !== null ? (vitalsIndex !== null ? 'Edit Tanda-Tanda Vital' : 'Tambah Catatan Baru') : 'Tambah Pasien Baru'}
             </h1>
-            <p className="text-slate-500 text-xs font-sans mt-0.5">Asisten pendataan klinis dokter muda</p>
+            <p className="text-slate-500 text-xs font-sans mt-0.5">Isilah form di bawah ini!</p>
           </div>
         </div>
       </div>
@@ -503,13 +503,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Database className="w-4 h-4 text-emerald-600" />
-              <span className="text-sm font-bold text-slate-800">Auto-fill Database Online</span>
+              <span className="text-sm font-bold text-slate-800">Import dari Database Online</span>
+              <span className="bg-emerald-50 border border-emerald-100 text-emerald-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0 ml-1">
+                BETA
+              </span>
             </div>
             <button
               onClick={() => setIsSearchMode(!isSearchMode)}
               className="text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg transition"
             >
-              {isSearchMode ? 'Tutup Pencarian' : 'Cari di Google Sheets'}
+              {isSearchMode ? 'Tutup Pencarian' : 'Cari di Database'}
             </button>
           </div>
 
@@ -577,7 +580,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Ruangan / Kamar</label>
                 <input
                   type="text"
-                  placeholder="Misal: R. Paru / Bed 3"
+                  placeholder="Misal: RA4 1.2.3"
                   value={room}
                   onChange={(e) => setRoom(e.target.value)}
                   className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
@@ -588,7 +591,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">No. Rekam Medis (RM)</label>
                 <input
                   type="text"
-                  placeholder="Ketik rekam medis..."
+                  placeholder="Misal: 00994499"
                   value={rm}
                   onChange={(e) => setRm(e.target.value)}
                   className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
@@ -601,7 +604,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Nama Lengkap Pasien</label>
                 <input
                   type="text"
-                  placeholder="Masukkan nama..."
+                  placeholder="Nama Pasien"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
@@ -612,9 +615,9 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <div className="space-y-1">
                   <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Jenis Kelamin (Gender)</label>
                   <select
-                     value={gender}
-                     onChange={(e) => setGender(normalizeGender(e.target.value))}
-                     className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                    value={gender}
+                    onChange={(e) => setGender(normalizeGender(e.target.value))}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
                   >
                     <option value="Laki-laki (L)">Laki-laki (L)</option>
                     <option value="Perempuan (P)">Perempuan (P)</option>
@@ -628,7 +631,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                       type="text"
                       value={age.replace(/\s*thn/gi, '')}
                       onChange={(e) => setAge(e.target.value ? `${e.target.value} thn` : '')}
-                      placeholder="Contoh: 45"
+                      placeholder="Misal: 54"
                       className="w-full px-3.5 py-2.5 text-sm focus:outline-none"
                     />
                     <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none font-semibold">thn</span>
@@ -644,7 +647,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                       type="text"
                       value={weight}
                       onChange={(e) => setWeight(e.target.value.replace(/[^0-9.]/g, ''))}
-                      placeholder="Contoh: 65"
+                      placeholder="Misal: 70"
                       className="w-full px-3.5 py-2.5 text-sm focus:outline-none"
                     />
                     <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none font-semibold">kg</span>
@@ -658,7 +661,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                       type="text"
                       value={height}
                       onChange={(e) => setHeight(e.target.value.replace(/[^0-9.]/g, ''))}
-                      placeholder="Contoh: 165"
+                      placeholder="Misal: 170"
                       className="w-full px-3.5 py-2.5 text-sm focus:outline-none"
                     />
                     <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none font-semibold">cm</span>
@@ -675,7 +678,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 className="w-full text-xs font-bold text-teal-700 bg-teal-50 hover:bg-teal-100/70 py-3 rounded-xl transition flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Calendar className="w-4 h-4" />
-                <span>Atur Kategori Follow Klinis Ketat</span>
+                <span>Tetapkan Sebagai Pasien Follow Ketat (FOLKET)</span>
               </button>
 
               {/* Display follow totals summary immediately */}
@@ -699,7 +702,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <span>Tanda-Tanda Vital (TTV)</span>
               </h3>
               <div className="flex items-center gap-2">
-                <span className="text-slate-400 text-[10px] uppercase font-bold shrink-0">Waktu Jam:</span>
+                <span className="text-slate-400 text-[10px] uppercase font-bold shrink-0">Waktu:</span>
                 <input
                   type="text"
                   value={time}
@@ -718,14 +721,14 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   onChange={(e) => setSens(e.target.value)}
                   className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500"
                 >
-                  <option value="">Pilih kesadaran...</option>
+                  <option value="">Pilih Tingkat Kesadaran</option>
                   <option value="Compos mentis">Compos mentis (Normal)</option>
                   <option value="Apatis">Apatis</option>
                   <option value="Somnolen">Somnolen</option>
                   <option value="Delirium">Delirium</option>
-                  <option value="Sopor">Sopor (Soporcomatose)</option>
-                  <option value="Coma">Koma (Coma)</option>
-                  <option value="Dalam Penggunaan Obat (DPO)">DPO (Sakit/Sedasi)</option>
+                  <option value="Sopor">Sopor</option>
+                  <option value="Coma">Koma</option>
+                  <option value="Dalam Penggunaan Obat (DPO)">DPO</option>
                 </select>
               </div>
 
@@ -817,7 +820,12 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     type="text"
                     placeholder="98"
                     value={spo2}
-                    onChange={(e) => setSpo2(e.target.value.replace(/[^0-9]/g, ''))}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9]/g, '');
+                      if (val === '' || parseInt(val, 10) <= 100) {
+                        setSpo2(val);
+                      }
+                    }}
                     className="w-full px-2 py-2.5 text-sm focus:outline-none font-mono"
                   />
                   <span className="text-xs bg-slate-50 px-1 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none">%</span>
@@ -875,249 +883,249 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
           {/* Right Column: Other Exams consolidated block */}
           <div className="space-y-6">
-          {/* Section: Pemeriksaan Lainnya */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-5">
-            <h3 className="text-sm font-bold text-slate-850 flex items-center gap-2 border-b border-slate-100 pb-2">
-              <Activity className="w-4.5 h-4.5 text-rose-500 animate-pulse" />
-              <span>Pemeriksaan Lainnya</span>
-            </h3>
+            {/* Section: Pemeriksaan Lainnya */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-5">
+              <h3 className="text-sm font-bold text-slate-850 flex items-center gap-2 border-b border-slate-100 pb-2">
+                <Activity className="w-4.5 h-4.5 text-rose-500 animate-pulse" />
+                <span>Pemeriksaan Lainnya</span>
+              </h3>
 
-            {/* Selection Toggles to activate each of the 4 diagnostics */}
-            <div className="grid grid-cols-2 gap-2 p-1 select-none font-sans text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  const newValue = !isGdsChecked;
-                  setIsGdsChecked(newValue);
-                  if (!newValue) setGdsRecommendation(null);
-                }}
-                className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${
-                  isGdsChecked
+              {/* Selection Toggles to activate each of the 4 diagnostics */}
+              <div className="grid grid-cols-2 gap-2 p-1 select-none font-sans text-xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newValue = !isGdsChecked;
+                    setIsGdsChecked(newValue);
+                    if (!newValue) setGdsRecommendation(null);
+                  }}
+                  className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isGdsChecked
                     ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
                     : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
-                }`}
-              >
-                <span>🧪 Skrining GDS</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOnIVDrug(!isOnIVDrug);
-                }}
-                className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${
-                  isOnIVDrug
-                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
-                }`}
-              >
-                <span>💉 Drip &amp; Pump</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setIsUopChecked(!isUopChecked);
-                }}
-                className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${
-                  isUopChecked
-                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
-                }`}
-              >
-                <span>💦 Urine (UOP)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setShowBalanceModal(true)}
-                className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${
-                  balanceCairan
-                    ? 'border-teal-600 bg-teal-50 text-teal-800 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
-                }`}
-              >
-                <span>⚖️ Balance Cairan</span>
-              </button>
-            </div>
-
-            {/* 1. GDS Block */}
-            {isGdsChecked && (
-              <div className="space-y-3 bg-red-50/10 p-4 rounded-2xl border border-red-100/50 text-xs text-slate-700 font-sans">
-                <div className="space-y-1">
-                  <label className="font-bold text-rose-800 uppercase tracking-widest text-[9px]">Hasil Gula Darah Sewaktu (GDS)</label>
-                  <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-rose-500 overflow-hidden">
-                    <input
-                      type="text"
-                      placeholder="Hasil GDS, misal: 250"
-                      value={gdsValue}
-                      onChange={(e) => setGdsValue(e.target.value.replace(/[^0-9]/g, ''))}
-                      className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
-                    />
-                    <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold font-mono">mg/dL</span>
-                  </div>
-                </div>
-
-                {gdsRecommendation && (
-                  <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-3.5 text-amber-950 space-y-2 mt-2">
-                    <div className="flex gap-2">
-                      <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
-                      <div className="leading-relaxed">
-                        <h5 className="font-bold text-amber-900">Rekomendasi Protokol Terapi GDS</h5>
-                        <p className="text-[11px] font-sans opacity-95 whitespace-pre-wrap mt-0.5">{gdsRecommendation.message}</p>
-                      </div>
-                    </div>
-
-                    {gdsRecommendation.suggestedRate && (
-                      <div className="pt-1 select-none flex items-center justify-end">
-                        <button
-                          type="button"
-                          onClick={applyNovorapidDose}
-                          className="text-[10px] font-black tracking-tight uppercase bg-amber-600 hover:bg-amber-700 text-white font-sans px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] shadow-sm shadow-amber-600/15"
-                        >
-                          Terapkan {gdsRecommendation.suggestedRate} cc/jam Novorapid
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* 2. Drugs (Drip / Syringe Pump) Block */}
-            {isOnIVDrug && (
-              <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100 text-xs space-y-3 font-sans">
-                <label className="block text-slate-800 font-bold">Daftar Infus / Syringe Pump:</label>
-                <div className="space-y-3">
-                  {ivDrugs.map((item, idx) => (
-                    <div key={`drug-row-${idx}`} className="space-y-2 border-b border-dashed border-slate-200/60 pb-3 last:border-0 last:pb-0">
-                      <div className="flex gap-2">
-                        <select
-                          value={item.name}
-                          onChange={(e) => handleIvDrugSelectChange(idx, e.target.value)}
-                          className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-sans focus:outline-none focus:border-teal-500 flex-1"
-                        >
-                          {CONSTANT_IV_DRUG_OPTIONS.map((opt) => (
-                            <option key={`opt-${opt}`} value={opt}>{opt}</option>
-                          ))}
-                        </select>
-
-                        <div className="w-[120px] flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-teal-500 shrink-0">
-                          <input
-                            type="text"
-                            placeholder="Rate"
-                            value={item.rate}
-                            onChange={(e) => handleIvDrugRateChange(idx, e.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'))}
-                            className="w-full px-2.5 py-2 text-xs font-sans text-center font-mono placeholder:text-slate-350 focus:outline-none"
-                          />
-                          <span className="text-[9px] bg-slate-50 px-1.5 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase">cc/j</span>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveIvDrug(idx)}
-                          className="p-2 border border-rose-100 hover:bg-rose-50 text-rose-650 shrink-0 rounded-xl transition"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      {item.name === 'Lainnya' && (
-                        <input
-                          type="text"
-                          placeholder="Nama obat IV lainnya..."
-                          value={item.customName || ''}
-                          onChange={(e) => handleIvDrugCustomNameChange(idx, e.target.value)}
-                          className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 font-sans"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
+                    }`}
+                >
+                  <span>🧪 Cek GDS</span>
+                </button>
 
                 <button
                   type="button"
-                  onClick={handleAddIvDrug}
-                  className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tight text-teal-700 bg-teal-50 hover:bg-teal-100/70 px-3.5 py-1.5 rounded-xl transition cursor-pointer"
+                  onClick={() => {
+                    setIsOnIVDrug(!isOnIVDrug);
+                  }}
+                  className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isOnIVDrug
+                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
+                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    }`}
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Tambah Obat Infus Lain</span>
+                  <span>💉 Terpasang Drip &amp; Pump?</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsUopChecked(!isUopChecked);
+                  }}
+                  className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isUopChecked
+                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
+                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    }`}
+                >
+                  <span>💦 Urine Output (UOP)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowBalanceModal(true)}
+                  className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${balanceCairan
+                    ? 'border-teal-600 bg-teal-50 text-teal-800 shadow-sm'
+                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    }`}
+                >
+                  <span>⚖️ Cek Balance Cairan</span>
                 </button>
               </div>
-            )}
 
-            {/* 3. Urine Output (UOP) Block */}
-            {isUopChecked && (
-              <div className="bg-teal-50/40 p-4 rounded-2xl border border-teal-100/60 text-xs space-y-3 font-sans">
-                <div className="space-y-1">
-                  <label className="font-bold text-teal-900 uppercase tracking-widest text-[9px]">Urine Output (UOP)</label>
-                  <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-teal-500 overflow-hidden">
-                    <input
-                      type="text"
-                      placeholder="Masukkan volume urine, misal: 800"
-                      value={uopValue}
-                      onChange={(e) => setUopValue(e.target.value.replace(/[^0-9]/g, ''))}
-                      className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
-                    />
-                    <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold font-mono">cc/24j</span>
+              {/* 1. GDS Block */}
+              {isGdsChecked && (
+                <div className="space-y-3 bg-red-50/10 p-4 rounded-2xl border border-red-100/50 text-xs text-slate-700 font-sans">
+                  <div className="space-y-1">
+                    <label className="font-bold text-rose-800 uppercase tracking-widest text-[9px]">Hasil Gula Darah Sewaktu (GDS)</label>
+                    <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-rose-500 overflow-hidden">
+                      <input
+                        type="text"
+                        placeholder="Hasil GDS, misal: 250"
+                        value={gdsValue}
+                        onChange={(e) => setGdsValue(e.target.value.replace(/[^0-9]/g, ''))}
+                        className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
+                      />
+                      <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold font-mono">mg/dL</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Indonesian guide warning tip box as requested */}
-                <div className="bg-white border border-teal-100/70 rounded-xl p-3 text-slate-755 flex gap-2">
-                  <Info className="w-4 h-4 text-teal-500 shrink-0 mt-0.5" />
-                  <div className="leading-normal font-sans">
-                    <p className="text-[11px] font-semibold text-teal-950">
-                      💡 Tips Penilaian Cepat:
-                    </p>
-                    <p className="text-[11px] font-medium text-slate-600 mt-0.5">
-                      Apabila sulit menghitung cc presisi: <strong className="text-teal-800">Apakah pasien dalam sehari BAK sampai 1 Aqua sedang (600 cc)?</strong>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+                  {gdsRecommendation && (
+                    <div className="bg-amber-50/50 border border-amber-200 rounded-xl p-3.5 text-amber-950 space-y-2 mt-2">
+                      <div className="flex gap-2">
+                        <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                        <div className="leading-relaxed">
+                          <h5 className="font-bold text-amber-900">Rekomendasi Protokol Terapi GDS</h5>
+                          <p className="text-[11px] font-sans opacity-95 whitespace-pre-wrap mt-0.5">{gdsRecommendation.message}</p>
+                        </div>
+                      </div>
 
-            {/* 4. Fluid Balance (Balance Cairan) */}
-            {balanceCairan && (
-              <div className="bg-teal-50/50 p-4 rounded-xl border border-teal-100 space-y-3 text-xs leading-relaxed font-sans mt-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-teal-800 font-bold">
-                    <CheckCircle2 className="w-4 h-4 text-teal-600" />
-                    <span>Balance Cairan Terhitung</span>
+                      {gdsRecommendation.suggestedRate && (
+                        <div className="pt-1 select-none flex items-center justify-end">
+                          <button
+                            type="button"
+                            onClick={applyNovorapidDose}
+                            className="text-[10px] font-black tracking-tight uppercase bg-amber-600 hover:bg-amber-700 text-white font-sans px-3 py-1.5 rounded-lg transition-all active:scale-[0.98] shadow-sm shadow-amber-600/15"
+                          >
+                            Terapkan {gdsRecommendation.suggestedRate} cc/jam Novorapid
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* 2. Drugs (Drip / Syringe Pump) Block */}
+              {isOnIVDrug && (
+                <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100 text-xs space-y-3 font-sans">
+                  <label className="block text-slate-800 font-bold">Daftar Infus / Syringe Pump:</label>
+                  <div className="space-y-3">
+                    {ivDrugs.map((item, idx) => (
+                      <div key={`drug-row-${idx}`} className="space-y-2 border-b border-dashed border-slate-200/60 pb-3 last:border-0 last:pb-0">
+                        <div className="flex gap-2">
+                          <select
+                            value={item.name}
+                            onChange={(e) => handleIvDrugSelectChange(idx, e.target.value)}
+                            className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-sans focus:outline-none focus:border-teal-500 flex-1"
+                          >
+                            {CONSTANT_IV_DRUG_OPTIONS.map((opt) => (
+                              <option key={`opt-${opt}`} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+
+                          <div className="w-[120px] flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-teal-500 shrink-0">
+                            <input
+                              type="text"
+                              placeholder="Rate"
+                              value={item.rate}
+                              onChange={(e) => handleIvDrugRateChange(idx, e.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'))}
+                              className="w-full px-2.5 py-2 text-xs font-sans text-center font-mono placeholder:text-slate-350 focus:outline-none"
+                            />
+                            <span className="text-[9px] bg-slate-50 px-1.5 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase">cc/j</span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveIvDrug(idx)}
+                            className="p-2 border border-rose-100 hover:bg-rose-50 text-rose-650 shrink-0 rounded-xl transition"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+
+                        {item.name === 'Lainnya' && (
+                          <input
+                            type="text"
+                            placeholder="Nama obat IV lainnya..."
+                            value={item.customName || ''}
+                            onChange={(e) => handleIvDrugCustomNameChange(idx, e.target.value)}
+                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 font-sans"
+                          />
+                        )}
+                      </div>
+                    ))}
                   </div>
-                  <span className={`px-2.5 py-1 rounded-lg text-xs font-black font-mono shrink-0 ${
-                    (balanceTotalResult || 0) >= 0 ? 'bg-teal-100 text-teal-900' : 'bg-rose-100 text-rose-900'
-                  }`}>
-                    {balanceTotalResult && balanceTotalResult >= 0 ? '+' : ''}{balanceTotalResult} cc
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-[11px] pt-1 border-t border-teal-100/40 text-slate-600">
-                  <p>Makan: {balanceCairan.makanValue} cc</p>
-                  <p>Minum: {balanceCairan.minumValue} cc</p>
-                  <p>Infus IVFD: {balanceCairan.ivfdValue} cc</p>
-                  <p>Urine (UOP): {balanceCairan.uopValue} cc</p>
-                </div>
-                <div className="flex gap-2 pt-2 items-center justify-end select-none">
+
                   <button
                     type="button"
-                    onClick={() => setBalanceCairan(undefined)}
-                    className="p-2 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-100 rounded-lg text-[10px] uppercase font-black tracking-tight cursor-pointer"
+                    onClick={handleAddIvDrug}
+                    className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tight text-teal-700 bg-teal-50 hover:bg-teal-100/70 px-3.5 py-1.5 rounded-xl transition cursor-pointer"
                   >
-                    Hapus
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowBalanceModal(true)}
-                    className="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-[10px] font-black uppercase tracking-tight flex items-center gap-1 cursor-pointer transition shadow-sm shadow-teal-600/10"
-                  >
-                    Sunting CC Cairan
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Tambah Drip atau Pump lain</span>
                   </button>
                 </div>
-              </div>
-            )}
+              )}
+
+              {/* 3. Urine Output (UOP) Block */}
+              {isUopChecked && (
+                <div className="bg-teal-50/40 p-4 rounded-2xl border border-teal-100/60 text-xs space-y-3 font-sans">
+                  <div className="space-y-1">
+                    <label className="font-bold text-teal-900 uppercase tracking-widest text-[9px]">Urine Output (UOP)</label>
+                    <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-teal-500 overflow-hidden">
+                      <input
+                        type="text"
+                        placeholder="Masukkan volume urine, misal: 800"
+                        value={uopValue}
+                        onChange={(e) => setUopValue(e.target.value.replace(/[^0-9]/g, ''))}
+                        className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
+                      />
+                      <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold font-mono">cc/24j</span>
+                    </div>
+                  </div>
+
+                  {/* Indonesian guide warning tip box as requested */}
+                  <div className="bg-white border border-teal-100/70 rounded-xl p-3 text-slate-755 flex gap-2">
+                    <Info className="w-4 h-4 text-teal-500 shrink-0 mt-0.5" />
+                    <div className="leading-normal font-sans">
+                      <p className="text-[11px] font-semibold text-teal-950">
+                        💡 Tips Penilaian Cepat:
+                      </p>
+                      <p className="text-[11px] font-medium text-slate-600 mt-0.5">
+                        Apabila sulit menghitung cc presisi: <strong className="text-teal-800">Apakah pasien dalam sehari BAK sampai 1 Aqua sedang (600 cc)?</strong>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 4. Fluid Balance (Balance Cairan) */}
+              {balanceCairan && (
+                <div className="bg-teal-50/50 p-4 rounded-xl border border-teal-100 space-y-3 text-xs leading-relaxed font-sans mt-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-teal-800 font-bold">
+                      <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                      <span>Balance Cairan Terhitung</span>
+                    </div>
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-black font-mono shrink-0 ${(balanceTotalResult || 0) >= 0 ? 'bg-teal-100 text-teal-900' : 'bg-rose-100 text-rose-900'
+                      }`}>
+                      {balanceTotalResult && balanceTotalResult >= 0 ? '+' : ''}{balanceTotalResult} cc
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-teal-100/40 text-slate-600">
+                    <p>Makan: {balanceCairan.makanValue} cc</p>
+                    <p>Minum: {balanceCairan.minumValue} cc</p>
+                    <p>Infus IVFD: {balanceCairan.ivfdValue} cc</p>
+                    <p>Urine (UOP): {balanceCairan.uopValue} cc</p>
+                    {balanceCairan.transfusiValue > 0 && <p>Transfusi: {balanceCairan.transfusiValue} cc</p>}
+                    {balanceCairan.syringePumpValue > 0 && <p>Syringe Pump: {balanceCairan.syringePumpValue} cc</p>}
+                    {balanceCairan.babValue > 0 && <p>BAB: {balanceCairan.babValue} cc</p>}
+                    {balanceCairan.muntahValue > 0 && <p>Muntah: {balanceCairan.muntahValue} cc</p>}
+                    {balanceCairan.iwl && balanceCairan.iwlValue > 0 && <p>IWL: {balanceCairan.iwlValue} cc</p>}
+                  </div>
+                  <div className="flex gap-2 pt-2 items-center justify-end select-none">
+                    <button
+                      type="button"
+                      onClick={() => setBalanceCairan(undefined)}
+                      className="p-2 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-100 rounded-lg text-[10px] uppercase font-black tracking-tight cursor-pointer"
+                    >
+                      Hapus
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowBalanceModal(true)}
+                      className="px-3.5 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-[10px] font-black uppercase tracking-tight flex items-center gap-1 cursor-pointer transition shadow-sm shadow-teal-600/10"
+                    >
+                      Sunting CC Cairan
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
         </div>
       </div>
 

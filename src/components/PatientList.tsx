@@ -45,7 +45,7 @@ const getVitalId = (vt: VitalsEntry) => {
 
 const normalizeRoom = (room: string) => {
   const clean = (room || '').toUpperCase().replace(/\s+/g, ' ').trim();
-  
+
   const prefixPositions: Record<string, number> = {
     'RA1': 0,
     'RA1 PSI': 1,
@@ -224,44 +224,38 @@ export const PatientList: React.FC<PatientListProps> = ({
             </div>
             <div>
               <h2 className="text-base font-black text-slate-800 tracking-tight">Pengaturan Urutan Pasien</h2>
-              <p className="text-xs text-slate-500 font-medium mt-0.5">Pilih kriteria penyusunan antrean ward rounds / TTV pasien Anda.</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">Pilih kriteria penyusunan urutan TTV pasien.</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowSortScreen(false)}
-            className="self-start sm:self-center px-4 py-2 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center font-sans shadow-xs"
-          >
-            Batal
-          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
           {[
             {
               key: 'manual',
-              title: 'Alur Manual (Grip & Drag)',
-              desc: 'Atur posisi pasien sesuka Anda dengan menggeser kartu ke atas atau ke bawah secara manual. Sempurna untuk merancang rute kunjungan bangsal kustom.',
+              title: 'Manual Sort',
+              desc: 'Atur posisi pasien sesuka Anda secara manual dengan drag and drop.',
               icon: GripVertical,
               colorClass: 'text-amber-600 bg-amber-50 border-amber-200'
             },
             {
               key: 'alphabet',
               title: 'Abjad',
-              desc: 'Urutkan daftar pasien secara alfabetis otomatis berdasarkan nama lengkap mereka.',
+              desc: 'Urutkan daftar pasien secara alfabetis otomatis berdasarkan nama lengkap pasien.',
               icon: User,
               colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-200'
             },
             {
               key: 'room',
               title: 'Ruangan',
-              desc: 'Urutkan pasien berdasarkan hirarki ruangan (RA1 s/d PJT) dan nomor kamar terendah secara otomatis.',
+              desc: 'Urutkan pasien berdasarkan ruangan.',
               icon: ArrowUpDown,
               colorClass: 'text-teal-600 bg-teal-50 border-teal-200'
             },
             {
               key: 'newest',
               title: 'Recency',
-              desc: 'Prioritaskan pasien yang paling baru dilakukan pencatatan tanda vital (TTV) di posisi paling atas.',
+              desc: 'Urutkan berdasarkan TTV pasien terbaru',
               icon: Activity,
               colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-200'
             }
@@ -274,11 +268,10 @@ export const PatientList: React.FC<PatientListProps> = ({
                 onClick={() => {
                   setTempSortCriteria(opt.key as any);
                 }}
-                className={`p-5 rounded-2xl text-left border transition-all cursor-pointer flex gap-4 items-start duration-250 ${
-                  isSelected
-                    ? 'bg-teal-50/40 border-teal-500 ring-2 ring-teal-500/20 shadow-xs'
-                    : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-2xs'
-                }`}
+                className={`p-5 rounded-2xl text-left border transition-all cursor-pointer flex gap-4 items-start duration-250 ${isSelected
+                  ? 'bg-teal-50/40 border-teal-500 ring-2 ring-teal-500/20 shadow-xs'
+                  : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-2xs'
+                  }`}
               >
                 <div className={`w-11 h-11 rounded-xl shrink-0 border flex items-center justify-center ${opt.colorClass}`}>
                   <IconComp className="w-5.5 h-5.5" />
@@ -336,7 +329,7 @@ export const PatientList: React.FC<PatientListProps> = ({
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-sans">
         <div className="flex items-center gap-2">
           <Activity className="w-5 h-5 text-teal-600" />
-          <h2 className="text-sm font-black text-slate-800 uppercase tracking-tight">Kondisi Ward Rounds / Antrean ({patients.length})</h2>
+          <h2 className="text-sm font-black text-slate-800 uppercase tracking-tight">Daftar Pasien yang terdaftar ({patients.length})</h2>
         </div>
 
         {patients.length > 1 && (
@@ -351,10 +344,10 @@ export const PatientList: React.FC<PatientListProps> = ({
                 {sortCriteria === 'manual'
                   ? 'Manual Shift'
                   : sortCriteria === 'alphabet'
-                  ? 'Abjad'
-                  : sortCriteria === 'room'
-                  ? 'Ruangan'
-                  : 'Recency'}
+                    ? 'Abjad'
+                    : sortCriteria === 'room'
+                      ? 'Ruangan'
+                      : 'Recency'}
               </span>
             </span>
           </button>
@@ -505,7 +498,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
                   RM: {p.rm}
                 </span>
               )}
-              <span className="text-[10px] shrink-0 font-sans">• {p.vitals.length} riwayat logs</span>
+              <span className="text-[10px] shrink-0 font-sans">• {p.vitals.length} TTV</span>
             </div>
           </div>
         </div>
@@ -541,10 +534,10 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
               <button
                 onClick={() => onAddVitals(originalIdx)}
                 className="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold font-sans rounded-xl transition shadow shadow-emerald-600/10 cursor-pointer shrink-0"
-                title="Pencatatan Baru"
+                title="Tambah TTV Baru"
               >
                 <Plus className="w-3.5 h-3.5 mr-0.5" />
-                <span className="hidden sm:inline">Pencatatan Baru</span>
+                <span className="hidden sm:inline">Tambah TTV Baru</span>
               </button>
               <button
                 onClick={() => copyPatientToClipboard(p)}
@@ -552,7 +545,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
                 title="Salin Data Pasien"
               >
                 <Copy className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Copy Singel</span>
+                <span className="hidden sm:inline">Copy Data Pasien Ini</span>
               </button>
             </div>
 
@@ -619,20 +612,18 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
         whileDrag={{ scale: 1.015, boxShadow: "0px 15px 35px rgba(15,23,42,0.12)", zIndex: 10 }}
         onDragEnd={() => {
           onReorder(patients);
-          showNotification('Antrean pasien berhasil diatur ulang!', 'success');
+          showNotification('Fata pasien berhasil diatur ulang!', 'success');
         }}
-        className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${
-          isExpanded ? '' : 'overflow-hidden'
-        }`}
+        className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isExpanded ? '' : 'overflow-hidden'
+          }`}
       >
         {cardContent}
       </Reorder.Item>
     );
   } else {
     return (
-      <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${
-        isExpanded ? '' : 'overflow-hidden'
-      }`}>
+      <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isExpanded ? '' : 'overflow-hidden'
+        }`}>
         {cardContent}
       </div>
     );

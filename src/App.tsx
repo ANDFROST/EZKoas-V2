@@ -380,7 +380,7 @@ export default function App() {
     <div className="min-h-screen bg-[#f3f4f6] text-slate-800 flex font-sans selection:bg-teal-100 selection:text-teal-900 overflow-x-hidden">
       {/* Sidebar Navigation Rail (Desktop Only) */}
       <aside className="hidden md:flex w-20 bg-teal-950 flex-col items-center py-8 gap-8 border-r border-teal-900 shrink-0">
-        <div 
+        <div
           onClick={() => setActivePane('dashboard')}
           className="w-11 h-11 bg-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/15 text-white cursor-pointer hover:bg-teal-500 transition-all active:scale-95"
           title="Ke Dashboard"
@@ -391,11 +391,10 @@ export default function App() {
           {/* Dashboard Icon Button */}
           <button
             onClick={() => setActivePane('dashboard')}
-            className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
-              activePane === 'dashboard'
-                ? 'bg-teal-900 text-teal-300 shadow-md border border-teal-800/80'
-                : 'text-teal-500 hover:text-teal-200 hover:bg-teal-900/30'
-            }`}
+            className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${activePane === 'dashboard'
+              ? 'bg-teal-900 text-teal-300 shadow-md border border-teal-800/80'
+              : 'text-teal-500 hover:text-teal-200 hover:bg-teal-900/30'
+              }`}
             title="Dashboard Utama"
           >
             <Compass className="w-5 h-5" />
@@ -404,11 +403,10 @@ export default function App() {
           {/* List / Queue Icon Button */}
           <button
             onClick={() => setActivePane('list')}
-            className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
-              activePane === 'list'
-                ? 'bg-teal-900 text-teal-300 shadow-md border border-teal-800/80'
-                : 'text-teal-500 hover:text-teal-200 hover:bg-teal-900/30'
-            }`}
+            className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${activePane === 'list'
+              ? 'bg-teal-900 text-teal-300 shadow-md border border-teal-800/80'
+              : 'text-teal-500 hover:text-teal-200 hover:bg-teal-900/30'
+              }`}
             title="Daftar Pasien (Ward Rounds Queue)"
           >
             <Contact className="w-5 h-5" />
@@ -417,11 +415,10 @@ export default function App() {
           {/* Add Patient Icon Button */}
           <button
             onClick={handleAddNewPatient}
-            className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${
-              activePane === 'form' && selectedPatientIdx === null
-                ? 'bg-teal-900 text-teal-300 shadow-md border border-teal-800/80'
-                : 'text-teal-500 hover:text-teal-200 hover:bg-teal-900/30'
-            }`}
+            className={`p-3 rounded-xl transition-all duration-200 cursor-pointer ${activePane === 'form' && selectedPatientIdx === null
+              ? 'bg-teal-900 text-teal-300 shadow-md border border-teal-800/80'
+              : 'text-teal-500 hover:text-teal-200 hover:bg-teal-900/30'
+              }`}
             title="Tambah Pasien Baru"
           >
             <Plus className="w-5 h-5" />
@@ -444,7 +441,7 @@ export default function App() {
           >
             <Info className="w-4.5 h-4.5" />
           </button>
-          <div 
+          <div
             onClick={() => setShowAboutModal(true)}
             className="w-9 h-9 rounded-full bg-teal-900/50 hover:bg-teal-900 flex items-center justify-center text-[10px] font-bold text-teal-300 cursor-pointer border border-teal-800 transition"
           >
@@ -459,7 +456,7 @@ export default function App() {
         <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-3">
             {/* Unified Drawer hamburger trigger button */}
-            <button 
+            <button
               onClick={() => setIsLeftNavOpen(true)}
               className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-950 text-white font-extrabold text-base shadow-xs cursor-pointer hover:bg-teal-900 transition active:scale-95"
               title="Buka Menu Navigasi"
@@ -472,7 +469,7 @@ export default function App() {
                   EZKOAS
                 </h1>
                 <span className="bg-teal-50 border border-teal-100 text-teal-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none">
-                  v1.2.0
+                  V2.1.0
                 </span>
               </div>
               <p className="hidden sm:block text-[10px] text-slate-450 font-sans leading-relaxed mt-0.5">
@@ -511,7 +508,7 @@ export default function App() {
               <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs select-none">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
-                  <span className="font-extrabold text-xs text-slate-500 uppercase tracking-wider">Antrean Pasien Rounds Aktif</span>
+                  <span className="font-extrabold text-xs text-slate-500 uppercase tracking-wider">Data Pasien yang Tersimpan</span>
                 </div>
                 <button
                   type="button"
@@ -547,7 +544,7 @@ export default function App() {
                     className="w-full bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white py-4 px-6 rounded-xl font-bold font-sans text-sm tracking-tight transition-all flex items-center justify-center gap-2 shadow-sm shadow-teal-600/10 cursor-pointer"
                   >
                     <Plus className="w-4.5 h-4.5 shrink-0" />
-                    <span>Registrasi Pasien Baru</span>
+                    <span>Tambah TTV Pasien Baru</span>
                   </button>
                 </div>
 
@@ -563,27 +560,27 @@ export default function App() {
                       </div>
                       <div>
                         <p className="font-extrabold text-base text-slate-900 tracking-tight">Edit / Tambah TTV Pasien</p>
-                        <p className="text-xs text-slate-400 font-medium font-sans mt-0.5">Kelola rekam vital &amp; antrean rounds</p>
+                        <p className="text-xs text-slate-400 font-medium font-sans mt-0.5">Ubah kembali TTV pasien yang tersimpan</p>
                       </div>
                     </div>
                     <span className="text-xs bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-100 font-extrabold px-3 py-2 rounded-xl transition flex items-center gap-0.5">
-                      Buka Antrean →
+                      Buka Data Pasien yang Tersimpan →
                     </span>
                   </button>
-                  
+
                   <div className="bg-[#f8fafc] px-6 py-4 flex items-center justify-between gap-4 select-none">
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-slate-400" />
                       <div>
                         <p className="text-slate-500 font-bold text-[10px] sm:text-xs uppercase tracking-wider">Total Pasien Terdaftar</p>
-                        <p className="text-[10px] text-slate-400 font-medium font-sans mt-0.5">Sensus pasien koas terdaftar dalam shift aktif</p>
+                        <p className="text-[10px] text-slate-400 font-medium font-sans mt-0.5">Jumlah pasien yang terdaftar</p>
                       </div>
                     </div>
                     <div className="flex items-baseline gap-1">
                       <span className="text-3xl font-black text-slate-900 font-mono tracking-tight leading-none">
                         {stats.total}
                       </span>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase">jiwa</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase">Pasien</span>
                     </div>
                   </div>
                 </div>
@@ -595,7 +592,7 @@ export default function App() {
                 <div className="bg-white border border-slate-200 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs">
                   <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
                     <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span>Salin Masal WhatsApp/SMS:</span>
+                    <span>Salin Masal ke WhatsApp:</span>
                   </span>
                   <div className="flex flex-wrap gap-2">
                     <button
@@ -603,21 +600,21 @@ export default function App() {
                       className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
                       <Copy className="w-3.5 h-3.5 text-teal-600" />
-                      <span>Copy Standar</span>
+                      <span>Copy TTV</span>
                     </button>
                     <button
                       onClick={copyWithIzin}
                       className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
                       <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Copy + Izin</span>
+                      <span>Copy TTV + Izin</span>
                     </button>
                     <button
                       onClick={copyFolketOnly}
                       className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
                       <Layers className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Copy Folket</span>
+                      <span>Copy Hanya Folket</span>
                     </button>
                   </div>
 
@@ -626,7 +623,7 @@ export default function App() {
                       onClick={resetAllData}
                       className="px-3.5 py-2 border border-red-200 bg-red-50 text-red-750 font-bold rounded-lg hover:bg-red-100 transition-all text-xs cursor-pointer"
                     >
-                      Reset database
+                      Hapus Semua Data
                     </button>
                   </div>
                 </div>
@@ -639,7 +636,10 @@ export default function App() {
                   className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                 >
                   <Import className="w-5 h-5 text-teal-600" />
-                  <span>Import dari Spreadsheet / Teks</span>
+                  <span>Import dari Database / Clipboard</span>
+                  <span className="bg-amber-50 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0 ml-1">
+                    BETA
+                  </span>
                 </button>
 
                 <button
@@ -647,7 +647,7 @@ export default function App() {
                   className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                 >
                   <FileText className="w-5 h-5 text-amber-600" />
-                  <span>Koleksi Teori &amp; Panduan Protokol</span>
+                  <span>Panduan dan Protokol</span>
                 </button>
               </div>
 
@@ -656,16 +656,16 @@ export default function App() {
                 <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
                 <div className="max-w-2xl">
                   <h4 className="text-base sm:text-lg font-black flex items-center gap-2 text-white">
-                    <Heart className="w-5 h-5 text-rose-400 animate-pulse" /> Kolaborasi &amp; Pemeliharaan Server
+                    <Heart className="w-5 h-5 text-rose-400 animate-pulse" /> Apakah Anda Terbantu?
                   </h4>
                   <p className="text-xs text-teal-200 leading-relaxed mt-2.5 font-medium">
-                    EZKOAS dibangun secara mandiri untuk rekan-rekan koas kedokteran agar dapat mencatat, mengolah, dan memformulasikan rounds shift dengan andal. Dukung pemeliharaan server database cloud online kami via Saweria traktir kopi andfrost!
+                    EZKOAS dibangun secara mandiri dan sukarela oleh Andy Sitanggang untuk membantu dan memudahkan teman sejawat koas agar dapat mencatat, mengolah, dan menyampaikan hasil pencatatan TTV dengan efisien dan mudah. Apabila Anda merasa terbantu dan ingin mendukung pengembangan aplikasi ini ataupun aplikasi baru kedepannya dapat menyampaikan dukungannya melalui tombol donasi dibawah ini!
                   </p>
                   <button
                     onClick={() => setShowSupportModal(true)}
                     className="bg-[#009baf] hover:bg-[#008ba0] active:scale-95 text-white font-black font-sans text-xs tracking-tight py-3 px-6 rounded-xl mt-5 transition shadow-lg shadow-cyan-950/10 cursor-pointer uppercase"
                   >
-                    Donasi via Saweria Sawer →
+                    BANTU SAYA TERUS BERKARYA →
                   </button>
                 </div>
               </div>
@@ -678,9 +678,8 @@ export default function App() {
         <button
           ref={floatingMenuRef}
           onClick={() => setIsLeftNavOpen(true)}
-          className={`fixed left-4 hover:left-5 bottom-8 z-40 bg-teal-950 hover:bg-teal-900 border border-teal-800 text-white rounded-full py-3 px-4.5 font-sans font-extrabold text-xs shadow-xl active:scale-95 flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${
-            isMenuVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
-          }`}
+          className={`fixed left-4 hover:left-5 bottom-8 z-40 bg-teal-950 hover:bg-teal-900 border border-teal-800 text-white rounded-full py-3 px-4.5 font-sans font-extrabold text-xs shadow-xl active:scale-95 flex items-center gap-1.5 cursor-pointer transition-all duration-300 ${isMenuVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90 pointer-events-none'
+            }`}
         >
           <span>☰</span>
           <span>Menu &amp; Protokol</span>
@@ -690,8 +689,8 @@ export default function App() {
         {isLeftNavOpen && (
           <div className="fixed inset-0 z-50 flex">
             {/* Dark outside backdrop */}
-            <div 
-              className="fixed inset-0 bg-slate-950/60 transition-opacity backdrop-blur-xs cursor-pointer" 
+            <div
+              className="fixed inset-0 bg-slate-950/60 transition-opacity backdrop-blur-xs cursor-pointer"
               onClick={() => setIsLeftNavOpen(false)}
             />
 
@@ -702,7 +701,7 @@ export default function App() {
                   <Stethoscope className="w-5 h-5 text-teal-400" />
                   <span className="font-extrabold text-base tracking-tight text-white font-sans">EZKOAS Menu</span>
                 </div>
-                <button 
+                <button
                   onClick={() => setIsLeftNavOpen(false)}
                   className="p-1 px-2.5 bg-teal-900 hover:bg-teal-850 rounded-lg text-teal-300 hover:text-white transition cursor-pointer"
                 >
@@ -713,31 +712,32 @@ export default function App() {
               <nav className="flex flex-col gap-2 mb-8 select-none">
                 <button
                   onClick={() => { setActivePane('dashboard'); setIsLeftNavOpen(false); }}
-                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 cursor-pointer ${
-                    activePane === 'dashboard' ? 'bg-teal-600 text-white shadow shadow-teal-950/40' : 'text-teal-400 hover:bg-teal-900 hover:text-teal-200'
-                  }`}
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 cursor-pointer ${activePane === 'dashboard' ? 'bg-teal-600 text-white shadow shadow-teal-950/40' : 'text-teal-400 hover:bg-teal-900 hover:text-teal-200'
+                    }`}
                 >
                   • Dashboard Utama
                 </button>
                 <button
                   onClick={() => { setActivePane('list'); setIsLeftNavOpen(false); }}
-                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 cursor-pointer ${
-                    activePane === 'list' ? 'bg-teal-600 text-white shadow shadow-teal-950/40' : 'text-teal-400 hover:bg-teal-900 hover:text-teal-200'
-                  }`}
+                  className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 cursor-pointer ${activePane === 'list' ? 'bg-teal-600 text-white shadow shadow-teal-950/40' : 'text-teal-400 hover:bg-teal-900 hover:text-teal-200'
+                    }`}
                 >
-                  • Antrean Pasien ({patients.length})
+                  • Data Pasien yang Tersimpan ({patients.length})
                 </button>
                 <button
                   onClick={() => { handleAddNewPatient(); setIsLeftNavOpen(false); }}
                   className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
                 >
-                  • Register Pasien Baru
+                  • Tambah TTV Pasien Baru
                 </button>
                 <button
                   onClick={() => { setShowImportModal(true); setIsLeftNavOpen(false); }}
                   className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
                 >
-                  • Import Spreadsheet / Teks
+                  <span className="flex-1">• Import dari Database / Clipboard</span>
+                  <span className="bg-amber-400/10 border border-amber-500/20 text-amber-400 font-mono text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">
+                    BETA
+                  </span>
                 </button>
                 <button
                   onClick={() => { setShowAboutModal(true); setIsLeftNavOpen(false); }}
@@ -753,7 +753,7 @@ export default function App() {
                   onClick={() => { setShowProtocolsModal(true); setIsLeftNavOpen(false); }}
                   className="w-full bg-amber-600 hover:bg-amber-700 active:scale-95 text-white font-extrabold py-3 px-4 rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer shadow-lg shadow-amber-950/30"
                 >
-                  📚 Buka Kompilasi Teori Protokol
+                  📚 Teori &amp; Protokol
                 </button>
               </div>
             </div>
@@ -769,7 +769,7 @@ export default function App() {
               {notification.type === 'success' ? '✅' : notification.type === 'error' ? '❌' : 'ℹ️'}
             </span>
             <div className="font-sans leading-tight">
-              <p className="font-extrabold text-slate-100">EZKOAS Atensi</p>
+              <p className="font-extrabold text-slate-100">Alert</p>
               <p className="text-slate-300 font-medium text-[11px] mt-0.5">{notification.message}</p>
             </div>
             <button
@@ -811,12 +811,12 @@ export default function App() {
             <div className="bg-teal-950 p-6 text-white text-center relative overflow-hidden">
               <div className="absolute -left-10 -top-10 w-24 h-24 bg-white/5 rounded-full blur-xl pointer-events-none" />
               <Heart className="w-10 h-10 text-rose-400 mx-auto animate-pulse mb-3" />
-              <h3 className="text-lg font-black tracking-tight font-sans">Dukungan Pemeliharaan EZKOAS</h3>
-              <p className="text-teal-300 text-xs mt-1 font-sans">Apresiasi pembuat aplikasi rounds dokter muda</p>
+              <h3 className="text-lg font-black tracking-tight font-sans">Apakah Anda merasa terbantu?</h3>
+              <p className="text-teal-300 text-xs mt-1 font-sans">Dukung saya untuk terus berkarya!</p>
             </div>
             <div className="p-6 text-center space-y-4">
               <p className="text-slate-600 text-xs leading-relaxed font-sans font-medium">
-                Jika aplikasi ini membantu Anda melewati dinas shift atau rounds koas yang padat dengan lebih mudah, silakan traktir pembuatnya secangkir kopi! Dukungan operasional server online disalurkan lewat Saweria.
+                EZKOAS dibangun secara mandiri dan sukarela oleh Andy Sitanggang untuk membantu dan memudahkan teman sejawat koas agar dapat mencatat, mengolah, dan menyampaikan hasil pencatatan TTV dengan efisien dan mudah. Apabila Anda merasa terbantu dan ingin mendukung pengembangan aplikasi ini ataupun aplikasi baru kedepannya dapat menyampaikan dukungannya melalui tombol donasi dibawah ini!
               </p>
               <div className="bg-teal-50 border border-teal-100 p-4.5 rounded-2xl font-extrabold text-[15px] font-mono text-teal-800">
                 saweria.co/andfrost
@@ -835,7 +835,7 @@ export default function App() {
                   rel="noopener noreferrer"
                   className="w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold font-sans text-xs transition rounded-xl flex items-center justify-center gap-1 shadow-md shadow-teal-650/10 uppercase"
                 >
-                  Buka Saweria
+                  DONASI
                 </a>
               </div>
             </div>
@@ -852,10 +852,10 @@ export default function App() {
               </span>
               <div>
                 <h3 className="text-lg font-black tracking-tight text-slate-850 font-sans">Tentang EZKOAS</h3>
-                <p className="text-xs text-slate-400 mt-1 font-sans font-medium">Versi Produksi Web 1.2.0</p>
+                <p className="text-xs text-slate-400 mt-1 font-sans font-medium">Versi Web 2.1.0</p>
               </div>
               <p className="text-slate-500 text-xs leading-relaxed font-medium mt-1">
-                EZKOAS dirancang khusus demi efisiensi klinis mahasiswa kedokteran muda (Koas) maupun residen Indonesia dalam mencatat, mengolah, dan menyerahkan (over-shift) data tanda vital rounds pasien dengan presisi tinggi di platform pesan.
+                EZKOAS merupakan aplikasi yang dibuat oleh seorang mahasiswa kedokteran yang bertujuan untuk membantu teman sejawat dokter muda (Koas) dalam mencatat, mengolah, dan menyerahkan hasil pencatatan berupa tanda vital pasien lengkap dengan panduan dan protokol klinis.
               </p>
               <div className="border-t border-slate-100 pt-4 text-[10px] text-slate-400 font-medium font-sans">
                 <p>Copyright © 2026 Andy Sitanggang.</p>
@@ -866,7 +866,7 @@ export default function App() {
                 onClick={() => setShowAboutModal(false)}
                 className="w-full py-2.5 bg-slate-100 hover:bg-slate-205 rounded-xl text-slate-705 font-sans font-bold text-xs transition cursor-pointer"
               >
-                Tutup Informasi
+                Tutup
               </button>
             </div>
           </div>
