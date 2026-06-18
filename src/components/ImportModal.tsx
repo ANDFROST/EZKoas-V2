@@ -323,7 +323,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   const executeClipboardImport = () => {
     const textSnapshot = clipboardText.trim();
     if (!textSnapshot) {
-      showNotification('Tempelkan teks format EZKOAS terlebih dahulu.', 'error');
+      showNotification('Paste teks format terlebih dahulu.', 'error');
       return;
     }
 
@@ -346,8 +346,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       {/* Header Info */}
       <div className="bg-white border-b border-slate-200 p-4 sm:p-6 flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-extrabold tracking-tight text-slate-900">Kanal Import Data Pasien</h2>
-          <p className="text-slate-400 text-xs mt-1">Impor riwayat vitals pasien secara massal</p>
+          <h2 className="text-lg font-extrabold tracking-tight text-slate-900">Import Data dari Server</h2>
+          <p className="text-slate-400 text-xs mt-1">Ketik nama pasien, ruangan, ataupun No.RM di kolom pencarian</p>
         </div>
         <div className="w-10 h-10 bg-teal-50 border border-teal-100 rounded-xl flex items-center justify-center">
           <Import className="w-5 h-5 text-teal-600" />
@@ -548,9 +548,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               <div>
                 <h4 className="font-bold">Format Penguraian Teks Clipboard</h4>
                 <p className="leading-relaxed opacity-90 mt-0.5">
-                  Salinkan TTV klinis langsung dari aplikasi rujukan atau chat messenger.
-                  Pengurai EZKOAS akan otomatis mendeteksi baris identitas pasien, alarms follow-up, serta catatan vitals (TTV) trend log.
-                  Jika ingin mengimpor multi-pasien sekaligus, pisahkan setiap blok pasien menggunakan garis pemisah putus-putus minimal 3 karakter (misal: <code>---</code>).
+                  Copy TTV pasien kemudian paste di kolom di bawah ini!
                 </p>
               </div>
             </div>
@@ -558,7 +556,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             <textarea
               value={clipboardText}
               onChange={(e) => setClipboardText(e.target.value)}
-              placeholder="Tempelkan pesan EZKOAS format rujukan di sini..."
+              placeholder="Paste di sini..."
               rows={10}
               className="w-full bg-slate-50/50 border border-slate-200 focus:border-teal-500 rounded-2xl p-4 focus:bg-white focus:outline-none transition text-sm font-mono text-slate-750 resize-none leading-relaxed"
             />
@@ -570,7 +568,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       <div className="bg-slate-50 p-4 sm:px-6 sm:py-4 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
         {activeTab === 'sheet' && !isLoadingSheet && sheetRows.length > 0 && (
           <div className="text-xs font-semibold text-slate-500 font-sans text-center sm:text-left">
-            {sheetRows.filter((_, idx) => selectedIndices[idx]).length} baris dipilih
+            {sheetRows.filter((_, idx) => selectedIndices[idx]).length} TTV dipilih
           </div>
         )}
         <div className="flex gap-2.5 w-full sm:w-auto ml-auto justify-end">
@@ -588,7 +586,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                 }`}
             >
               <UserCheck className="w-4 h-4 shrink-0" />
-              <span>Import Terpilih</span>
+              <span>Import</span>
             </button>
           ) : (
             <button
@@ -596,7 +594,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-sans text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow shadow-teal-600/15 cursor-pointer`}
             >
               <Import className="w-4 h-4 shrink-0" />
-              <span>Urai &amp; Import</span>
+              <span>Import</span>
             </button>
           )}
         </div>

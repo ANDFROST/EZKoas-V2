@@ -102,23 +102,38 @@ export default function App() {
     const handleScroll = () => {
       const workspace = workspaceRef.current;
       const floatingButton = floatingMenuRef.current;
-      const savePanel = document.getElementById('patient-form-save-panel');
 
-      if (!workspace || !floatingButton || activePane !== 'form') {
+      if (!workspace || !floatingButton) {
         setIsMenuVisible(true);
         return;
       }
 
-      if (!savePanel) {
-        setIsMenuVisible(true);
-        return;
+      if (activePane === 'form') {
+        const savePanel = document.getElementById('patient-form-save-panel');
+        if (savePanel) {
+          const rect = savePanel.getBoundingClientRect();
+          const isNear = rect.top < window.innerHeight - 130;
+          setIsMenuVisible(!isNear);
+          return;
+        }
+      } else if (activePane === 'dashboard') {
+        const bottomSection = document.getElementById('main-menu-bottom-section');
+        if (bottomSection && floatingButton) {
+          const btnRect = floatingButton.getBoundingClientRect();
+          const secRect = bottomSection.getBoundingClientRect();
+
+          // Check for exact physical overlap (bounding box collision)
+          const isOverlapping =
+            btnRect.bottom > secRect.top &&
+            btnRect.top < secRect.bottom &&
+            btnRect.right > secRect.left &&
+            btnRect.left < secRect.right;
+          setIsMenuVisible(!isOverlapping);
+          return;
+        }
       }
 
-      const savePanelRect = savePanel.getBoundingClientRect();
-
-      // Detect if the top of the save button container is within 130px of the viewport's bottom.
-      const isNear = savePanelRect.top < window.innerHeight - 130;
-      setIsMenuVisible(!isNear);
+      setIsMenuVisible(true);
     };
 
     const workspace = workspaceRef.current;
@@ -473,7 +488,7 @@ export default function App() {
                 </span>
               </div>
               <p className="hidden sm:block text-[10px] text-slate-450 font-sans leading-relaxed mt-0.5">
-                Asisten Klinis Dokter Muda • Pendataan TTV & Handover Rounds
+                Aplikasi TTV untuk Koas. Buat TTV  jadi gampang!
               </p>
             </div>
           </div>
@@ -485,7 +500,7 @@ export default function App() {
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-[11px] font-semibold rounded-lg shadow-sm font-sans transition-all cursor-pointer"
             >
               <Gift className="w-3.5 h-3.5" />
-              <span>Dukung Andy</span>
+              <span>Dukung Saya</span>
             </button>
           </div>
         </header>
@@ -587,87 +602,91 @@ export default function App() {
 
               </div>
 
-              {/* Fast Copy Toolbar Bar */}
-              {patients.length > 0 && (
-                <div className="bg-white border border-slate-200 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs">
-                  <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
-                    <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span>Salin Masal ke WhatsApp:</span>
-                  </span>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={copyStandard}
-                      className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                    >
-                      <Copy className="w-3.5 h-3.5 text-teal-600" />
-                      <span>Copy TTV</span>
-                    </button>
-                    <button
-                      onClick={copyWithIzin}
-                      className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                    >
-                      <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Copy TTV + Izin</span>
-                    </button>
-                    <button
-                      onClick={copyFolketOnly}
-                      className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                    >
-                      <Layers className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Copy Hanya Folket</span>
-                    </button>
+              <div id="main-menu-bottom-section" className="space-y-6">
+
+                {/* Fast Copy Toolbar Bar */}
+                {patients.length > 0 && (
+                  <div className="bg-white border border-slate-200 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs">
+                    <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
+                      <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span>Salin Masal ke WhatsApp:</span>
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={copyStandard}
+                        className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <Copy className="w-3.5 h-3.5 text-teal-600" />
+                        <span>Copy TTV</span>
+                      </button>
+                      <button
+                        onClick={copyWithIzin}
+                        className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Copy TTV + Izin</span>
+                      </button>
+                      <button
+                        onClick={copyFolketOnly}
+                        className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <Layers className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Copy Hanya Folket</span>
+                      </button>
+                    </div>
+
+                    <div className="ml-auto flex items-center gap-2">
+                      <button
+                        onClick={resetAllData}
+                        className="px-3.5 py-2 border border-red-200 bg-red-50 text-red-750 font-bold rounded-lg hover:bg-red-100 transition-all text-xs cursor-pointer"
+                      >
+                        Hapus Semua Data
+                      </button>
+                    </div>
                   </div>
+                )}
 
-                  <div className="ml-auto flex items-center gap-2">
-                    <button
-                      onClick={resetAllData}
-                      className="px-3.5 py-2 border border-red-200 bg-red-50 text-red-750 font-bold rounded-lg hover:bg-red-100 transition-all text-xs cursor-pointer"
-                    >
-                      Hapus Semua Data
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Utility Tools launcher row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  onClick={() => setShowImportModal(true)}
-                  className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
-                >
-                  <Import className="w-5 h-5 text-teal-600" />
-                  <span>Import dari Database / Clipboard</span>
-                  <span className="bg-amber-50 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0 ml-1">
-                    BETA
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setShowProtocolsModal(true)}
-                  className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
-                >
-                  <FileText className="w-5 h-5 text-amber-600" />
-                  <span>Panduan dan Protokol</span>
-                </button>
-              </div>
-
-              {/* Support CTA Banner */}
-              <div className="bg-teal-950 text-white rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden font-sans border border-teal-900 select-none">
-                <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-                <div className="max-w-2xl">
-                  <h4 className="text-base sm:text-lg font-black flex items-center gap-2 text-white">
-                    <Heart className="w-5 h-5 text-rose-400 animate-pulse" /> Apakah Anda Terbantu?
-                  </h4>
-                  <p className="text-xs text-teal-200 leading-relaxed mt-2.5 font-medium">
-                    EZKOAS dibangun secara mandiri dan sukarela oleh Andy Sitanggang untuk membantu dan memudahkan teman sejawat koas agar dapat mencatat, mengolah, dan menyampaikan hasil pencatatan TTV dengan efisien dan mudah. Apabila Anda merasa terbantu dan ingin mendukung pengembangan aplikasi ini ataupun aplikasi baru kedepannya dapat menyampaikan dukungannya melalui tombol donasi dibawah ini!
-                  </p>
+                {/* Utility Tools launcher row */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button
-                    onClick={() => setShowSupportModal(true)}
-                    className="bg-[#009baf] hover:bg-[#008ba0] active:scale-95 text-white font-black font-sans text-xs tracking-tight py-3 px-6 rounded-xl mt-5 transition shadow-lg shadow-cyan-950/10 cursor-pointer uppercase"
+                    onClick={() => setShowImportModal(true)}
+                    className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                   >
-                    BANTU SAYA TERUS BERKARYA →
+                    <Import className="w-5 h-5 text-teal-600" />
+                    <span>Import dari Database / Clipboard</span>
+                    <span className="bg-amber-50 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0 ml-1">
+                      BETA
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowProtocolsModal(true)}
+                    className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                  >
+                    <FileText className="w-5 h-5 text-amber-600" />
+                    <span>Panduan dan Protokol</span>
                   </button>
                 </div>
+
+                {/* Support CTA Banner */}
+                <div className="bg-teal-950 text-white rounded-3xl p-6 sm:p-8 shadow-xs relative overflow-hidden font-sans border border-teal-900 select-none">
+                  <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+                  <div className="max-w-2xl">
+                    <h4 className="text-base sm:text-lg font-black flex items-center gap-2 text-white">
+                      <Heart className="w-5 h-5 text-rose-400 animate-pulse" /> Apakah Anda Terbantu?
+                    </h4>
+                    <p className="text-xs text-teal-200 leading-relaxed mt-2.5 font-medium">
+                      EZKOAS dibangun secara mandiri dan sukarela oleh Andy Sitanggang untuk membantu dan memudahkan teman sejawat koas agar dapat mencatat, mengolah, dan menyampaikan hasil pencatatan TTV dengan efisien dan mudah. Apabila Anda merasa terbantu dan ingin mendukung pengembangan aplikasi ini ataupun aplikasi baru kedepannya dapat menyampaikan dukungannya melalui tombol donasi dibawah ini!
+                    </p>
+                    <button
+                      onClick={() => setShowSupportModal(true)}
+                      className="bg-[#009baf] hover:bg-[#008ba0] active:scale-95 text-white font-black font-sans text-xs tracking-tight py-3 px-6 rounded-xl mt-5 transition shadow-lg shadow-cyan-950/10 cursor-pointer uppercase"
+                    >
+                      BANTU SAYA TERUS BERKARYA →
+                    </button>
+                  </div>
+                </div>
+
               </div>
 
             </div>
