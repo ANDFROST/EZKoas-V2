@@ -130,6 +130,7 @@ interface PatientListProps {
   onDeleteVitals: (patientIdx: number, vitalsIdx: number) => void;
   onReorder: (reordered: PatientRecord[]) => void;
   showNotification: (msg: string, type: 'success' | 'dev' | 'error') => void;
+  filterFolketOnly?: boolean;
 }
 
 export const PatientList: React.FC<PatientListProps> = ({
@@ -139,7 +140,8 @@ export const PatientList: React.FC<PatientListProps> = ({
   onDeletePatient,
   onDeleteVitals,
   onReorder,
-  showNotification
+  showNotification,
+  filterFolketOnly
 }) => {
   const [expandedPatientIdxs, setExpandedPatientIdxs] = useState<Record<number, boolean>>({});
   const [sortCriteria, setSortCriteria] = useState<'alphabet' | 'room' | 'newest' | 'manual'>('manual');
@@ -186,7 +188,16 @@ export const PatientList: React.FC<PatientListProps> = ({
 
   // Sorting handlers
   const sortedPatientsWIndices = React.useMemo(() => {
-    const mapped = patients.map((p, idx) => ({ p, originalIdx: idx }));
+    let mapped = patients.map((p, idx) => ({ p, originalIdx: idx }));
+
+    if (filterFolketOnly) {
+      mapped = mapped.filter(({ p }) => {
+        const nameFolket = (p.name || '').toLowerCase().includes('folket');
+        const roomFolket = (p.room || '').toLowerCase().includes('folket');
+        const keluhanFolket = p.vitals.some(v => (v.keluhan || '').toLowerCase().includes('folket'));
+        return nameFolket || roomFolket || keluhanFolket || p.isFollowTtv || p.isFollowGds || p.isFollowUop || p.isFollowBalance;
+      });
+    }
 
     if (sortCriteria === 'alphabet') {
       return mapped.sort((a, b) => a.p.name.localeCompare(b.p.name));
@@ -200,7 +211,7 @@ export const PatientList: React.FC<PatientListProps> = ({
       });
     }
     return mapped; // manual default order
-  }, [patients, sortCriteria]);
+  }, [patients, sortCriteria, filterFolketOnly]);
 
   // Copy single patient details to clipboard
   const copyPatientToClipboard = (p: PatientRecord) => {
@@ -329,7 +340,7 @@ export const PatientList: React.FC<PatientListProps> = ({
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-sans">
         <div className="flex items-center gap-2">
           <Activity className="w-5 h-5 text-teal-600" />
-          <h2 className="text-sm font-black text-slate-800 uppercase tracking-tight">Daftar Pasien yang terdaftar ({patients.length})</h2>
+          <h2 className="text-sm font-black text-slate-800 uppercase tracking-tight">List Pasien yang Tersimpan ({patients.length})</h2>
         </div>
 
         {patients.length > 1 && (
@@ -364,7 +375,7 @@ export const PatientList: React.FC<PatientListProps> = ({
         </div>
       ) : (
         <div className="space-y-4">
-          {sortCriteria === 'manual' ? (
+          {sortCriteria === 'manual' && !filterFolketOnly ? (
             <Reorder.Group
               axis="y"
               values={localPatients}
@@ -401,7 +412,7 @@ export const PatientList: React.FC<PatientListProps> = ({
                   patients={patients}
                   isExpanded={!!expandedPatientIdxs[originalIdx]}
                   toggleExpand={toggleExpand}
-                  sortCriteria={sortCriteria}
+                  sortCriteria={filterFolketOnly && sortCriteria === 'manual' ? ('filtered-manual' as any) : sortCriteria}
                   onAddVitals={onAddVitals}
                   onEditVitals={onEditVitals}
                   onDeletePatient={onDeletePatient}
@@ -499,6 +510,12 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
                 </span>
               )}
               <span className="text-[10px] shrink-0 font-sans">• {p.vitals.length} TTV</span>
+
+              {/* Folket (Follow Ketat) Indicators */}
+              {p.isFollowTtv && <span className="bg-amber-100 text-amber-800 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm border border-amber-200">TTV {p.followTtvInterval}</span>}
+              {p.isFollowGds && <span className="bg-blue-100 text-blue-800 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm border border-blue-200">GDS {p.followGdsInterval}</span>}
+              {p.isFollowUop && <span className="bg-emerald-100 text-emerald-800 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm border border-emerald-200">UOP {p.followUopInterval}</span>}
+              {p.isFollowBalance && <span className="bg-purple-100 text-purple-800 text-[9.5px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm border border-purple-200">Bal {p.followBalanceInterval}</span>}
             </div>
           </div>
         </div>

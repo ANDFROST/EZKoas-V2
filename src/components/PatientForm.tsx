@@ -4,6 +4,7 @@ import { formatTime, normalizeGender, GOOGLE_SHEETS_SCRIPT_URL } from '../utils'
 import { GcsCalculator } from './GcsCalculator';
 import { BalanceCairanModal } from './BalanceCairanModal';
 import { MedicalProtocolsRef } from './MedicalProtocolsRef';
+import { ImportOnlineModal, ImportOnlineResult } from './ImportOnlineModal';
 import {
   FileText,
   User,
@@ -108,19 +109,11 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   // Balance Cairan
   const [balanceCairan, setBalanceCairan] = useState<BalanceCairan | undefined>(undefined);
 
-  // Modals / Overlays Visibility
   const [showGcsCalculator, setShowGcsCalculator] = useState(false);
   const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [showProtocolsRef, setShowProtocolsRef] = useState(false);
   const [showFollowModal, setShowFollowModal] = useState(false);
-
-  // Search Online states
-  const [isSearchMode, setIsSearchMode] = useState(false);
-  const [searchName, setSearchName] = useState('');
-  const [searchRm, setSearchRm] = useState('');
-  const [searchRoom, setSearchRoom] = useState('');
-  const [isSearchingSheet, setIsSearchingSheet] = useState(false);
-  const [loadedSheetRows, setLoadedSheetRows] = useState<SpreadsheetRow[]>([]);
+  const [showImportOnlineModal, setShowImportOnlineModal] = useState(false);
 
   // Sliding-scale recommendations
   const [gdsRecommendation, setGdsRecommendation] = useState<{ message: string; suggestedRate?: string } | null>(null);
@@ -262,73 +255,13 @@ export const PatientForm: React.FC<PatientFormProps> = ({
     showNotification('Berhasil menerapkan dosis sliding scale Novorapid!', 'success');
   };
 
-  // Connect & pull Google Sheets list for lookups
-  const fetchSpreadsheetDatabase = async (): Promise<SpreadsheetRow[]> => {
-    try {
-      const response = await fetch(GOOGLE_SHEETS_SCRIPT_URL);
-      if (response.ok) {
-        const data = await response.json();
-        setLoadedSheetRows(data);
-        return data;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    return [];
-  };
-
-  // Search matching patients and fill records internally
-  const handleSheetSearch = async () => {
-    const qName = searchName.trim().toLowerCase();
-    const qRm = searchRm.trim().replace(/[^a-z0-9]/gi, '');
-    const qRoom = searchRoom.trim().toLowerCase();
-
-    if (!qName && !qRm && !qRoom) {
-      showNotification('Harap masukkan minimal satu kriteria pencarian', 'error');
-      return;
-    }
-
-    setIsSearchingSheet(true);
-    let rows = loadedSheetRows;
-    if (rows.length === 0) {
-      rows = await fetchSpreadsheetDatabase();
-    }
-
-    let match: SpreadsheetRow | null = null;
-    for (const r of rows) {
-      let isMatch = false;
-      if (qName) {
-        const dbName = (r.Nama || '').toLowerCase();
-        if (dbName.includes(qName)) isMatch = true;
-      } else if (qRm) {
-        const dbRm = String(r['No RM'] || r['No. RM'] || r.RM || '').replace(/[^a-z0-9]/gi, '');
-        if (dbRm.includes(qRm)) isMatch = true;
-      } else if (qRoom) {
-        const dbRoom = (r['Ruang Rawat'] || r.Room || '').toLowerCase();
-        if (dbRoom.includes(qRoom)) isMatch = true;
-      }
-
-      if (isMatch) {
-        match = r;
-        break;
-      }
-    }
-
-    setIsSearchingSheet(false);
-
-    if (match) {
-      setName(match.Nama || '');
-      setRm(String(match['No RM'] || match['No. RM'] || match.RM || ''));
-      setRoom(match['Ruang Rawat'] || match.Room || '');
-      setAge(match.Umur || match.Usia || '');
-      if (match['Jenis Kelamin'] || match.Gender) {
-        setGender(normalizeGender(match['Jenis Kelamin'] || match.Gender || ''));
-      }
-      setIsSearchMode(false);
-      showNotification('Pasien ditemukan & data diisi secara otomatis!', 'success');
-    } else {
-      showNotification('Data pasien tidak ditemukan di Google Sheets.', 'error');
-    }
+  const handleApplyOnlineData = (data: ImportOnlineResult) => {
+    setName(data.name);
+    setRm(data.rm);
+    setRoom(data.room);
+    setAge(data.age);
+    setGender(data.gender);
+    setShowImportOnlineModal(false);
   };
 
   // Manage custom drugs row array
@@ -499,68 +432,25 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
       {/* Lookup database trigger */}
       {patientIndex === null && (
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Database className="w-4 h-4 text-emerald-600" />
-              <span className="text-sm font-bold text-slate-800">Import dari Database Online</span>
-              <span className="bg-emerald-50 border border-emerald-100 text-emerald-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0 ml-1">
-                BETA
-              </span>
+        <div className="bg-gradient-to-br from-teal-50 to-emerald-50/50 p-4 rounded-2xl border border-teal-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center shrink-0">
+              <Search className="w-5 h-5 text-teal-600" />
             </div>
-            <button
-              onClick={() => setIsSearchMode(!isSearchMode)}
-              className="text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg transition"
-            >
-              {isSearchMode ? 'Tutup Pencarian' : 'Cari di Database'}
-            </button>
+            <div>
+              <h3 className="font-bold text-teal-900 text-sm flex items-center gap-1.5">
+                Cari Identitas Pasien
+                <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">BETA</span>
+              </h3>
+              <p className="text-xs text-teal-700/80 mt-0.5">Otomatis isi data pasien yang terbaru</p>
+            </div>
           </div>
-
-          {isSearchMode && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-emerald-50/20 p-4 rounded-xl border border-emerald-100 text-xs">
-              <div className="space-y-1">
-                <label className="font-bold text-slate-650 block">Nama Pasien</label>
-                <input
-                  type="text"
-                  placeholder="Masukkan nama..."
-                  value={searchName}
-                  onChange={(e) => setSearchName(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-550"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-bold text-slate-650 block">No. Rekam Medis (RM)</label>
-                <input
-                  type="text"
-                  placeholder="Masukkan RM..."
-                  value={searchRm}
-                  onChange={(e) => setSearchRm(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-555"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="font-bold text-slate-650 block">Ruang / Kamar</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Masukkan ruangan..."
-                    value={searchRoom}
-                    onChange={(e) => setSearchRoom(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-550"
-                  />
-                  <button
-                    onClick={handleSheetSearch}
-                    disabled={isSearchingSheet}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 rounded-xl flex items-center justify-center shrink-0 min-w-[70px] transition active:scale-95"
-                  >
-                    {isSearchingSheet ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          <button
+            onClick={() => setShowImportOnlineModal(true)}
+            className="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-bold rounded-xl text-xs transition shadow-sm shrink-0 shadow-teal-600/20"
+          >
+            Cari Pasien
+          </button>
         </div>
       )}
 
@@ -626,16 +516,13 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
                 <div className="space-y-1">
                   <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Umur / Usia</label>
-                  <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-teal-500 overflow-hidden">
-                    <input
-                      type="text"
-                      value={age.replace(/\s*thn/gi, '')}
-                      onChange={(e) => setAge(e.target.value ? `${e.target.value} thn` : '')}
-                      placeholder="Misal: 54"
-                      className="w-full px-3.5 py-2.5 text-sm focus:outline-none"
-                    />
-                    <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none font-semibold">thn</span>
-                  </div>
+                  <input
+                    type="text"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    placeholder="Misal: 54 th 11 bl"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                  />
                 </div>
               </div>
 
@@ -1141,11 +1028,11 @@ export const PatientForm: React.FC<PatientFormProps> = ({
         <button
           onClick={triggerSave}
           type="button"
-          className="px-8 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:bg-teal-800 border border-teal-700 text-white text-sm font-extrabold shadow-lg shadow-teal-600/15 flex items-center gap-2 tracking-tight transition cursor-pointer"
+          className="px-8 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:bg-teal-800 border border-teal-700 text-white text-sm font-extrabold shadow-lg shadow-teal-600/15 flex items-center justify-center gap-2 tracking-tight transition cursor-pointer"
         >
           <Sparkles className="w-4 h-4 shrink-0" />
           <span>
-            {patientIndex !== null ? (vitalsIndex !== null ? 'Perbarui Vitals' : 'Tambahkan Trend Vitals') : 'Simpan Pasien Baru'}
+            {patientIndex !== null ? (vitalsIndex !== null ? 'Update TTV' : 'Tambahkan TTV Baru') : 'Simpan Pasien Baru'}
           </span>
         </button>
       </div>
@@ -1194,6 +1081,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             </div>
             <MedicalProtocolsRef />
           </div>
+        </div>
+      )}
+
+      {showImportOnlineModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-2 sm:p-4">
+          <ImportOnlineModal
+            onApply={handleApplyOnlineData}
+            onClose={() => setShowImportOnlineModal(false)}
+            showNotification={showNotification}
+          />
         </div>
       )}
 

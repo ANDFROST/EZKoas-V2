@@ -1,7 +1,7 @@
 import { PatientRecord, VitalsEntry, BalanceCairan } from './types';
 
 // Web App URL untuk mengambil data dari Google Sheets
-export const GOOGLE_SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjrb32k4ogvSbU6ITXUtC81qOb3wVYYmEgOI4CiblB8j4TpcqgeYOsmxxLgzZWfjz7yA/exec';
+export const GOOGLE_SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzmsKMv8Q1B4_Ikfhu6Lz5ZKulIOZnhOiV2_nOMDcXSHwgQ0VvkHzdGoElp3G_LQiagg/exec';
 
 // Web App URL untuk mengirim Masukan dan Saran ke Google Docs
 // Ganti dengan URL hasil Publish Web App dari Google Apps Script Anda nanti
@@ -213,9 +213,9 @@ export function formatPatientRecord(p: PatientRecord): string {
   headerParts.push(p.gender === 'Laki-laki (L)' ? 'L' : 'P');
 
   if (p.age) {
-    const ageStr = p.age.toLowerCase().includes('thn') || p.age.toLowerCase().includes('tahun')
-      ? p.age
-      : `${p.age} thn`;
+    const ageLower = p.age.toLowerCase();
+    const hasTimeUnit = ageLower.includes('th') || ageLower.includes('bl') || ageLower.includes('hr');
+    const ageStr = hasTimeUnit ? p.age : `${p.age} thn`;
     headerParts.push(ageStr);
   }
 

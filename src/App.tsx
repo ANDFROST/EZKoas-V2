@@ -58,6 +58,9 @@ export default function App() {
   const [showProtocolsModal, setShowProtocolsModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
+  // List filters
+  const [filterFolketOnly, setFilterFolketOnly] = useState(false);
+
   // Custom Toast notification states
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'dev' | 'error' } | null>(null);
 
@@ -180,9 +183,10 @@ export default function App() {
   const copyFolketOnly = () => {
     const folketMatches = patients.filter(
       (p) =>
-        p.name.toLowerCase().includes('folket') ||
-        p.room.toLowerCase().includes('folket') ||
-        p.vitals.some((v) => v.keluhan.toLowerCase().includes('folket'))
+        (p.name || '').toLowerCase().includes('folket') ||
+        (p.room || '').toLowerCase().includes('folket') ||
+        p.isFollowTtv || p.isFollowGds || p.isFollowUop || p.isFollowBalance ||
+        p.vitals.some((v) => (v.keluhan || '').toLowerCase().includes('folket'))
     );
 
     if (folketMatches.length === 0) {
@@ -403,7 +407,7 @@ export default function App() {
           className="w-11 h-11 bg-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/15 text-white cursor-pointer hover:bg-teal-500 transition-all active:scale-95"
           title="Ke Dashboard"
         >
-          <Stethoscope className="w-5 h-5 text-white" />
+          <img src="/logo-1.png" alt="EZKOAS Logo" className="w-6 h-6 object-contain" />
         </div>
         <nav className="flex flex-col gap-6">
           {/* Dashboard Icon Button */}
@@ -523,23 +527,34 @@ export default function App() {
           ) : activePane === 'list' ? (
             /* Patients rounds queue */
             <div className="space-y-6">
-              <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs select-none">
+              <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs select-none flex-wrap gap-3">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
                   <span className="font-extrabold text-xs text-slate-500 uppercase tracking-wider">Data Pasien yang Tersimpan</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setActivePane('dashboard')}
-                  className="px-4.5 py-2 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer"
-                >
-                  ← Kembali ke Dashboard
-                </button>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => setFilterFolketOnly(!filterFolketOnly)}
+                    className={`px-3 py-2 border text-xs font-bold font-sans rounded-xl transition cursor-pointer flex items-center gap-1.5 ${filterFolketOnly ? 'bg-amber-100 border-amber-300 text-amber-800 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'}`}
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    Tampilkan Pasien Folket
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivePane('dashboard')}
+                    className="px-4.5 py-2 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer"
+                  >
+                    ← Kembali ke Dashboard
+                  </button>
+                </div>
               </div>
 
               <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-xs">
                 <PatientList
                   patients={patients}
+                  filterFolketOnly={filterFolketOnly}
                   onAddVitals={handleAddVitalsLogToPatient}
                   onEditVitals={handleEditVitalsLogOfPatient}
                   onDeletePatient={handleDeletePatientRecord}
@@ -720,8 +735,8 @@ export default function App() {
             <div className="relative w-80 max-w-[90%] bg-teal-950 border-r border-teal-900 text-teal-100 flex flex-col p-6 shadow-2xl h-full z-10 overflow-y-auto font-sans">
               <div className="flex items-center justify-between border-b border-teal-850 pb-4 mb-6">
                 <div className="flex items-center gap-2">
-                  <Stethoscope className="w-5 h-5 text-teal-400" />
-                  <span className="font-extrabold text-base tracking-tight text-white font-sans">EZKOAS Menu</span>
+                  <img src="/logo-2.png" alt="EZKOAS Logo" className="h-6 w-auto object-contain" />
+                  <span className="font-extrabold text-base tracking-tight text-white font-sans">Menu Utama</span>
                 </div>
                 <button
                   onClick={() => setIsLeftNavOpen(false)}
@@ -884,11 +899,10 @@ export default function App() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4 select-none">
           <div className="bg-white rounded-3xl overflow-hidden max-w-md w-full border border-slate-150 shadow-2xl font-sans">
             <div className="p-6 text-center space-y-4">
-              <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-50 border border-teal-150 text-teal-750 mx-auto shadow-inner">
-                <Stethoscope className="w-8 h-8 text-teal-600" />
-              </span>
+              <div className="mx-auto flex justify-center mb-2">
+                <img src="/logo-1.png" alt="EZKOAS Logo Gelap" className="h-16 w-auto object-contain drop-shadow-sm" />
+              </div>
               <div>
-                <h3 className="text-lg font-black tracking-tight text-slate-850 font-sans">Tentang EZKOAS</h3>
                 <p className="text-xs text-slate-400 mt-1 font-sans font-medium">Versi Web 2.1.0</p>
               </div>
               <p className="text-slate-500 text-xs leading-relaxed font-medium mt-1">
