@@ -1,6 +1,11 @@
 import { PatientRecord, VitalsEntry, BalanceCairan } from './types';
 
+// Web App URL untuk mengambil data dari Google Sheets
 export const GOOGLE_SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjrb32k4ogvSbU6ITXUtC81qOb3wVYYmEgOI4CiblB8j4TpcqgeYOsmxxLgzZWfjz7yA/exec';
+
+// Web App URL untuk mengirim Masukan dan Saran ke Google Docs
+// Ganti dengan URL hasil Publish Web App dari Google Apps Script Anda nanti
+export const GOOGLE_DOCS_FEEDBACK_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzkyVkNZYrddec7XN6fvz5cLV_illz_j9JZQ5l6aLlSizq-MlWUCt43CtVmL2HeLGRu/exec';
 
 // Normalisasi jenis kelamin
 export function normalizeGender(val: string): 'Laki-laki (L)' | 'Perempuan (P)' {

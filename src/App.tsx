@@ -5,6 +5,7 @@ import { PatientForm } from './components/PatientForm';
 import { PatientList } from './components/PatientList';
 import { ImportModal } from './components/ImportModal';
 import { MedicalProtocolsRef } from './components/MedicalProtocolsRef';
+import { FeedbackModal } from './components/FeedbackModal';
 import {
   Stethoscope,
   Plus,
@@ -31,7 +32,8 @@ import {
   ClipboardCheck,
   Settings,
   Notebook,
-  FileSpreadsheet
+  FileSpreadsheet,
+  MessageSquareText
 } from 'lucide-react';
 
 const STORAGE_KEY = 'ezkoas_patients_data';
@@ -54,6 +56,7 @@ export default function App() {
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showSupportModal, setShowSupportModal] = useState(false);
   const [showProtocolsModal, setShowProtocolsModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   // Custom Toast notification states
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'dev' | 'error' } | null>(null);
@@ -764,6 +767,12 @@ export default function App() {
                 >
                   • Tentang EZKOAS
                 </button>
+                <button
+                  onClick={() => { setShowFeedbackModal(true); setIsLeftNavOpen(false); }}
+                  className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer mt-2 border border-teal-800/50 bg-teal-900/30"
+                >
+                  <MessageSquareText className="w-3.5 h-3.5 shrink-0" /> Masukan dan Saran
+                </button>
               </nav>
 
               {/* COMPILATION TEORI PROTOKOL modal trigger inside Left Navigation sidebar panel! */}
@@ -859,6 +868,15 @@ export default function App() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {showFeedbackModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 flex flex-col items-center justify-center p-2 sm:p-4 select-none">
+          <FeedbackModal
+            onClose={() => setShowFeedbackModal(false)}
+            showNotification={triggerNotification}
+          />
         </div>
       )}
 
