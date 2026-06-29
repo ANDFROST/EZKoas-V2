@@ -4,7 +4,7 @@ import {
   parseClipboardPatients,
   normalizeGender,
   formatTime,
-  GOOGLE_SHEETS_SCRIPT_URL
+  GOOGLE_SHEETS_TTV_WEBAPP_URL
 } from '../utils';
 import {
   Import,
@@ -65,7 +65,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   const fetchSpreadsheet = async () => {
     setIsLoadingSheet(true);
     try {
-      const response = await fetch(GOOGLE_SHEETS_SCRIPT_URL);
+      const response = await fetch(GOOGLE_SHEETS_TTV_WEBAPP_URL);
       if (response.ok) {
         const data = await response.json();
         setSheetRows(data);
@@ -145,7 +145,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       const nameVal = getRowValue(row, ['Nama', 'Name', 'Patient', 'Nama Pasien']).toLowerCase();
       const rmVal = String(row['No RM'] || row['No. RM'] || row.RM || '').toLowerCase();
       const roomVal = getRowValue(row, ['Ruang Rawat', 'Ruang', 'Room']).toLowerCase();
-      const timeVal = getRowValue(row, ['VitalsTime', 'Waktu', 'Time']).toLowerCase();
+      const timeVal = getRowValue(row, ['VitalsTime', 'Waktu', 'Time', 'Waktu TTV']).toLowerCase();
 
       if (qName && !nameVal.includes(qName)) return;
       if (qRm && !rmVal.includes(qRm)) return;
@@ -226,17 +226,17 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     const ageVal = getRowValue(row, ['Umur', 'Age', 'Usia']);
     const genderVal = normalizeGender(getRowValue(row, ['Jenis Kelamin', 'Gender', 'Sex']));
 
-    const isFollowTtv = getRowValue(row, ['FollowTtv', 'Follow TTV', 'isFollowTtv']).toLowerCase() === 'true';
-    const isFollowGds = getRowValue(row, ['FollowGds', 'Follow GDS', 'isFollowGds']).toLowerCase() === 'true';
-    const isFollowUop = getRowValue(row, ['FollowUop', 'Follow UOP', 'isFollowUop']).toLowerCase() === 'true';
-    const isFollowBalance = getRowValue(row, ['FollowBalance', 'Follow Balance', 'isFollowBalance']).toLowerCase() === 'true';
+    const isFollowTtv = getRowValue(row, ['FollowTtv', 'Follow TTV', 'isFollowTtv']).toLowerCase() === 'true' || getRowValue(row, ['FollowTtv', 'Follow TTV', 'isFollowTtv']).toLowerCase() === 'ya';
+    const isFollowGds = getRowValue(row, ['FollowGds', 'Follow GDS', 'isFollowGds']).toLowerCase() === 'true' || getRowValue(row, ['FollowGds', 'Follow GDS', 'isFollowGds']).toLowerCase() === 'ya';
+    const isFollowUop = getRowValue(row, ['FollowUop', 'Follow UOP', 'isFollowUop']).toLowerCase() === 'true' || getRowValue(row, ['FollowUop', 'Follow UOP', 'isFollowUop']).toLowerCase() === 'ya';
+    const isFollowBalance = getRowValue(row, ['FollowBalance', 'Follow Balance', 'isFollowBalance']).toLowerCase() === 'true' || getRowValue(row, ['FollowBalance', 'Follow Balance', 'isFollowBalance']).toLowerCase() === 'ya';
 
-    const followTtvInterval = getRowValue(row, ['FollowTtvInterval', 'Follow TTV Interval']) || '3 Jam';
-    const followGdsInterval = getRowValue(row, ['FollowGdsInterval', 'Follow GDS Interval']) || '3 Jam';
-    const followUopInterval = getRowValue(row, ['FollowUopInterval', 'Follow UOP Interval']) || '3 Jam';
-    const followBalanceInterval = getRowValue(row, ['FollowBalanceInterval', 'Follow Balance Interval']) || '3 Jam';
+    const followTtvInterval = getRowValue(row, ['FollowTtvInterval', 'Follow TTV Interval', 'Interval TTV']) || '3 Jam';
+    const followGdsInterval = getRowValue(row, ['FollowGdsInterval', 'Follow GDS Interval', 'Interval GDS']) || '3 Jam';
+    const followUopInterval = getRowValue(row, ['FollowUopInterval', 'Follow UOP Interval', 'Interval UOP']) || '3 Jam';
+    const followBalanceInterval = getRowValue(row, ['FollowBalanceInterval', 'Follow Balance Interval', 'Interval Balance']) || '3 Jam';
 
-    const rawTime = getRowValue(row, ['VitalsTime', 'Waktu', 'Time']);
+    const rawTime = getRowValue(row, ['VitalsTime', 'Waktu', 'Time', 'Waktu TTV']);
     const mappedTime = rawTime ? formatTime(rawTime) : '';
 
     const bpVal = getRowValue(row, ['BP', 'TD', 'Tekanan Darah']).replace(/mmhg/gi, '').trim();
@@ -254,14 +254,17 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     const lpmVal = getRowValue(row, ['LPM', 'Lpm', 'flow']).replace(/[^0-9.]/g, '');
     const tempVal = getRowValue(row, ['Temp', 'Temperature', 'Suhu']).replace(/[^0-9.]/g, '');
 
-    const gdsChecked = getRowValue(row, ['GDSChecked', 'isGdsChecked']).toLowerCase() === 'true';
-    const gdsV = getRowValue(row, ['GDSValue', 'GDS']).replace(/[^0-9.]/g, '');
+    const gdsChecked = getRowValue(row, ['GDSChecked', 'isGdsChecked', 'Cek GDS']).toLowerCase() === 'true' || getRowValue(row, ['GDSChecked', 'isGdsChecked', 'Cek GDS']).toLowerCase() === 'ya';
+    const gdsV = getRowValue(row, ['GDSValue', 'GDS', 'Nilai GDS']).replace(/[^0-9.]/g, '');
 
-    const isOnIV = getRowValue(row, ['IsOnIVDrug', 'OnIVDrug', 'isOnIVDrug']).toLowerCase() === 'true';
+    const uopChecked = getRowValue(row, ['Cek UOP', 'UOPChecked', 'isUopChecked']).toLowerCase() === 'true' || getRowValue(row, ['Cek UOP', 'UOPChecked', 'isUopChecked']).toLowerCase() === 'ya';
+    const uopV = getRowValue(row, ['Nilai UOP', 'UOPValue', 'UOP']).replace(/[^0-9.]/g, '');
+
+    const isOnIV = getRowValue(row, ['IsOnIVDrug', 'OnIVDrug', 'isOnIVDrug', 'Pakai Obat IV']).toLowerCase() === 'true' || getRowValue(row, ['IsOnIVDrug', 'OnIVDrug', 'isOnIVDrug', 'Pakai Obat IV']).toLowerCase() === 'ya';
 
     // Parse semicolon list for IV medications
-    const rawIvNames = getRowValue(row, ['IVDrugNames', 'IV Drug Names', 'Nama Obat IV']);
-    const rawIvRates = getRowValue(row, ['IVDrugRates', 'IV Drug Rates', 'Rate Obat IV']);
+    const rawIvNames = getRowValue(row, ['IVDrugNames', 'IV Drug Names', 'Nama Obat IV', 'ivDrugNames']);
+    const rawIvRates = getRowValue(row, ['IVDrugRates', 'IV Drug Rates', 'Rate Obat IV', 'ivDrugRates']);
 
     const ivDrugNames = rawIvNames ? rawIvNames.split(/[;|/]+/).map((s) => s.trim()).filter(Boolean) : [];
     const ivDrugRates = rawIvRates ? rawIvRates.split(/[;|/]+/).map((s) => s.trim().replace(/,/g, '.')).filter(Boolean) : [];
@@ -281,11 +284,35 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       temp: tempVal,
       isGdsChecked: gdsChecked || !!gdsV,
       gdsValue: gdsV,
+      isUopChecked: uopChecked || !!uopV,
+      uopValue: uopV,
       isOnIVDrug: isOnIV || ivDrugNames.length > 0,
       ivDrugNames,
       ivDrugRates,
       keluhan: keluhanVal,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      balanceCairan: {
+        makanType: (getRowValue(row, ['BC Makan Type', 'bcMakanType']) as any) || 'Makan',
+        makanCount: Number(getRowValue(row, ['BC Makan Count', 'bcMakanCount'])) || 0,
+        makanValue: Number(getRowValue(row, ['BC Makan Value (cc)', 'bcMakanValue'])) || 0,
+        minumOption: (getRowValue(row, ['BC Minum Option', 'bcMinumOption']) as any) || 'None',
+        minumValue: Number(getRowValue(row, ['BC Minum Value (cc)', 'bcMinumValue'])) || 0,
+        ivfdOption: (getRowValue(row, ['BC IVFD Option', 'bcIvfdOption']) as any) || 'None',
+        ivfdValue: Number(getRowValue(row, ['BC IVFD Value (cc)', 'bcIvfdValue'])) || 0,
+        transfusiBags: Number(getRowValue(row, ['BC Transfusi Bags', 'bcTransfusiBags'])) || 0,
+        transfusiValue: Number(getRowValue(row, ['BC Transfusi Value (cc)', 'bcTransfusiValue'])) || 0,
+        syringePumpCc: Number(getRowValue(row, ['BC Syringe Pump Cc', 'bcSyringePumpCc'])) || 0,
+        syringePumpValue: Number(getRowValue(row, ['BC Syringe Pump Value (cc)', 'bcSyringePumpValue'])) || 0,
+        babType: (getRowValue(row, ['BC BAB Type', 'bcBabType']) as any) || 'Keras/biasa',
+        babCount: Number(getRowValue(row, ['BC BAB Count', 'bcBabCount'])) || 0,
+        babValue: Number(getRowValue(row, ['BC BAB Value (cc)', 'bcBabValue'])) || 0,
+        uopOption: (getRowValue(row, ['BC UOP Option', 'bcUopOption']) as any) || 'None',
+        uopValue: Number(getRowValue(row, ['BC UOP Value (cc)', 'bcUopValue'])) || 0,
+        muntahCount: Number(getRowValue(row, ['BC Muntah Count', 'bcMuntahCount'])) || 0,
+        muntahValue: Number(getRowValue(row, ['BC Muntah Value (cc)', 'bcMuntahValue'])) || 0,
+        iwl: getRowValue(row, ['BC Ada IWL', 'bcIwl']).toLowerCase() === 'ya' || getRowValue(row, ['BC Ada IWL', 'bcIwl']).toLowerCase() === 'true',
+        iwlValue: Number(getRowValue(row, ['BC IWL Value (cc)', 'bcIwlValue'])) || 0,
+      }
     };
 
     return {
@@ -294,6 +321,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       name: nameVal,
       gender: genderVal,
       age: ageVal,
+      weight: getRowValue(row, ['Berat Badan', 'Weight']),
+      height: getRowValue(row, ['Tinggi Badan', 'Height']),
       isFollowTtv,
       followTtvInterval,
       isFollowGds,
@@ -491,7 +520,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                             const r = sheetRows[originalIndex];
                             const childChecked = !!selectedIndices[originalIndex];
 
-                            const rawTimeVal = getRowValue(r, ['VitalsTime', 'Waktu', 'Time']);
+                            const rawTimeVal = getRowValue(r, ['VitalsTime', 'Waktu', 'Time', 'Waktu TTV']);
                             const tVal = rawTimeVal ? formatTime(rawTimeVal) : '(Tanpa jam)';
 
                             const bpVal = getRowValue(r, ['BP', 'TD', 'Tekanan Darah']);

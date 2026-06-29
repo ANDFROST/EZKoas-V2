@@ -226,15 +226,15 @@ export const PatientList: React.FC<PatientListProps> = ({
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 12 }}
-        className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm font-sans space-y-6 select-none"
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm font-sans space-y-6 select-none transition-colors"
       >
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800 transition-colors">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-600 shadow-xs shrink-0">
               <SlidersHorizontal className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-base font-black text-slate-800 tracking-tight">Pengaturan Urutan Pasien</h2>
+              <h2 className="text-base font-black text-slate-800 dark:text-slate-100 tracking-tight">Pengaturan Urutan Pasien</h2>
               <p className="text-xs text-slate-500 font-medium mt-0.5">Pilih kriteria penyusunan urutan TTV pasien.</p>
             </div>
           </div>
@@ -281,14 +281,14 @@ export const PatientList: React.FC<PatientListProps> = ({
                 }}
                 className={`p-5 rounded-2xl text-left border transition-all cursor-pointer flex gap-4 items-start duration-250 ${isSelected
                   ? 'bg-teal-50/40 border-teal-500 ring-2 ring-teal-500/20 shadow-xs'
-                  : 'bg-white border-slate-200 hover:border-slate-300 hover:shadow-2xs'
+                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-2xs'
                   }`}
               >
                 <div className={`w-11 h-11 rounded-xl shrink-0 border flex items-center justify-center ${opt.colorClass}`}>
                   <IconComp className="w-5.5 h-5.5" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2 font-extrabold text-sm text-slate-800">
+                  <div className="flex items-center gap-2 font-extrabold text-sm text-slate-800 dark:text-slate-100">
                     <span>{opt.title}</span>
                     {isSelected && (
                       <span className="text-[9px] bg-teal-600 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-normal shrink-0 shadow-xs font-sans">
@@ -306,10 +306,10 @@ export const PatientList: React.FC<PatientListProps> = ({
         </div>
 
         {/* Action Button Strip with Apply Button */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 select-none">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 select-none transition-colors">
           <button
             onClick={() => setShowSortScreen(false)}
-            className="px-4.5 py-2.5 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold font-sans rounded-xl transition cursor-pointer"
+            className="px-4.5 py-2.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold font-sans rounded-xl transition cursor-pointer"
           >
             Batal
           </button>
@@ -337,16 +337,16 @@ export const PatientList: React.FC<PatientListProps> = ({
   return (
     <div className="space-y-6">
       {/* List controls options header */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-sans">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-sans transition-colors">
         <div className="flex items-center gap-2">
           <Activity className="w-5 h-5 text-teal-600" />
-          <h2 className="text-sm font-black text-slate-800 uppercase tracking-tight">List Pasien yang Tersimpan ({patients.length})</h2>
+          <h2 className="text-sm font-black text-slate-800 dark:text-slate-100 uppercase tracking-tight">List Pasien yang Tersimpan ({patients.length})</h2>
         </div>
 
         {patients.length > 1 && (
           <button
             onClick={handleOpenSortScreen}
-            className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-bold font-sans rounded-xl transition cursor-pointer select-none text-slate-700 shadow-sm shrink-0"
+            className="inline-flex items-center gap-2 px-4 py-2 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-bold font-sans rounded-xl transition cursor-pointer select-none text-slate-700 dark:text-slate-200 shadow-sm shrink-0"
           >
             <SlidersHorizontal className="w-4 h-4 text-teal-600" />
             <span>
@@ -366,9 +366,9 @@ export const PatientList: React.FC<PatientListProps> = ({
       </div>
 
       {patients.length === 0 ? (
-        <div className="bg-white border border-slate-200 rounded-2xl py-16 px-6 text-center shadow-sm select-none">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-16 px-6 text-center shadow-sm select-none transition-colors">
           <FileSpreadsheet className="w-14 h-14 text-slate-300 mx-auto mb-4 animate-bounce" />
-          <h3 className="text-sm font-extrabold text-slate-700 font-sans">Belum Ada Pasien Yang Terdata</h3>
+          <h3 className="text-sm font-extrabold text-slate-700 dark:text-slate-200 font-sans">Belum Ada Pasien Yang Terdata</h3>
           <p className="text-slate-400 text-xs px-4 mt-1 font-sans max-w-sm mx-auto">
             Gunakan tombol tambah pasien baru di atas atau kanal impor untuk mengumpulkan log klinis Anda dengan cepat.
           </p>
@@ -475,7 +475,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
   }, [p.vitals]);
 
   const cardContent = (
-    <div className={`bg-white rounded-2xl ${isExpanded ? '' : 'overflow-hidden'} select-none`}>
+    <div className={`bg-white dark:bg-slate-900 rounded-2xl ${isExpanded ? '' : 'overflow-hidden'} select-none transition-colors`}>
       {/* Main collapsed header button card visual */}
       <div className="p-4 sm:p-5 flex flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-3.5 min-w-0">
@@ -486,7 +486,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
 
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-extrabold text-slate-800 truncate leading-tight font-sans">
+              <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 truncate leading-tight font-sans">
                 {p.name || '(Pasien Tanpa Nama)'}
               </h3>
               {/* Gender abbreviation badge */}
@@ -526,7 +526,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
           {sortCriteria === 'manual' && (
             <div
               onPointerDown={(e) => dragControls.start(e)}
-              className="p-2 border border-slate-200 bg-slate-50/50 hover:bg-slate-50 text-slate-400 hover:text-slate-600 rounded-xl transition cursor-grab active:cursor-grabbing flex items-center justify-center touch-none"
+              className="p-2 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 rounded-xl transition cursor-grab active:cursor-grabbing flex items-center justify-center touch-none"
               title="Tarik handle ini untuk mengatur urutan pasien"
             >
               <GripVertical className="w-5 h-5" />
@@ -535,7 +535,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
 
           <button
             onClick={() => toggleExpand(originalIdx)}
-            className="p-2 border border-slate-200 bg-slate-50/50 hover:bg-slate-50 rounded-xl transition text-slate-500 flex items-center justify-center cursor-pointer"
+            className="p-2 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition text-slate-500 dark:text-slate-400 flex items-center justify-center cursor-pointer"
           >
             {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
           </button>
@@ -544,9 +544,9 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
 
       {/* Extended Details Area with trend histories and logs list */}
       {isExpanded && (
-        <div className="border-t border-slate-200 bg-slate-50/45 divide-y divide-slate-200/60 select-text">
+        <div className="border-t border-slate-200 dark:border-slate-800 bg-slate-50/45 dark:bg-slate-900/50 divide-y divide-slate-200/60 dark:divide-slate-800/60 select-text transition-colors">
           {/* Horizontal actions sub-header dashboard bar */}
-          <div className="px-4 py-3 flex flex-row items-center justify-between gap-1.5 bg-[#f8fafc] select-none">
+          <div className="px-4 py-3 flex flex-row items-center justify-between gap-1.5 bg-[#f8fafc] dark:bg-slate-900/80 select-none transition-colors">
             <div className="flex flex-row items-center gap-1.5 min-w-0">
               <button
                 onClick={() => onAddVitals(originalIdx)}
@@ -631,7 +631,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
           onReorder(patients);
           showNotification('Fata pasien berhasil diatur ulang!', 'success');
         }}
-        className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isExpanded ? '' : 'overflow-hidden'
+        className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm transition-colors ${isExpanded ? '' : 'overflow-hidden'
           }`}
       >
         {cardContent}
@@ -639,7 +639,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
     );
   } else {
     return (
-      <div className={`bg-white border border-slate-200 rounded-2xl shadow-sm ${isExpanded ? '' : 'overflow-hidden'
+      <div className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm transition-colors ${isExpanded ? '' : 'overflow-hidden'
         }`}>
         {cardContent}
       </div>
@@ -673,13 +673,13 @@ const VitalEntryItem: React.FC<VitalEntryItemProps> = ({
       dragControls={dragControls}
       whileDrag={{ scale: 1.02, boxShadow: "0px 8px 20px rgba(15,23,42,0.08)", zIndex: 20 }}
       onDragEnd={onDragEnd}
-      className="bg-white border border-slate-200 rounded-xl p-3 sm:p-3.5 hover:border-slate-400 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs"
+      className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-3.5 hover:border-slate-400 dark:hover:border-slate-600 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-2xs"
     >
       {/* Left parameters logs breakdown with Grip Handle */}
       <div className="flex items-start gap-3 min-w-0 select-text">
         <div
           onPointerDown={(e) => dragControls.start(e)}
-          className="p-1.5 border border-slate-200 bg-slate-50/50 hover:bg-slate-50 text-slate-400 hover:text-slate-600 rounded-lg transition shrink-0 mt-0.5 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none"
+          className="p-1.5 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 rounded-lg transition shrink-0 mt-0.5 flex items-center justify-center cursor-grab active:cursor-grabbing touch-none select-none"
           title="Tarik handle ini untuk mengatur urutan TTV (bisa digeser ke atas/bawah)"
         >
           <GripVertical className="w-4 h-4" />
@@ -687,7 +687,7 @@ const VitalEntryItem: React.FC<VitalEntryItemProps> = ({
         <div className="space-y-2 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
-            <span className="font-mono font-black text-slate-800 text-sm">Jam {vt.time || '(Blank)'}</span>
+            <span className="font-mono font-black text-slate-800 dark:text-slate-100 text-sm">Jam {vt.time || '(Blank)'}</span>
 
             {/* Parameter shortcuts badges */}
             {vt.bp && <span className="bg-slate-50 text-slate-600 font-mono text-[10px] px-1.5 py-0.5 rounded font-black">TD: {vt.bp}</span>}
@@ -707,7 +707,7 @@ const VitalEntryItem: React.FC<VitalEntryItemProps> = ({
       <div className="flex items-center justify-end gap-2 shrink-0 self-end md:self-center select-none">
         <button
           onClick={() => onEditVitals(originalIdx, vIdx)}
-          className="p-2 border border-slate-200 hover:bg-slate-50 text-teal-600 rounded-xl transition flex items-center justify-center cursor-pointer"
+          className="p-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-teal-600 rounded-xl transition flex items-center justify-center cursor-pointer"
           title="Edit Catatan Vitals"
         >
           <Edit className="w-4 h-4" />

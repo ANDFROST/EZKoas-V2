@@ -75,7 +75,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose, showNotif
           </div>
         </div>
       </div>
-      
+
       <div className="p-6 overflow-y-auto flex-1">
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-1.5">
@@ -104,7 +104,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose, showNotif
                 <User className="w-4 h-4 text-slate-400 shrink-0 mr-2" />
                 <input
                   type="text"
-                  placeholder="Contoh: Alira"
+                  placeholder="Misal: Andy"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full text-sm font-semibold focus:outline-none placeholder:text-slate-300 text-slate-800"

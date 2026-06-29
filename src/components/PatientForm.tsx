@@ -413,16 +413,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   return (
     <div className="space-y-6">
       {/* Title ribbon */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm transition-colors">
         <div className="flex items-center gap-3">
           <button
             onClick={onCancel}
-            className="p-2 hover:bg-slate-50 border border-slate-100 active:scale-95 rounded-xl transition text-slate-500"
+            className="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-100 dark:border-slate-700 active:scale-95 rounded-xl transition text-slate-500 dark:text-slate-400"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
-            <h1 className="text-lg font-extrabold text-slate-800 font-sans tracking-tight">
+            <h1 className="text-lg font-extrabold text-slate-800 dark:text-slate-100 font-sans tracking-tight">
               {patientIndex !== null ? (vitalsIndex !== null ? 'Edit Tanda-Tanda Vital' : 'Tambah Catatan Baru') : 'Tambah Pasien Baru'}
             </h1>
             <p className="text-slate-500 text-xs font-sans mt-0.5">Isilah form di bawah ini!</p>
@@ -432,13 +432,13 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
       {/* Lookup database trigger */}
       {patientIndex === null && (
-        <div className="bg-gradient-to-br from-teal-50 to-emerald-50/50 p-4 rounded-2xl border border-teal-100 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans">
+        <div className="bg-gradient-to-br from-teal-50 dark:from-teal-900/30 to-emerald-50/50 dark:to-emerald-900/20 p-4 rounded-2xl border border-teal-100 dark:border-teal-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans transition-colors">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center shrink-0">
               <Search className="w-5 h-5 text-teal-600" />
             </div>
             <div>
-              <h3 className="font-bold text-teal-900 text-sm flex items-center gap-1.5">
+              <h3 className="font-bold text-teal-900 dark:text-teal-100 text-sm flex items-center gap-1.5">
                 Cari Identitas Pasien
                 <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">BETA</span>
               </h3>
@@ -459,8 +459,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
         {/* Left Column: Patient Identity & Alerts */}
         <div className="space-y-6">
           {/* Section: Identitas Pasien */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-            <h3 className="text-sm font-bold text-slate-850 flex items-center gap-2 border-b border-slate-100 pb-2">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+            <h3 className="text-sm font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
               <User className="w-4.5 h-4.5 text-teal-600" />
               <span>Identitas Pasien</span>
             </h3>
@@ -582,9 +582,9 @@ export const PatientForm: React.FC<PatientFormProps> = ({
           </div>
 
           {/* Section: Tanda-Tanda Vitals */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-              <h3 className="text-sm font-bold text-slate-850 flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+              <h3 className="text-sm font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2">
                 <Heart className="w-4.5 h-4.5 text-emerald-500" />
                 <span>Tanda-Tanda Vital (TTV)</span>
               </h3>
@@ -594,7 +594,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   type="text"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
-                  className="w-16 bg-slate-50 border border-slate-200 text-slate-800 py-1 px-2.5 rounded-lg text-xs font-bold focus:outline-none focus:bg-white focus:border-emerald-500 text-center font-mono"
+                  className="w-16 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 py-1 px-2.5 rounded-lg text-xs font-bold focus:outline-none focus:bg-white dark:focus:bg-slate-700 focus:border-emerald-500 text-center font-mono"
                 />
               </div>
             </div>
@@ -627,12 +627,12 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     placeholder="Contoh: (E4V5M6) atau 15"
                     value={gcsValue}
                     onChange={(e) => setGcsValue(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-yellow-500 font-mono font-medium"
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-yellow-500 font-mono font-medium transition-colors"
                   />
                   <button
                     type="button"
                     onClick={() => setShowGcsCalculator(true)}
-                    className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/50 p-2.5 rounded-xl shrink-0 transition"
+                    className="bg-emerald-50 dark:bg-emerald-900/40 hover:bg-emerald-100 dark:hover:bg-emerald-800 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-700/50 p-2.5 rounded-xl shrink-0 transition"
                     title="Kalkulator GCS"
                   >
                     <Calculator className="w-5 h-5" />
@@ -649,7 +649,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 value={keluhan}
                 onChange={(e) => setKeluhan(e.target.value)}
                 rows={2}
-                className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 resize-none font-sans"
+                className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 resize-none font-sans transition-colors"
               />
             </div>
 
@@ -771,8 +771,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
           {/* Right Column: Other Exams consolidated block */}
           <div className="space-y-6">
             {/* Section: Pemeriksaan Lainnya */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-5">
-              <h3 className="text-sm font-bold text-slate-850 flex items-center gap-2 border-b border-slate-100 pb-2">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm space-y-5 transition-colors">
+              <h3 className="text-sm font-bold text-slate-850 dark:text-slate-100 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
                 <Activity className="w-4.5 h-4.5 text-rose-500 animate-pulse" />
                 <span>Pemeriksaan Lainnya</span>
               </h3>
@@ -787,8 +787,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     if (!newValue) setGdsRecommendation(null);
                   }}
                   className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isGdsChecked
-                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    ? 'border-teal-600 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 shadow-sm'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                 >
                   <span>🧪 Cek GDS</span>
@@ -800,8 +800,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     setIsOnIVDrug(!isOnIVDrug);
                   }}
                   className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isOnIVDrug
-                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    ? 'border-teal-600 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 shadow-sm'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                 >
                   <span>💉 Terpasang Drip &amp; Pump?</span>
@@ -813,8 +813,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     setIsUopChecked(!isUopChecked);
                   }}
                   className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isUopChecked
-                    ? 'border-teal-600 bg-teal-50 text-teal-700 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    ? 'border-teal-600 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 shadow-sm'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                 >
                   <span>💦 Urine Output (UOP)</span>
@@ -1017,11 +1017,11 @@ export const PatientForm: React.FC<PatientFormProps> = ({
       </div>
 
       {/* Main Save / Update panel bottom bar */}
-      <div id="patient-form-save-panel" className="bg-slate-50/50 p-6 rounded-2xl border border-slate-200/60 flex flex-col sm:flex-row sm:items-center justify-end gap-3.5 select-none pt-4 mt-6">
+      <div id="patient-form-save-panel" className="bg-slate-50/50 dark:bg-slate-900/50 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-end gap-3.5 select-none pt-4 mt-6 transition-colors">
         <button
           onClick={onCancel}
           type="button"
-          className="px-6 py-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-705 text-sm font-semibold transition active:scale-95"
+          className="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-705 dark:text-slate-300 text-sm font-semibold transition active:scale-95"
         >
           Kembali ke Menu
         </button>

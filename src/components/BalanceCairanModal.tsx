@@ -158,13 +158,13 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
   const fluidBalance = totalIntake - totalOutput;
 
   return (
-    <div className="bg-white rounded-[32px] border border-slate-200 shadow-2xl max-w-lg w-full mx-auto overflow-hidden font-sans p-6 sm:p-8">
+    <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-2xl max-w-lg w-full mx-auto overflow-hidden font-sans p-6 sm:p-8 transition-colors">
       {/* Title */}
-      <div className="mb-6 border-b border-slate-100 pb-3">
-        <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Balance Cairan</h2>
+      <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-3 transition-colors">
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Balance Cairan</h2>
       </div>
 
-      <div className="space-y-6 max-h-[64vh] overflow-y-auto pr-1 text-slate-800">
+      <div className="space-y-6 max-h-[64vh] overflow-y-auto pr-1 text-slate-800 dark:text-slate-200">
         {/* INTAKE SECTION */}
         <div className="space-y-4">
           <h3 className="text-xs font-black text-teal-800 uppercase tracking-wider">Intake</h3>
@@ -172,36 +172,36 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* Makan / NGT */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">Makan / NGT</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">Makan / NGT</label>
               <select
                 value={b.makanType}
                 onChange={(e) => handleMakanTypeChange(e.target.value as any)}
-                className="w-full bg-[#f8fafc] border border-slate-300 hover:border-slate-400 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-cyan-500 h-[46px] truncate"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 h-[46px] truncate transition-colors"
               >
                 <option value="Makan">Makan</option>
                 <option value="NGT">NGT</option>
               </select>
             </div>
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">Kali makan hari ini?</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">Kali makan hari ini?</label>
               <input
                 type="number"
                 value={b.makanCount || ''}
                 onChange={(e) => handleMakanCountChange(Number(e.target.value))}
                 placeholder="0"
-                className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none h-[46px] transition-colors"
               />
             </div>
             <div className="flex items-center justify-center text-slate-600 font-black text-sm h-[46px] w-4 self-end pb-3 select-none">
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">Hasil</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">Hasil</label>
               <input
                 type="number"
                 value={b.makanValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, makanValue: Number(e.target.value) }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
@@ -209,11 +209,11 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* Minum */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">Minum</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">Minum</label>
               <select
                 value={b.minumOption}
                 onChange={(e) => handleMinumOptionChange(e.target.value as any)}
-                className="w-full bg-[#f8fafc] border border-slate-300 hover:border-slate-400 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-cyan-500 h-[46px] truncate"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 h-[46px] truncate transition-colors"
               >
                 <option value="None">Minum</option>
                 <option value="Aqua besar">Aqua Besar (1500 cc)</option>
@@ -225,12 +225,12 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.minumValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, minumValue: Number(e.target.value), minumOption: 'None' }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
@@ -238,11 +238,11 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* IVFD */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">IVFD</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">IVFD</label>
               <select
                 value={b.ivfdOption}
                 onChange={(e) => handleIvfdOptionChange(e.target.value as any)}
-                className="w-full bg-[#f8fafc] border border-slate-300 hover:border-slate-400 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-cyan-500 h-[46px] truncate"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 h-[46px] truncate transition-colors"
               >
                 <option value="None">IVFD</option>
                 <option value="20 gtt/i makro">20 gtt/i makro (1440 cc)</option>
@@ -255,12 +255,12 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.ivfdValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, ivfdValue: Number(e.target.value), ivfdOption: 'None' }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
@@ -268,25 +268,25 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* Transfusi */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">Kantong darah hari ini?</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">Kantong darah hari ini?</label>
               <input
                 type="number"
                 value={b.transfusiBags || ''}
                 onChange={(e) => handleTransfusiBagsChange(Number(e.target.value))}
                 placeholder="3 kantong"
-                className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none h-[46px] transition-colors"
               />
             </div>
             <div className="flex items-center justify-center text-slate-600 font-black text-sm h-[46px] w-4 self-end pb-3 select-none">
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.transfusiValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, transfusiValue: Number(e.target.value) }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
@@ -294,32 +294,32 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* Syringe Pump CC */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">CC masuk syringe pump?</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">CC masuk syringe pump?</label>
               <input
                 type="number"
                 value={b.syringePumpCc || ''}
                 onChange={(e) => handleSyringePumpChange(Number(e.target.value))}
                 placeholder="400 cc"
-                className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none h-[46px] transition-colors"
               />
             </div>
             <div className="flex items-center justify-center text-slate-600 font-black text-sm h-[46px] w-4 self-end pb-3 select-none">
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.syringePumpValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, syringePumpValue: Number(e.target.value) }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
         </div>
 
         {/* Separator block divider lines */}
-        <hr className="border-slate-200 my-4" />
+        <hr className="border-slate-200 dark:border-slate-800 my-4 transition-colors" />
 
         {/* OUTPUT SECTION */}
         <div className="space-y-4">
@@ -328,36 +328,36 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* BAB */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">BAB</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">BAB</label>
               <select
                 value={b.babType}
                 onChange={(e) => handleBabTypeChange(e.target.value as any)}
-                className="w-full bg-[#f8fafc] border border-slate-300 hover:border-slate-400 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-cyan-500 h-[46px] truncate"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 h-[46px] truncate transition-colors"
               >
                 <option value="Keras/biasa">Keras/biasa</option>
                 <option value="Mencret">Mencret</option>
               </select>
             </div>
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">Berapa kali BAB?</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">Berapa kali BAB?</label>
               <input
                 type="number"
                 value={b.babCount || ''}
                 onChange={(e) => handleBabCountChange(Number(e.target.value))}
                 placeholder="3 Kali"
-                className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none h-[46px] transition-colors"
               />
             </div>
             <div className="flex items-center justify-center text-slate-600 font-black text-sm h-[46px] w-4 self-end pb-3 select-none">
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.babValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, babValue: Number(e.target.value) }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
@@ -365,11 +365,11 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* UOP */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">UOP</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">UOP</label>
               <select
                 value={b.uopOption}
                 onChange={(e) => handleUopOptionChange(e.target.value as any)}
-                className="w-full bg-[#f8fafc] border border-slate-300 hover:border-slate-400 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none focus:border-cyan-500 h-[46px] truncate"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl px-3.5 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 h-[46px] truncate transition-colors"
               >
                 <option value="None">UOP</option>
                 <option value="Aqua besar">Aqua Besar (1500 cc)</option>
@@ -381,12 +381,12 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.uopValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, uopValue: Number(e.target.value), uopOption: 'None' }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
@@ -394,32 +394,32 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
           {/* Muntah */}
           <div className="flex gap-2 items-end">
             <div className="flex flex-col gap-1 flex-1 min-w-0">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider block truncate">Muntah berapa kali?</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider block truncate">Muntah berapa kali?</label>
               <input
                 type="number"
                 value={b.muntahCount || ''}
                 onChange={(e) => handleMuntahChange(Number(e.target.value))}
                 placeholder="2"
-                className="w-full bg-[#f8fafc] border border-slate-300 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white focus:outline-none h-[46px] transition-colors"
               />
             </div>
             <div className="flex items-center justify-center text-slate-600 font-black text-sm h-[46px] w-4 self-end pb-3 select-none">
               =
             </div>
             <div className="flex flex-col gap-1 w-20 sm:w-24">
-              <label className="text-[10px] font-extrabold text-slate-605 uppercase tracking-wider text-center block truncate">cc</label>
+              <label className="text-[10px] font-extrabold text-slate-605 dark:text-slate-400 uppercase tracking-wider text-center block truncate">cc</label>
               <input
                 type="number"
                 value={b.muntahValue || 0}
                 onChange={(e) => setB((prev) => ({ ...prev, muntahValue: Number(e.target.value) }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px]"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] transition-colors"
               />
             </div>
           </div>
 
           {/* IWL / Insensible Water Loss */}
           <div className="flex gap-2 items-end">
-            <label className="flex items-center gap-3 bg-[#f8fafc] hover:bg-slate-100/60 border border-slate-300 rounded-2xl px-4 py-3 text-xs sm:text-sm cursor-pointer font-bold text-slate-700 flex-1 h-[46px] select-none">
+            <label className="flex items-center gap-3 bg-[#f8fafc] dark:bg-slate-800 hover:bg-slate-100/60 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-3 text-xs sm:text-sm cursor-pointer font-bold text-slate-700 dark:text-slate-200 flex-1 h-[46px] select-none transition-colors">
               <input
                 type="checkbox"
                 checked={b.iwl}
@@ -438,7 +438,7 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
                 value={b.iwlValue || 0}
                 disabled={!b.iwl}
                 onChange={(e) => setB((prev) => ({ ...prev, iwlValue: Number(e.target.value) }))}
-                className="w-full bg-[#f8fafc] border border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 text-center focus:outline-none h-[46px] disabled:bg-slate-100 disabled:text-slate-500"
+                className="w-full bg-[#f8fafc] dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-3 py-3 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white text-center focus:outline-none h-[46px] disabled:bg-slate-100 disabled:dark:bg-slate-800 disabled:text-slate-500 transition-colors"
               />
             </div>
           </div>
@@ -446,11 +446,11 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
       </div>
 
       {/* Summary totals text aligned precisely to right side */}
-      <div className="mt-6 flex flex-col items-end gap-1.5 text-right font-sans select-none pr-1 border-t border-slate-100 pt-4">
-        <p className="text-xs sm:text-sm font-bold text-slate-700 leading-none">
+      <div className="mt-6 flex flex-col items-end gap-1.5 text-right font-sans select-none pr-1 border-t border-slate-100 dark:border-slate-800 pt-4 transition-colors">
+        <p className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 leading-none">
           Total Intake: {totalIntake >= 0 ? '+' : ''}{totalIntake} cc
         </p>
-        <p className="text-xs sm:text-sm font-bold text-slate-700 leading-none">
+        <p className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 leading-none">
           Total Output: -{totalOutput} cc
         </p>
         <p className="text-sm sm:text-base font-black text-teal-850 leading-none mt-1">
@@ -459,7 +459,7 @@ export const BalanceCairanModal: React.FC<BalanceCairanModalProps> = ({ initialD
       </div>
 
       {/* Bottom control buttons */}
-      <div className="mt-8 flex items-center justify-end gap-4 font-sans border-t border-slate-100 pt-5">
+      <div className="mt-8 flex items-center justify-end gap-4 font-sans border-t border-slate-100 dark:border-slate-800 pt-5 transition-colors">
         <button
           onClick={onClose}
           type="button"

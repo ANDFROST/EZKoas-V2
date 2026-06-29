@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PatientRecord, VitalsEntry } from './types';
-import { formatPatientRecord, formatTime, GOOGLE_SHEETS_SCRIPT_URL } from './utils';
+import { formatPatientRecord, formatTime, GOOGLE_SHEETS_TTV_WEBAPP_URL } from './utils';
 import { PatientForm } from './components/PatientForm';
 import { PatientList } from './components/PatientList';
 import { ImportModal } from './components/ImportModal';
@@ -33,13 +33,38 @@ import {
   Settings,
   Notebook,
   FileSpreadsheet,
-  MessageSquareText
+  MessageSquareText,
+  Moon,
+  Sun
 } from 'lucide-react';
 
 const STORAGE_KEY = 'ezkoas_patients_data';
 
 export default function App() {
   const [patients, setPatients] = useState<PatientRecord[]>([]);
+
+  // Dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try {
+      const stored = localStorage.getItem('ezkoas_theme');
+      if (stored) return stored === 'dark';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch {
+      return false;
+    }
+  });
+
+  // Apply dark mode class to HTML element
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+      localStorage.setItem('ezkoas_theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('ezkoas_theme', 'light');
+    }
+  }, [isDarkMode]);
 
   // Page tracking: 'dashboard' (home shortcuts menu) | 'list' (queue log timeline) | 'form' (patient form)
   const [activePane, setActivePane] = useState<'dashboard' | 'list' | 'form'>('dashboard');
@@ -251,38 +276,64 @@ export default function App() {
   // Synchronise spreadsheet server record in background
   const syncPatientToGSheetsOffline = async (patient: PatientRecord, entry: VitalsEntry) => {
     try {
-      const params = {
+      const params: Record<string, string> = {
         action: 'save',
         timestamp: new Date().toISOString(),
-        room: patient.room,
-        rm: patient.rm,
-        name: patient.name,
-        gender: patient.gender,
-        age: patient.age,
+        room: patient.room || '',
+        rm: patient.rm || '',
+        name: patient.name || '',
+        gender: patient.gender || '',
+        age: patient.age || '',
+        weight: patient.weight || '',
+        height: patient.height || '',
         followTtv: patient.isFollowTtv ? 'true' : 'false',
-        followTtvInterval: patient.followTtvInterval,
+        followTtvInterval: patient.followTtvInterval || '',
         followGds: patient.isFollowGds ? 'true' : 'false',
-        followGdsInterval: patient.followGdsInterval,
+        followGdsInterval: patient.followGdsInterval || '',
         followUop: patient.isFollowUop ? 'true' : 'false',
-        followUopInterval: patient.followUopInterval,
+        followUopInterval: patient.followUopInterval || '',
         followBalance: patient.isFollowBalance ? 'true' : 'false',
-        followBalanceInterval: patient.followBalanceInterval,
-        vitalsTime: entry.time,
-        bp: entry.bp,
-        sens: entry.sens,
-        gcs: entry.gcs,
-        hr: entry.hr,
-        rr: entry.rr,
-        spo2: entry.spo2,
-        o2Method: entry.o2Method,
-        lpm: entry.lpm,
-        temp: entry.temp,
+        followBalanceInterval: patient.followBalanceInterval || '',
+        vitalsTime: entry.time || '',
+        bp: entry.bp || '',
+        sens: entry.sens || '',
+        gcs: entry.gcs || '',
+        hr: entry.hr || '',
+        rr: entry.rr || '',
+        spo2: entry.spo2 || '',
+        o2Method: entry.o2Method || '',
+        lpm: entry.lpm || '',
+        temp: entry.temp || '',
         gdsChecked: entry.isGdsChecked ? 'true' : 'false',
-        gdsValue: entry.gdsValue,
+        gdsValue: entry.gdsValue || '',
+        uopChecked: entry.isUopChecked ? 'true' : 'false',
+        uopValue: entry.uopValue || '',
         isOnIVDrug: entry.isOnIVDrug ? 'true' : 'false',
-        ivDrugNames: entry.ivDrugNames.join(', '),
-        ivDrugRates: entry.ivDrugRates.join(', '),
-        keluhan: entry.keluhan
+        ivDrugNames: entry.ivDrugNames ? entry.ivDrugNames.join('; ') : '',
+        ivDrugRates: entry.ivDrugRates ? entry.ivDrugRates.join('; ') : '',
+        keluhan: entry.keluhan || '',
+        
+        // Balance Cairan
+        bcMakanType: entry.balanceCairan?.makanType || '',
+        bcMakanCount: entry.balanceCairan?.makanCount?.toString() || '',
+        bcMakanValue: entry.balanceCairan?.makanValue?.toString() || '',
+        bcMinumOption: entry.balanceCairan?.minumOption || '',
+        bcMinumValue: entry.balanceCairan?.minumValue?.toString() || '',
+        bcIvfdOption: entry.balanceCairan?.ivfdOption || '',
+        bcIvfdValue: entry.balanceCairan?.ivfdValue?.toString() || '',
+        bcTransfusiBags: entry.balanceCairan?.transfusiBags?.toString() || '',
+        bcTransfusiValue: entry.balanceCairan?.transfusiValue?.toString() || '',
+        bcSyringePumpCc: entry.balanceCairan?.syringePumpCc?.toString() || '',
+        bcSyringePumpValue: entry.balanceCairan?.syringePumpValue?.toString() || '',
+        bcBabType: entry.balanceCairan?.babType || '',
+        bcBabCount: entry.balanceCairan?.babCount?.toString() || '',
+        bcBabValue: entry.balanceCairan?.babValue?.toString() || '',
+        bcUopOption: entry.balanceCairan?.uopOption || '',
+        bcUopValue: entry.balanceCairan?.uopValue?.toString() || '',
+        bcMuntahCount: entry.balanceCairan?.muntahCount?.toString() || '',
+        bcMuntahValue: entry.balanceCairan?.muntahValue?.toString() || '',
+        bcIwl: entry.balanceCairan?.iwl ? 'true' : 'false',
+        bcIwlValue: entry.balanceCairan?.iwlValue?.toString() || ''
       };
 
       const formData = new URLSearchParams();
@@ -291,7 +342,7 @@ export default function App() {
       });
 
       // Background POST webhook syncing
-      fetch(GOOGLE_SHEETS_SCRIPT_URL, {
+      fetch(GOOGLE_SHEETS_TTV_WEBAPP_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -399,7 +450,7 @@ export default function App() {
   }, [patients]);
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-slate-800 flex font-sans selection:bg-teal-100 selection:text-teal-900 overflow-x-hidden">
+    <div className="min-h-screen bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-200 flex font-sans selection:bg-teal-100 dark:selection:bg-teal-900 selection:text-teal-900 dark:selection:text-teal-100 overflow-x-hidden transition-colors duration-200">
       {/* Sidebar Navigation Rail (Desktop Only) */}
       <aside className="hidden md:flex w-20 bg-teal-950 flex-col items-center py-8 gap-8 border-r border-teal-900 shrink-0">
         <div
@@ -457,6 +508,13 @@ export default function App() {
         </nav>
         <div className="mt-auto flex flex-col gap-5 items-center">
           <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="p-2 text-teal-500 hover:text-teal-200 transition-colors cursor-pointer"
+            title="Toggle Dark Mode"
+          >
+            {isDarkMode ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+          </button>
+          <button
             onClick={() => setShowAboutModal(true)}
             className="p-2 text-teal-500 hover:text-teal-200 transition-colors cursor-pointer"
             title="Tentang EZKOAS"
@@ -475,7 +533,7 @@ export default function App() {
       {/* Main Workspace Frame */}
       <div ref={workspaceRef} className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto relative">
         {/* Dynamic Top App Bar */}
-        <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 sticky top-0 z-30 shadow-xs">
+        <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between shrink-0 sticky top-0 z-30 shadow-xs transition-colors duration-200">
           <div className="flex items-center gap-3">
             {/* Unified Drawer hamburger trigger button */}
             <button
@@ -487,7 +545,7 @@ export default function App() {
             </button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-extrabold text-slate-900 font-sans tracking-tight leading-none cursor-pointer" onClick={() => setActivePane('dashboard')}>
+                <h1 className="text-base font-extrabold text-slate-900 dark:text-white font-sans tracking-tight leading-none cursor-pointer" onClick={() => setActivePane('dashboard')}>
                   EZKOAS
                 </h1>
                 <span className="bg-teal-50 border border-teal-100 text-teal-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none">
@@ -527,7 +585,7 @@ export default function App() {
           ) : activePane === 'list' ? (
             /* Patients rounds queue */
             <div className="space-y-6">
-              <div className="bg-white border border-slate-200 p-4 rounded-xl flex items-center justify-between shadow-xs select-none flex-wrap gap-3">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex items-center justify-between shadow-xs select-none flex-wrap gap-3 transition-colors">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
                   <span className="font-extrabold text-xs text-slate-500 uppercase tracking-wider">Data Pasien yang Tersimpan</span>
@@ -536,7 +594,7 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setFilterFolketOnly(!filterFolketOnly)}
-                    className={`px-3 py-2 border text-xs font-bold font-sans rounded-xl transition cursor-pointer flex items-center gap-1.5 ${filterFolketOnly ? 'bg-amber-100 border-amber-300 text-amber-800 shadow-sm' : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'}`}
+                    className={`px-3 py-2 border text-xs font-bold font-sans rounded-xl transition cursor-pointer flex items-center gap-1.5 ${filterFolketOnly ? 'bg-amber-100 border-amber-300 text-amber-800 shadow-sm' : 'bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'}`}
                   >
                     <Layers className="w-3.5 h-3.5" />
                     Tampilkan Pasien Folket
@@ -544,14 +602,14 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setActivePane('dashboard')}
-                    className="px-4.5 py-2 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer"
+                    className="px-4.5 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl transition cursor-pointer"
                   >
                     ← Kembali ke Dashboard
                   </button>
                 </div>
               </div>
 
-              <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
                 <PatientList
                   patients={patients}
                   filterFolketOnly={filterFolketOnly}
@@ -571,7 +629,7 @@ export default function App() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 {/* Patient registration shortcut block */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 flex items-center justify-center">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs p-6 flex items-center justify-center transition-colors">
                   <button
                     onClick={handleAddNewPatient}
                     className="w-full bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white py-4 px-6 rounded-xl font-bold font-sans text-sm tracking-tight transition-all flex items-center justify-center gap-2 shadow-sm shadow-teal-600/10 cursor-pointer"
@@ -582,17 +640,17 @@ export default function App() {
                 </div>
 
                 {/* Collided "Edit / Tambah TTV Pasien" button stack + Total Pasien metric card widget */}
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden divide-y divide-slate-100 flex flex-col justify-between">
+                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 flex flex-col justify-between transition-colors">
                   <button
                     onClick={() => setActivePane('list')}
-                    className="w-full text-slate-850 bg-white hover:bg-slate-50 font-bold px-6 py-5 text-sm flex items-center justify-between transition cursor-pointer text-left focus:outline-none"
+                    className="w-full text-slate-850 dark:text-slate-200 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold px-6 py-5 text-sm flex items-center justify-between transition cursor-pointer text-left focus:outline-none"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 flex items-center justify-center">
                         <ClipboardCheck className="w-5 h-5 text-teal-600" />
                       </div>
                       <div>
-                        <p className="font-extrabold text-base text-slate-900 tracking-tight">Edit / Tambah TTV Pasien</p>
+                        <p className="font-extrabold text-base text-slate-900 dark:text-slate-100 tracking-tight">Edit / Tambah TTV Pasien</p>
                         <p className="text-xs text-slate-400 font-medium font-sans mt-0.5">Ubah kembali TTV pasien yang tersimpan</p>
                       </div>
                     </div>
@@ -601,7 +659,7 @@ export default function App() {
                     </span>
                   </button>
 
-                  <div className="bg-[#f8fafc] px-6 py-4 flex items-center justify-between gap-4 select-none">
+                  <div className="bg-[#f8fafc] dark:bg-slate-800/50 px-6 py-4 flex items-center justify-between gap-4 select-none transition-colors">
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-slate-400" />
                       <div>
@@ -610,7 +668,7 @@ export default function App() {
                       </div>
                     </div>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-black text-slate-900 font-mono tracking-tight leading-none">
+                      <span className="text-3xl font-black text-slate-900 dark:text-white font-mono tracking-tight leading-none">
                         {stats.total}
                       </span>
                       <span className="text-[10px] font-bold text-slate-400 uppercase">Pasien</span>
@@ -624,7 +682,7 @@ export default function App() {
 
                 {/* Fast Copy Toolbar Bar */}
                 {patients.length > 0 && (
-                  <div className="bg-white border border-slate-200 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs transition-colors">
                     <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
                       <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
                       <span>Salin Masal ke WhatsApp:</span>
@@ -639,14 +697,14 @@ export default function App() {
                       </button>
                       <button
                         onClick={copyWithIzin}
-                        className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                       >
                         <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
                         <span>Copy TTV + Izin</span>
                       </button>
                       <button
                         onClick={copyFolketOnly}
-                        className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                       >
                         <Layers className="w-3.5 h-3.5 text-amber-600" />
                         <span>Copy Hanya Folket</span>
@@ -668,7 +726,7 @@ export default function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button
                     onClick={() => setShowImportModal(true)}
-                    className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.99] text-slate-700 dark:text-slate-200 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                   >
                     <Import className="w-5 h-5 text-teal-600" />
                     <span>Import dari Database / Clipboard</span>
@@ -679,7 +737,7 @@ export default function App() {
 
                   <button
                     onClick={() => setShowProtocolsModal(true)}
-                    className="w-full bg-white border border-slate-200 hover:bg-slate-50 active:scale-[0.99] text-slate-700 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.99] text-slate-700 dark:text-slate-200 py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                   >
                     <FileText className="w-5 h-5 text-amber-600" />
                     <span>Panduan dan Protokol</span>
@@ -775,6 +833,13 @@ export default function App() {
                   <span className="bg-amber-400/10 border border-amber-500/20 text-amber-400 font-mono text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">
                     BETA
                   </span>
+                </button>
+                <button
+                  onClick={() => { setIsDarkMode(!isDarkMode); setIsLeftNavOpen(false); }}
+                  className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
+                >
+                  {isDarkMode ? <Sun className="w-3.5 h-3.5 shrink-0" /> : <Moon className="w-3.5 h-3.5 shrink-0" />} 
+                  {isDarkMode ? 'Mode Terang' : 'Mode Gelap'}
                 </button>
                 <button
                   onClick={() => { setShowAboutModal(true); setIsLeftNavOpen(false); }}

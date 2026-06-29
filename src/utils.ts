@@ -1,10 +1,15 @@
 import { PatientRecord, VitalsEntry, BalanceCairan } from './types';
 
-// Web App URL untuk mengambil data dari Google Sheets
+// 1. Web App URL untuk mengambil identitas pasien di pasien baru database
+export const GOOGLE_SHEETS_PATIENT_DB_URL = 'https://script.google.com/macros/s/AKfycbwSfq24sW60zArOA0pOFe9Sa8LS33ISp4UhKtVY6vrma2xA6x2-LaryJSBBU5rrX6fw6g/exec';
+
+// 2. Web App URL untuk import data pasien dari database
 export const GOOGLE_SHEETS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzmsKMv8Q1B4_Ikfhu6Lz5ZKulIOZnhOiV2_nOMDcXSHwgQ0VvkHzdGoElp3G_LQiagg/exec';
 
-// Web App URL untuk mengirim Masukan dan Saran ke Google Docs
-// Ganti dengan URL hasil Publish Web App dari Google Apps Script Anda nanti
+// 3. Web App URL untuk mengirimkan hasil TTV apapun setelah simpan atau update
+export const GOOGLE_SHEETS_TTV_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzWCKBqHWW6u5yRjwvmMFRz7Lk52QBaBMeXQK50v_UayuXKqoU_a9E7gDJzQmcdfhpX_A/exec';
+
+// 4. Web App URL untuk mengirim Masukan dan Saran
 export const GOOGLE_DOCS_FEEDBACK_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzkyVkNZYrddec7XN6fvz5cLV_illz_j9JZQ5l6aLlSizq-MlWUCt43CtVmL2HeLGRu/exec';
 
 // Normalisasi jenis kelamin
