@@ -628,16 +628,16 @@ export default function App() {
               {/* Launcher Cards stack and collided queue-metrics panel */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {/* Patient registration shortcut block */}
-                <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs p-6 flex items-center justify-center transition-colors">
-                  <button
-                    onClick={handleAddNewPatient}
-                    className="w-full bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white py-4 px-6 rounded-xl font-bold font-sans text-sm tracking-tight transition-all flex items-center justify-center gap-2 shadow-sm shadow-teal-600/10 cursor-pointer"
-                  >
-                    <Plus className="w-4.5 h-4.5 shrink-0" />
-                    <span>Tambah TTV Pasien Baru</span>
-                  </button>
-                </div>
+                {/* Patient registration shortcut standalone button */}
+                <button
+                  onClick={handleAddNewPatient}
+                  className="w-full h-full min-h-[140px] bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white rounded-2xl font-extrabold font-sans text-base sm:text-lg tracking-tight transition-all flex flex-col items-center justify-center gap-3 shadow-xl shadow-teal-600/20 border border-teal-500/50 cursor-pointer"
+                >
+                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0 shadow-inner">
+                    <Plus className="w-6 h-6 text-white" />
+                  </div>
+                  <span>Tambah TTV Pasien Baru</span>
+                </button>
 
                 {/* Collided "Edit / Tambah TTV Pasien" button stack + Total Pasien metric card widget */}
                 <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 flex flex-col justify-between transition-colors">
@@ -654,7 +654,7 @@ export default function App() {
                         <p className="text-xs text-slate-400 font-medium font-sans mt-0.5">Ubah kembali TTV pasien yang tersimpan</p>
                       </div>
                     </div>
-                    <span className="text-xs bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-100 font-extrabold px-3 py-2 rounded-xl transition flex items-center gap-0.5">
+                    <span className="text-xs bg-teal-50 dark:bg-teal-900/30 hover:bg-teal-100 dark:hover:bg-teal-800/40 text-teal-700 dark:text-teal-400 border border-teal-100 dark:border-teal-800/50 font-extrabold px-3 py-2 rounded-xl transition flex items-center gap-0.5">
                       Buka Data Pasien yang Tersimpan →
                     </span>
                   </button>
@@ -690,7 +690,7 @@ export default function App() {
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={copyStandard}
-                        className="px-3.5 py-2 hover:bg-slate-50 text-slate-700 border border-slate-200 bg-white font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
                       >
                         <Copy className="w-3.5 h-3.5 text-teal-600" />
                         <span>Copy TTV</span>
@@ -714,7 +714,7 @@ export default function App() {
                     <div className="ml-auto flex items-center gap-2">
                       <button
                         onClick={resetAllData}
-                        className="px-3.5 py-2 border border-red-200 bg-red-50 text-red-750 font-bold rounded-lg hover:bg-red-100 transition-all text-xs cursor-pointer"
+                        className="px-3.5 py-2 border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 text-red-750 dark:text-red-400 font-bold rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-xs cursor-pointer"
                       >
                         Hapus Semua Data
                       </button>
@@ -810,26 +810,26 @@ export default function App() {
                   className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 cursor-pointer ${activePane === 'dashboard' ? 'bg-teal-600 text-white shadow shadow-teal-950/40' : 'text-teal-400 hover:bg-teal-900 hover:text-teal-200'
                     }`}
                 >
-                  • Dashboard Utama
+                  Dashboard Utama
                 </button>
                 <button
                   onClick={() => { setActivePane('list'); setIsLeftNavOpen(false); }}
                   className={`w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 cursor-pointer ${activePane === 'list' ? 'bg-teal-600 text-white shadow shadow-teal-950/40' : 'text-teal-400 hover:bg-teal-900 hover:text-teal-200'
                     }`}
                 >
-                  • Data Pasien yang Tersimpan ({patients.length})
+                  Data Pasien yang Tersimpan ({patients.length})
                 </button>
                 <button
                   onClick={() => { handleAddNewPatient(); setIsLeftNavOpen(false); }}
                   className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
                 >
-                  • Tambah TTV Pasien Baru
+                  Tambah TTV Pasien Baru
                 </button>
                 <button
                   onClick={() => { setShowImportModal(true); setIsLeftNavOpen(false); }}
                   className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
                 >
-                  <span className="flex-1">• Import dari Database / Clipboard</span>
+                  <span className="flex-1">Import dari Database / Clipboard</span>
                   <span className="bg-amber-400/10 border border-amber-500/20 text-amber-400 font-mono text-[8px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">
                     BETA
                   </span>
@@ -845,7 +845,7 @@ export default function App() {
                   onClick={() => { setShowAboutModal(true); setIsLeftNavOpen(false); }}
                   className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
                 >
-                  • Tentang EZKOAS
+                  Tentang EZKOAS
                 </button>
                 <button
                   onClick={() => { setShowFeedbackModal(true); setIsLeftNavOpen(false); }}
@@ -962,25 +962,25 @@ export default function App() {
 
       {showAboutModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4 select-none">
-          <div className="bg-white rounded-3xl overflow-hidden max-w-md w-full border border-slate-150 shadow-2xl font-sans">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden max-w-md w-full border border-slate-150 dark:border-slate-800 shadow-2xl font-sans transition-colors">
             <div className="p-6 text-center space-y-4">
               <div className="mx-auto flex justify-center mb-2">
-                <img src="/logo-1.png" alt="EZKOAS Logo Gelap" className="h-16 w-auto object-contain drop-shadow-sm" />
+                <img src={isDarkMode ? "/logo-2.png" : "/logo-1.png"} alt="EZKOAS Logo" className="h-16 w-auto object-contain drop-shadow-sm" />
               </div>
               <div>
-                <p className="text-xs text-slate-400 mt-1 font-sans font-medium">Versi Web 2.1.0</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-sans font-medium transition-colors">Versi Web 2.1.0</p>
               </div>
-              <p className="text-slate-500 text-xs leading-relaxed font-medium mt-1">
+              <p className="text-slate-500 dark:text-slate-300 text-xs leading-relaxed font-medium mt-1 transition-colors">
                 EZKOAS merupakan aplikasi yang dibuat oleh seorang mahasiswa kedokteran yang bertujuan untuk membantu teman sejawat dokter muda (Koas) dalam mencatat, mengolah, dan menyerahkan hasil pencatatan berupa tanda vital pasien lengkap dengan panduan dan protokol klinis.
               </p>
-              <div className="border-t border-slate-100 pt-4 text-[10px] text-slate-400 font-medium font-sans">
+              <div className="border-t border-slate-100 dark:border-slate-800 pt-4 text-[10px] text-slate-400 dark:text-slate-500 font-medium font-sans transition-colors">
                 <p>Copyright © 2026 Andy Sitanggang.</p>
                 <p className="mt-0.5">Semua Hak Cipta Dilindungi Undang-Undang.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowAboutModal(false)}
-                className="w-full py-2.5 bg-slate-100 hover:bg-slate-205 rounded-xl text-slate-705 font-sans font-bold text-xs transition cursor-pointer"
+                className="w-full py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-205 dark:hover:bg-slate-700 rounded-xl text-slate-705 dark:text-slate-300 font-sans font-bold text-xs transition cursor-pointer"
               >
                 Tutup
               </button>

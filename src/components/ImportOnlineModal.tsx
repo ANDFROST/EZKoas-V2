@@ -120,15 +120,15 @@ export const ImportOnlineModal: React.FC<ImportOnlineModalProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-3xl w-full mx-auto overflow-hidden font-sans flex flex-col max-h-[85vh] sm:max-h-[90vh]">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-3xl w-full mx-auto overflow-hidden font-sans flex flex-col max-h-[85vh] sm:max-h-[90vh] transition-colors">
       {/* Header Info */}
-      <div className="bg-white border-b border-slate-200 p-4 sm:p-6 flex items-center justify-between shrink-0">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 sm:p-6 flex items-center justify-between shrink-0 transition-colors">
         <div>
-          <h2 className="text-lg font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+          <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2 transition-colors">
             Pencarian Identitas Database
             <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full leading-none shrink-0">BETA</span>
           </h2>
-          <p className="text-slate-500 text-xs mt-1">
+          <p className="text-slate-500 dark:text-slate-400 text-xs mt-1 transition-colors">
             <strong className="text-amber-600">Proses pengembangan, sementara hanya pasien RA3 dan RA4</strong>
           </p>
         </div>
@@ -139,37 +139,37 @@ export const ImportOnlineModal: React.FC<ImportOnlineModalProps> = ({
 
       <div className="p-4 sm:p-6 flex-1 overflow-y-auto flex flex-col gap-5 min-h-0">
         {/* Form Filter */}
-        <div className="bg-slate-50/70 border border-slate-200 p-4 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-3 shrink-0">
+        <div className="bg-slate-50/70 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl grid grid-cols-1 sm:grid-cols-3 gap-3 shrink-0 transition-colors">
           <div className="space-y-1.5">
-            <label className="font-bold text-slate-500 text-[10px] uppercase tracking-widest">Nama Pasien</label>
+            <label className="font-bold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-widest transition-colors">Nama Pasien</label>
             <input
               type="text"
               value={searchName}
               onChange={(e) => setSearchName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500"
+              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
               placeholder="Nama Pasien"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="font-bold text-slate-500 text-[10px] uppercase tracking-widest">No. RM</label>
+            <label className="font-bold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-widest transition-colors">No. RM</label>
             <input
               type="text"
               value={searchRm}
               onChange={(e) => setSearchRm(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500"
+              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
               placeholder="Misal: 00998877"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="font-bold text-slate-500 text-[10px] uppercase tracking-widest">Ruangan</label>
+            <label className="font-bold text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-widest transition-colors">Ruangan</label>
             <input
               type="text"
               value={searchRoom}
               onChange={(e) => setSearchRoom(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500"
+              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
               placeholder="Misal: RA3 2.1.1"
             />
           </div>
@@ -186,8 +186,8 @@ export const ImportOnlineModal: React.FC<ImportOnlineModalProps> = ({
         </button>
 
         {/* Hasil Pencarian */}
-        <div className="flex-1 min-h-0 flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="bg-slate-50 px-4 py-2.5 border-b border-slate-200 text-xs font-bold text-slate-600 shrink-0">
+        <div className="flex-1 min-h-0 flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-colors">
+          <div className="bg-slate-50 dark:bg-slate-800 px-4 py-2.5 border-b border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-400 shrink-0 transition-colors">
             Hasil Pencarian {hasSearched && !isLoading ? `(${filteredRows.length} ditemukan)` : ''}
           </div>
           <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
@@ -212,7 +212,7 @@ export const ImportOnlineModal: React.FC<ImportOnlineModalProps> = ({
                 onClick={() => setSelectedRowIndex(idx)}
                 className={`p-3 rounded-xl border flex items-center gap-3 cursor-pointer transition ${selectedRowIndex === idx
                   ? 'border-teal-500 bg-teal-50/50 shadow-sm'
-                  : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                  : 'border-slate-100 dark:border-slate-700 hover:border-slate-200 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
               >
                 <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${selectedRowIndex === idx ? 'border-teal-500 bg-teal-500' : 'border-slate-300'
@@ -220,10 +220,10 @@ export const ImportOnlineModal: React.FC<ImportOnlineModalProps> = ({
                   {selectedRowIndex === idx && <div className="w-2 h-2 bg-white rounded-full" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-sm text-slate-800 truncate">
+                  <div className="font-bold text-sm text-slate-800 dark:text-slate-100 truncate transition-colors">
                     {row.Nama || row.Name || row.Patient || '(Tanpa Nama)'}
                   </div>
-                  <div className="text-xs text-slate-500 mt-0.5 truncate font-medium">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate font-medium transition-colors">
                     {row.Ruangan || row['Ruang Rawat'] || row.Room ? `🚪 ${row.Ruangan || row['Ruang Rawat'] || row.Room}` : ''}
                     <span className="mx-2">•</span>
                     RM: {row['No RM'] || row['No. RM'] || row.RM || '-'}
@@ -236,10 +236,10 @@ export const ImportOnlineModal: React.FC<ImportOnlineModalProps> = ({
       </div>
 
       {/* Button handlers bar */}
-      <div className="bg-slate-50 p-4 sm:px-6 sm:py-4 border-t border-slate-200 flex items-center justify-end gap-3 shrink-0">
+      <div className="bg-slate-50 dark:bg-slate-800 p-4 sm:px-6 sm:py-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-end gap-3 shrink-0 transition-colors">
         <button
           onClick={onClose}
-          className="px-5 py-2.5 rounded-xl border border-slate-250 hover:bg-slate-100 text-slate-705 text-xs sm:text-sm font-semibold transition"
+          className="px-5 py-2.5 rounded-xl border border-slate-250 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-705 dark:text-slate-300 text-xs sm:text-sm font-semibold transition"
         >
           Batal
         </button>

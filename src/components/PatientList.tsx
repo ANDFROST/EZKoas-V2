@@ -505,7 +505,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
                 </span>
               )}
               {p.rm && (
-                <span className="bg-slate-50 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0">
+                <span className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold px-2 py-0.5 rounded-lg shrink-0 transition-colors">
                   RM: {p.rm}
                 </span>
               )}
@@ -558,7 +558,7 @@ const PatientCardItem: React.FC<PatientCardItemProps> = ({
               </button>
               <button
                 onClick={() => copyPatientToClipboard(p)}
-                className="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold font-sans rounded-xl transition cursor-pointer shrink-0"
+                className="inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold font-sans rounded-xl transition cursor-pointer shrink-0"
                 title="Salin Data Pasien"
               >
                 <Copy className="w-3.5 h-3.5" />
@@ -690,10 +690,10 @@ const VitalEntryItem: React.FC<VitalEntryItemProps> = ({
             <span className="font-mono font-black text-slate-800 dark:text-slate-100 text-sm">Jam {vt.time || '(Blank)'}</span>
 
             {/* Parameter shortcuts badges */}
-            {vt.bp && <span className="bg-slate-50 text-slate-600 font-mono text-[10px] px-1.5 py-0.5 rounded font-black">TD: {vt.bp}</span>}
-            {vt.hr && <span className="bg-slate-50 text-slate-600 font-mono text-[10px] px-1.5 py-0.5 rounded font-black">HR: {vt.hr}</span>}
-            {vt.rr && <span className="bg-slate-50 text-slate-600 font-mono text-[10px] px-1.5 py-0.5 rounded font-black">RR: {vt.rr}</span>}
-            {vt.spo2 && <span className="bg-slate-50 text-slate-600 font-mono text-[10px] px-1.5 py-0.5 rounded font-black">SpO₂: {vt.spo2}%</span>}
+            {vt.bp && <span className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-black transition-colors">TD: {vt.bp}</span>}
+            {vt.hr && <span className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-black transition-colors">HR: {vt.hr}</span>}
+            {vt.rr && <span className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-black transition-colors">RR: {vt.rr}</span>}
+            {vt.spo2 && <span className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-mono text-[10px] px-1.5 py-0.5 rounded font-black transition-colors">SpO₂: {vt.spo2}%</span>}
           </div>
 
           {/* Detailed values text view */}

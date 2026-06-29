@@ -442,7 +442,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 Cari Identitas Pasien
                 <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">BETA</span>
               </h3>
-              <p className="text-xs text-teal-700/80 mt-0.5">Otomatis isi data pasien yang terbaru</p>
+              <p className="text-xs text-teal-700/80 mt-0.5">Otomatis isi identitas pasien dari file koyan terbaru</p>
             </div>
           </div>
           <button
@@ -473,7 +473,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   placeholder="Misal: RA4 1.2.3"
                   value={room}
                   onChange={(e) => setRoom(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
                 />
               </div>
 
@@ -484,7 +484,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   placeholder="Misal: 00994499"
                   value={rm}
                   onChange={(e) => setRm(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
                 />
               </div>
             </div>
@@ -497,7 +497,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   placeholder="Nama Pasien"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
                 />
               </div>
 
@@ -507,7 +507,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   <select
                     value={gender}
                     onChange={(e) => setGender(normalizeGender(e.target.value))}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
                   >
                     <option value="Laki-laki (L)">Laki-laki (L)</option>
                     <option value="Perempuan (P)">Perempuan (P)</option>
@@ -520,8 +520,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     type="text"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    placeholder="Misal: 54 th 11 bl"
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500"
+                    placeholder="Misal: 54"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
                   />
                 </div>
               </div>
@@ -529,29 +529,29 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Berat Badan (BB)</label>
-                  <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-teal-500 overflow-hidden">
+                  <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-teal-500 overflow-hidden transition-colors">
                     <input
                       type="text"
                       value={weight}
                       onChange={(e) => setWeight(e.target.value.replace(/[^0-9.]/g, ''))}
                       placeholder="Misal: 70"
-                      className="w-full px-3.5 py-2.5 text-sm focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                     />
-                    <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none font-semibold">kg</span>
+                    <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 select-none font-semibold transition-colors">kg</span>
                   </div>
                 </div>
 
                 <div className="space-y-1">
                   <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Tinggi Badan (TB)</label>
-                  <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-teal-500 overflow-hidden">
+                  <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-teal-500 overflow-hidden transition-colors">
                     <input
                       type="text"
                       value={height}
                       onChange={(e) => setHeight(e.target.value.replace(/[^0-9.]/g, ''))}
                       placeholder="Misal: 170"
-                      className="w-full px-3.5 py-2.5 text-sm focus:outline-none"
+                      className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none"
                     />
-                    <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none font-semibold">cm</span>
+                    <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 select-none font-semibold transition-colors">cm</span>
                   </div>
                 </div>
               </div>
@@ -570,8 +570,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
               {/* Display follow totals summary immediately */}
               {(isFollowTtv || isFollowGds || isFollowUop || isFollowBalance) && (
-                <div className="bg-slate-50/50 rounded-xl p-3 border border-slate-200/50 flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700">
-                  <span className="text-slate-400 select-none shrink-0">Lonceng Aktif:</span>
+                <div className="bg-slate-50/50 dark:bg-slate-800/50 rounded-xl p-3 border border-slate-200/50 dark:border-slate-700/50 flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300 transition-colors">
+                  <span className="text-slate-400 select-none shrink-0">Cek Aktif:</span>
                   {isFollowTtv && <span className="bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded border border-emerald-200">🛎️ TTV ({followTtvInterval})</span>}
                   {isFollowGds && <span className="bg-rose-50 text-rose-800 px-2 py-0.5 rounded border border-rose-200">🩸 GDS ({followGdsInterval})</span>}
                   {isFollowUop && <span className="bg-teal-50 text-teal-800 px-2 py-0.5 rounded border border-teal-200">🧪 UOP ({followUopInterval})</span>}
@@ -606,7 +606,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <select
                   value={sens}
                   onChange={(e) => setSens(e.target.value)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Pilih Tingkat Kesadaran</option>
                   <option value="Compos mentis">Compos mentis (Normal)</option>
@@ -657,43 +657,43 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             <div className="grid grid-cols-1 gap-4 text-xs font-sans">
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Tanda Darah (TD) / Tensi</label>
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-emerald-500 overflow-hidden">
+                <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="120/80"
                     value={bp}
                     onChange={(e) => setBp(e.target.value.replace(/[^0-9/]/g, ''))}
-                    className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
+                    className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none font-mono"
                   />
-                  <span className="text-xs bg-slate-50 px-3.5 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase font-semibold">mmHg</span>
+                  <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 uppercase font-semibold transition-colors">mmHg</span>
                 </div>
               </div>
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Heart Rate (HR) / Nadi</label>
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-emerald-500 overflow-hidden">
+                <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="80"
                     value={hr}
                     onChange={(e) => setHr(e.target.value.replace(/[^0-9]/g, ''))}
-                    className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
+                    className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none font-mono"
                   />
-                  <span className="text-xs bg-slate-50 px-3.5 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase font-semibold">kali / menit</span>
+                  <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 uppercase font-semibold transition-colors">kali / menit</span>
                 </div>
               </div>
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Respiratory Rate (RR) / Napas</label>
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-emerald-500 overflow-hidden">
+                <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="20"
                     value={rr}
                     onChange={(e) => setRr(e.target.value.replace(/[^0-9]/g, ''))}
-                    className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
+                    className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none font-mono"
                   />
-                  <span className="text-xs bg-slate-50 px-3.5 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase font-semibold">kali / menit</span>
+                  <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 uppercase font-semibold transition-colors">kali / menit</span>
                 </div>
               </div>
             </div>
@@ -702,7 +702,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             <div className="grid grid-cols-12 gap-2 text-xs">
               <div className="col-span-3 space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px] block truncate">SpO2 %</label>
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-emerald-500 overflow-hidden">
+                <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="98"
@@ -715,7 +715,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     }}
                     className="w-full px-2 py-2.5 text-sm focus:outline-none font-mono"
                   />
-                  <span className="text-xs bg-slate-50 px-1 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 select-none">%</span>
+                  <span className="text-xs bg-slate-50 dark:bg-slate-800 px-1 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 select-none transition-colors">%</span>
                 </div>
               </div>
 
@@ -724,7 +724,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 <select
                   value={o2Method}
                   onChange={(e) => setO2Method(e.target.value as any)}
-                  className="w-full bg-white border border-slate-200 rounded-xl px-2 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 h-[42px] truncate"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-2 py-2.5 text-xs sm:text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 h-[42px] truncate transition-colors"
                 >
                   <option value="Room Air (RA)">Room Air (RA)</option>
                   <option value="Nasal Cannula (NK)">Nasal Cannula (NK)</option>
@@ -736,16 +736,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
               <div className="col-span-3 space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px] block truncate">Laju LPM</label>
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-emerald-500 overflow-hidden">
+                <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="3"
                     disabled={['Room Air (RA)', 'Ventilator'].includes(o2Method)}
                     value={lpm}
                     onChange={(e) => setLpm(e.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'))}
-                    className="w-full px-2 py-2.5 text-sm focus:outline-none disabled:bg-slate-50 font-mono"
+                    className="w-full px-2 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 disabled:bg-slate-50 dark:disabled:bg-slate-800 focus:outline-none font-mono transition-colors"
                   />
-                  <span className="text-[9px] bg-slate-50 px-1 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase select-none">lpm</span>
+                  <span className="text-[9px] bg-slate-50 dark:bg-slate-800 px-1 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 uppercase select-none transition-colors">lpm</span>
                 </div>
               </div>
             </div>
@@ -754,7 +754,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Suhu (Temperature)</label>
-                <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-emerald-500 overflow-hidden">
+                <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="36.5"
@@ -762,7 +762,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                     onChange={(e) => setTemp(e.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'))}
                     className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
                   />
-                  <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold">°C</span>
+                  <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 font-semibold transition-colors">°C</span>
                 </div>
               </div>
             </div>
@@ -825,7 +825,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   onClick={() => setShowBalanceModal(true)}
                   className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${balanceCairan
                     ? 'border-teal-600 bg-teal-50 text-teal-800 shadow-sm'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
                     }`}
                 >
                   <span>⚖️ Cek Balance Cairan</span>
@@ -836,8 +836,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               {isGdsChecked && (
                 <div className="space-y-3 bg-red-50/10 p-4 rounded-2xl border border-red-100/50 text-xs text-slate-700 font-sans">
                   <div className="space-y-1">
-                    <label className="font-bold text-rose-800 uppercase tracking-widest text-[9px]">Hasil Gula Darah Sewaktu (GDS)</label>
-                    <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-rose-500 overflow-hidden">
+                    <label className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Hasil Gula Darah Sewaktu (GDS)</label>
+                    <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-rose-500 overflow-hidden transition-colors">
                       <input
                         type="text"
                         placeholder="Hasil GDS, misal: 250"
@@ -845,7 +845,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                         onChange={(e) => setGdsValue(e.target.value.replace(/[^0-9]/g, ''))}
                         className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
                       />
-                      <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold font-mono">mg/dL</span>
+                      <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 font-semibold font-mono transition-colors">mg/dL</span>
                     </div>
                   </div>
 
@@ -877,8 +877,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
               {/* 2. Drugs (Drip / Syringe Pump) Block */}
               {isOnIVDrug && (
-                <div className="bg-slate-50/50 p-4 rounded-2xl border border-slate-100 text-xs space-y-3 font-sans">
-                  <label className="block text-slate-800 font-bold">Daftar Infus / Syringe Pump:</label>
+                <div className="bg-slate-50/50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 text-xs space-y-3 font-sans transition-colors">
+                  <label className="block font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Daftar Infus / Syringe Pump:</label>
                   <div className="space-y-3">
                     {ivDrugs.map((item, idx) => (
                       <div key={`drug-row-${idx}`} className="space-y-2 border-b border-dashed border-slate-200/60 pb-3 last:border-0 last:pb-0">
@@ -886,28 +886,28 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                           <select
                             value={item.name}
                             onChange={(e) => handleIvDrugSelectChange(idx, e.target.value)}
-                            className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-sans focus:outline-none focus:border-teal-500 flex-1"
+                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white font-sans focus:outline-none focus:border-teal-500 flex-1 transition-colors"
                           >
                             {CONSTANT_IV_DRUG_OPTIONS.map((opt) => (
                               <option key={`opt-${opt}`} value={opt}>{opt}</option>
                             ))}
                           </select>
 
-                          <div className="w-[120px] flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-teal-500 shrink-0">
+                          <div className="w-[120px] flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden focus-within:border-teal-500 shrink-0 transition-colors">
                             <input
                               type="text"
                               placeholder="Rate"
                               value={item.rate}
                               onChange={(e) => handleIvDrugRateChange(idx, e.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'))}
-                              className="w-full px-2.5 py-2 text-xs font-sans text-center font-mono placeholder:text-slate-350 focus:outline-none"
+                              className="w-full bg-transparent text-slate-800 dark:text-white px-2.5 py-2 text-xs font-sans text-center font-mono placeholder:text-slate-350 dark:placeholder:text-slate-500 focus:outline-none"
                             />
-                            <span className="text-[9px] bg-slate-50 px-1.5 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 uppercase">cc/j</span>
+                            <span className="text-[9px] bg-slate-50 dark:bg-slate-800 px-1.5 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 uppercase transition-colors">cc/j</span>
                           </div>
 
                           <button
                             type="button"
                             onClick={() => handleRemoveIvDrug(idx)}
-                            className="p-2 border border-rose-100 hover:bg-rose-50 text-rose-650 shrink-0 rounded-xl transition"
+                            className="p-2 border border-rose-100 dark:border-rose-900/50 hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-650 dark:text-rose-400 shrink-0 rounded-xl transition"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -919,7 +919,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                             placeholder="Nama obat IV lainnya..."
                             value={item.customName || ''}
                             onChange={(e) => handleIvDrugCustomNameChange(idx, e.target.value)}
-                            className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 font-sans"
+                            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 font-sans transition-colors"
                           />
                         )}
                       </div>
@@ -929,7 +929,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   <button
                     type="button"
                     onClick={handleAddIvDrug}
-                    className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tight text-teal-700 bg-teal-50 hover:bg-teal-100/70 px-3.5 py-1.5 rounded-xl transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-tight text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/30 hover:bg-teal-100/70 dark:hover:bg-teal-800/50 px-3.5 py-1.5 rounded-xl transition cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Tambah Drip atau Pump lain</span>
@@ -939,30 +939,30 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
               {/* 3. Urine Output (UOP) Block */}
               {isUopChecked && (
-                <div className="bg-teal-50/40 p-4 rounded-2xl border border-teal-100/60 text-xs space-y-3 font-sans">
+                <div className="bg-teal-50/40 dark:bg-teal-900/10 p-4 rounded-2xl border border-teal-100/60 dark:border-teal-900/30 text-xs space-y-3 font-sans transition-colors">
                   <div className="space-y-1">
-                    <label className="font-bold text-teal-900 uppercase tracking-widest text-[9px]">Urine Output (UOP)</label>
-                    <div className="flex items-center bg-white border border-slate-200 rounded-xl focus-within:border-teal-500 overflow-hidden">
+                    <label className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Urine Output (UOP)</label>
+                    <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-teal-500 overflow-hidden transition-colors">
                       <input
                         type="text"
                         placeholder="Masukkan volume urine, misal: 800"
                         value={uopValue}
                         onChange={(e) => setUopValue(e.target.value.replace(/[^0-9]/g, ''))}
-                        className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
+                        className="w-full bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 px-3.5 py-2.5 text-sm focus:outline-none font-mono"
                       />
-                      <span className="text-xs bg-slate-50 px-3 py-2.5 border-l border-slate-200 text-slate-400 shrink-0 font-semibold font-mono">cc/24j</span>
+                      <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 font-semibold font-mono transition-colors">cc/24j</span>
                     </div>
                   </div>
 
                   {/* Indonesian guide warning tip box as requested */}
-                  <div className="bg-white border border-teal-100/70 rounded-xl p-3 text-slate-755 flex gap-2">
+                  <div className="bg-white dark:bg-slate-900 border border-teal-100/70 dark:border-teal-800/50 rounded-xl p-3 text-slate-755 dark:text-slate-300 flex gap-2 transition-colors">
                     <Info className="w-4 h-4 text-teal-500 shrink-0 mt-0.5" />
                     <div className="leading-normal font-sans">
-                      <p className="text-[11px] font-semibold text-teal-950">
+                      <p className="text-[11px] font-semibold text-teal-950 dark:text-teal-300 transition-colors">
                         💡 Tips Penilaian Cepat:
                       </p>
-                      <p className="text-[11px] font-medium text-slate-600 mt-0.5">
-                        Apabila sulit menghitung cc presisi: <strong className="text-teal-800">Apakah pasien dalam sehari BAK sampai 1 Aqua sedang (600 cc)?</strong>
+                      <p className="text-[11px] font-medium text-slate-600 dark:text-slate-400 mt-0.5 transition-colors">
+                        Apabila sulit menghitung cc presisi: <strong className="text-teal-800 dark:text-teal-400 transition-colors">Apakah pasien dalam sehari BAK sampai 1 Aqua sedang (600 cc)?</strong>
                       </p>
                     </div>
                   </div>
@@ -971,18 +971,18 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
               {/* 4. Fluid Balance (Balance Cairan) */}
               {balanceCairan && (
-                <div className="bg-teal-50/50 p-4 rounded-xl border border-teal-100 space-y-3 text-xs leading-relaxed font-sans mt-3">
+                <div className="bg-teal-50/50 dark:bg-teal-900/20 p-4 rounded-xl border border-teal-100 dark:border-teal-900/50 space-y-3 text-xs leading-relaxed font-sans mt-3 transition-colors">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-teal-800 font-bold">
+                    <div className="flex items-center gap-1.5 text-teal-800 dark:text-teal-400 font-bold transition-colors">
                       <CheckCircle2 className="w-4 h-4 text-teal-600" />
                       <span>Balance Cairan Terhitung</span>
                     </div>
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-black font-mono shrink-0 ${(balanceTotalResult || 0) >= 0 ? 'bg-teal-100 text-teal-900' : 'bg-rose-100 text-rose-900'
+                    <span className={`px-2.5 py-1 rounded-lg text-xs font-black font-mono shrink-0 transition-colors ${(balanceTotalResult || 0) >= 0 ? 'bg-teal-100 dark:bg-teal-900/50 text-teal-900 dark:text-teal-300' : 'bg-rose-100 dark:bg-rose-900/50 text-rose-900 dark:text-rose-300'
                       }`}>
                       {balanceTotalResult && balanceTotalResult >= 0 ? '+' : ''}{balanceTotalResult} cc
                     </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-teal-100/40 text-slate-600">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-teal-100/40 dark:border-teal-800/40 text-slate-600 dark:text-slate-400 transition-colors">
                     <p>Makan: {balanceCairan.makanValue} cc</p>
                     <p>Minum: {balanceCairan.minumValue} cc</p>
                     <p>Infus IVFD: {balanceCairan.ivfdValue} cc</p>
@@ -1097,7 +1097,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
       {/* Checklist Alerts Monitoring setting overlays */}
       {showFollowModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl overflow-hidden max-w-md w-full border border-slate-100 shadow-xl font-sans">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden max-w-md w-full border border-slate-100 dark:border-slate-800 shadow-xl font-sans transition-colors">
             <div className="bg-teal-700 p-5 text-white flex items-center justify-between">
               <h4 className="font-extrabold tracking-tight">Atur Parameter Follow Ketat</h4>
               <button onClick={() => setShowFollowModal(false)} className="text-white/60 hover:text-white transition">
@@ -1106,8 +1106,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             </div>
             <div className="p-5 space-y-4 text-xs font-sans max-h-[60vh] overflow-y-auto">
               {/* Checkbox TTV */}
-              <div className="space-y-2 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-                <label className="flex items-center gap-2 font-bold text-slate-800 cursor-pointer text-sm">
+              <div className="space-y-2 p-3 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-colors">
+                <label className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 cursor-pointer text-sm transition-colors">
                   <input
                     type="checkbox"
                     checked={isFollowTtv}
@@ -1117,12 +1117,12 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   <span>Tanda Vital (TTV)</span>
                 </label>
                 {isFollowTtv && (
-                  <div className="flex items-center justify-between pt-1 font-medium pl-6 text-slate-705">
-                    <span>Lonceng per:</span>
+                  <div className="flex items-center justify-between pt-1 font-medium pl-6 text-slate-705 dark:text-slate-300 transition-colors">
+                    <span>Cek per:</span>
                     <select
                       value={followTtvInterval}
                       onChange={(e) => setFollowTtvInterval(e.target.value)}
-                      className="bg-white border text-xs px-2 py-1 rounded-lg focus:outline-none"
+                      className="bg-white dark:bg-slate-800 border dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs px-2 py-1 rounded-lg focus:outline-none transition-colors"
                     >
                       {['30 Menit', '1 Jam', '2 Jam', '3 Jam', '4 Jam', '6 Jam', '8 Jam', '12 Jam', '24 Jam'].map((o) => (
                         <option key={o} value={o}>{o}</option>
@@ -1133,8 +1133,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               </div>
 
               {/* Checkbox GDS */}
-              <div className="space-y-2 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-                <label className="flex items-center gap-2 font-bold text-slate-800 cursor-pointer text-sm">
+              <div className="space-y-2 p-3 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-colors">
+                <label className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 cursor-pointer text-sm transition-colors">
                   <input
                     type="checkbox"
                     checked={isFollowGds}
@@ -1144,12 +1144,12 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   <span>Gula Darah Sewaktu (GDS)</span>
                 </label>
                 {isFollowGds && (
-                  <div className="flex items-center justify-between pt-1 font-medium pl-6 text-slate-705">
-                    <span>Lonceng per:</span>
+                  <div className="flex items-center justify-between pt-1 font-medium pl-6 text-slate-705 dark:text-slate-300 transition-colors">
+                    <span>Cek per:</span>
                     <select
                       value={followGdsInterval}
                       onChange={(e) => setFollowGdsInterval(e.target.value)}
-                      className="bg-white border text-xs px-2 py-1 rounded-lg focus:outline-none"
+                      className="bg-white dark:bg-slate-800 border dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs px-2 py-1 rounded-lg focus:outline-none transition-colors"
                     >
                       {['30 Menit', '1 Jam', '2 Jam', '3 Jam', '4 Jam', '6 Jam', '8 Jam', '12 Jam', '24 Jam'].map((o) => (
                         <option key={o} value={o}>{o}</option>
@@ -1160,23 +1160,23 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               </div>
 
               {/* Checkbox UOP */}
-              <div className="space-y-2 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-                <label className="flex items-center gap-2 font-bold text-slate-800 cursor-pointer text-sm">
+              <div className="space-y-2 p-3 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-colors">
+                <label className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 cursor-pointer text-sm transition-colors">
                   <input
                     type="checkbox"
                     checked={isFollowUop}
                     onChange={(e) => setIsFollowUop(e.target.checked)}
                     className="w-4.5 h-4.5 accent-teal-600 rounded"
                   />
-                  <span>Refleks Urine (UOP)</span>
+                  <span>Urine Output (UOP)</span>
                 </label>
                 {isFollowUop && (
                   <div className="flex items-center justify-between pt-1 font-medium pl-6 text-slate-750">
-                    <span>Lonceng per:</span>
+                    <span>Cek per:</span>
                     <select
                       value={followUopInterval}
                       onChange={(e) => setFollowUopInterval(e.target.value)}
-                      className="bg-white border text-xs px-2 py-1 rounded-lg focus:outline-none"
+                      className="bg-white dark:bg-slate-800 border dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs px-2 py-1 rounded-lg focus:outline-none transition-colors"
                     >
                       {['30 Menit', '1 Jam', '2 Jam', '3 Jam', '4 Jam', '6 Jam', '8 Jam', '12 Jam', '24 Jam'].map((o) => (
                         <option key={o} value={o}>{o}</option>
@@ -1187,8 +1187,8 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               </div>
 
               {/* Checkbox Balance Cairan */}
-              <div className="space-y-2 p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-                <label className="flex items-center gap-2 font-bold text-slate-800 cursor-pointer text-sm">
+              <div className="space-y-2 p-3 bg-slate-50/50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 transition-colors">
+                <label className="flex items-center gap-2 font-bold text-slate-800 dark:text-slate-200 cursor-pointer text-sm transition-colors">
                   <input
                     type="checkbox"
                     checked={isFollowBalance}
@@ -1199,11 +1199,11 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 </label>
                 {isFollowBalance && (
                   <div className="flex items-center justify-between pt-1 font-medium pl-6 text-slate-750">
-                    <span>Lonceng per:</span>
+                    <span>Cek per:</span>
                     <select
                       value={followBalanceInterval}
                       onChange={(e) => setFollowBalanceInterval(e.target.value)}
-                      className="bg-white border text-xs px-2 py-1 rounded-lg focus:outline-none"
+                      className="bg-white dark:bg-slate-800 border dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs px-2 py-1 rounded-lg focus:outline-none transition-colors"
                     >
                       {['30 Menit', '1 Jam', '2 Jam', '3 Jam', '4 Jam', '6 Jam', '8 Jam', '12 Jam', '24 Jam'].map((o) => (
                         <option key={o} value={o}>{o}</option>
@@ -1214,7 +1214,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               </div>
             </div>
 
-            <div className="bg-slate-50 p-4 border-t border-slate-100 flex justify-end">
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 border-t border-slate-100 dark:border-slate-800 flex justify-end transition-colors">
               <button
                 onClick={() => setShowFollowModal(false)}
                 className="bg-teal-600 hover:bg-teal-700 active:scale-95 transition text-white text-xs font-bold px-6 py-2 rounded-xl shadow-md shadow-teal-600/10 cursor-pointer"

@@ -371,11 +371,11 @@ export const ImportModal: React.FC<ImportModalProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-4xl w-full mx-auto overflow-hidden font-sans flex flex-col max-h-[80vh] sm:max-h-[85vh]">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-4xl w-full mx-auto overflow-hidden font-sans flex flex-col max-h-[80vh] sm:max-h-[85vh] transition-colors">
       {/* Header Info */}
-      <div className="bg-white border-b border-slate-200 p-4 sm:p-6 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4 sm:p-6 flex items-center justify-between transition-colors">
         <div>
-          <h2 className="text-lg font-extrabold tracking-tight text-slate-900">Import Data dari Server</h2>
+          <h2 className="text-lg font-extrabold tracking-tight text-slate-900 dark:text-slate-100 transition-colors">Import Data dari Server</h2>
           <p className="text-slate-400 text-xs mt-1">Ketik nama pasien, ruangan, ataupun No.RM di kolom pencarian</p>
         </div>
         <div className="w-10 h-10 bg-teal-50 border border-teal-100 rounded-xl flex items-center justify-center">
@@ -384,11 +384,10 @@ export const ImportModal: React.FC<ImportModalProps> = ({
       </div>
 
       {/* Modal tabs */}
-      <div className="bg-slate-50 border-b border-slate-200/60 p-2 flex">
+      <div className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200/60 dark:border-slate-700/60 p-2 flex transition-colors">
         <button
           onClick={() => setActiveTab('sheet')}
-          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${activeTab === 'sheet' ? 'bg-white shadow text-teal-700' : 'text-slate-500 hover:text-slate-700'
-            }`}
+          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${activeTab === 'sheet' ? 'bg-white dark:bg-slate-700 shadow text-teal-700 dark:text-teal-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
         >
           <Cloud className="w-4 h-4 shrink-0 text-teal-500" />
           <span className="hidden sm:inline">Database Server</span>
@@ -396,8 +395,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         </button>
         <button
           onClick={() => setActiveTab('clipboard')}
-          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${activeTab === 'clipboard' ? 'bg-white shadow text-teal-700' : 'text-slate-500 hover:text-slate-700'
-            }`}
+          className={`flex-1 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer ${activeTab === 'clipboard' ? 'bg-white dark:bg-slate-700 shadow text-teal-700 dark:text-teal-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
         >
           <ClipboardList className="w-4 h-4 shrink-0 text-teal-500" />
           <span className="hidden sm:inline">Analisis Teks Clipboard</span>
@@ -409,47 +407,47 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         {activeTab === 'sheet' && (
           <div className="space-y-4">
             {/* Real-time search tools */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 bg-slate-50/75 p-2.5 sm:p-3.5 rounded-xl border border-slate-200/40 text-[11px] sm:text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 bg-slate-50/75 dark:bg-slate-800/50 p-2.5 sm:p-3.5 rounded-xl border border-slate-200/40 dark:border-slate-700/50 text-[11px] sm:text-xs transition-colors">
               <div className="space-y-1 col-span-2 md:col-span-1">
-                <label className="font-bold text-slate-500">Nama Pasien</label>
-                <div className="flex bg-white items-center rounded-xl border border-slate-200/70 overflow-hidden px-2.5">
+                <label className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Nama Pasien</label>
+                <div className="flex bg-white dark:bg-slate-900 items-center rounded-xl border border-slate-200/70 dark:border-slate-700/70 overflow-hidden px-2.5 transition-colors">
                   <Search className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-1.5" />
                   <input
                     type="text"
                     value={filterName}
                     onChange={(e) => setFilterName(e.target.value)}
-                    className="w-full py-1.5 focus:outline-none focus:bg-white text-xs text-slate-705"
+                    className="w-full py-1.5 bg-transparent focus:outline-none text-xs text-slate-705 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
                     placeholder="Ketik nama..."
                   />
                 </div>
               </div>
               <div className="space-y-1">
-                <label className="font-bold text-slate-500">Nomor RM</label>
+                <label className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Nomor RM</label>
                 <input
                   type="text"
                   value={filterRm}
                   onChange={(e) => setFilterRm(e.target.value)}
-                  className="w-full bg-white border border-slate-200/70 rounded-xl px-3 py-1.5 focus:outline-none text-xs text-slate-705"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl px-3 py-1.5 focus:outline-none text-xs text-slate-705 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors"
                   placeholder="Ketik rekam medis..."
                 />
               </div>
               <div className="space-y-1">
-                <label className="font-bold text-slate-500">Ruangan</label>
+                <label className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Ruangan</label>
                 <input
                   type="text"
                   value={filterRoom}
                   onChange={(e) => setFilterRoom(e.target.value)}
-                  className="w-full bg-white border border-slate-200/70 rounded-xl px-3 py-1.5 focus:outline-none text-xs text-slate-705"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl px-3 py-1.5 focus:outline-none text-xs text-slate-705 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors"
                   placeholder="Nama ruangan..."
                 />
               </div>
               <div className="space-y-1">
-                <label className="font-bold text-slate-500">Waktu</label>
+                <label className="font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[9px] transition-colors">Waktu</label>
                 <input
                   type="text"
                   value={filterTime}
                   onChange={(e) => setFilterTime(e.target.value)}
-                  className="w-full bg-white border border-slate-200/70 rounded-xl px-3 py-1.5 focus:outline-none text-xs text-slate-705"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200/70 dark:border-slate-700/70 rounded-xl px-3 py-1.5 focus:outline-none text-xs text-slate-705 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors"
                   placeholder="Jam, misal: 12:00"
                 />
               </div>
@@ -459,7 +457,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
             {isLoadingSheet ? (
               <div className="py-20 flex flex-col items-center justify-center gap-3">
                 <Loader2 className="w-8 h-8 text-teal-500 animate-spin" />
-                <p className="text-xs text-slate-500 font-sans">Mengunduh row database dari cloud...</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-sans transition-colors">Mengunduh row database dari cloud...</p>
               </div>
             ) : groupedPatients.length === 0 ? (
               <div className="py-16 text-center">
@@ -476,7 +474,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                   return (
                     <div key={`group-${group.key}`} className="border border-slate-100 rounded-xl overflow-hidden font-sans">
                       {/* Parent header panel */}
-                      <div className="bg-slate-50/50 p-3.5 flex items-center justify-between gap-3 text-xs">
+                      <div className="bg-slate-50/50 dark:bg-slate-800/50 p-3.5 flex items-center justify-between gap-3 text-xs transition-colors">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           {/* Checked toggle button */}
                           <button
@@ -496,7 +494,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                           </button>
 
                           <div className="min-w-0 flex-1 cursor-pointer select-none" onClick={() => toggleGroupExpanded(group.key)}>
-                            <div className="font-bold text-slate-800 text-xs sm:text-sm truncate">{group.label}</div>
+                             <div className="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm truncate transition-colors">{group.label}</div>
                             <div className="text-[10px] text-slate-400 font-medium font-sans mt-0.5 flex items-center gap-1">
                               <span>Total vitals: {group.itemIndices.length} records</span>
                               {formattedDate && <span>• Tanggal masuk: {formattedDate}</span>}
@@ -507,7 +505,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                         <button
                           type="button"
                           onClick={() => toggleGroupExpanded(group.key)}
-                          className="p-1 px-2 hover:bg-slate-100 rounded-lg text-slate-400 transition"
+                          className="p-1 px-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 dark:text-slate-350 transition"
                         >
                           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         </button>
@@ -515,7 +513,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
                       {/* Expandable nested child records */}
                       {isExpanded && (
-                        <div className="bg-white divide-y divide-slate-50 pl-11 text-xs">
+                        <div className="bg-white dark:bg-slate-900 divide-y divide-slate-50 dark:divide-slate-800 pl-11 text-xs transition-colors">
                           {group.itemIndices.map((originalIndex) => {
                             const r = sheetRows[originalIndex];
                             const childChecked = !!selectedIndices[originalIndex];
@@ -538,7 +536,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                             return (
                               <div
                                 key={`row-entry-${originalIndex}`}
-                                className="p-3 hover:bg-slate-50/50 flex items-center justify-between gap-3 text-xs select-none"
+                                className="p-3 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 flex items-center justify-between gap-3 text-xs select-none transition-colors"
                               >
                                 <div className="flex items-center gap-3 flex-1 min-w-0">
                                   <button
@@ -553,8 +551,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                                     )}
                                   </button>
                                   <div className="min-w-0 flex-1">
-                                    <p className="font-bold text-slate-700">Jam log: {tVal}</p>
-                                    <p className="text-[10px] text-slate-500 truncate mt-0.5">{lineSummary}</p>
+                                    <p className="font-bold text-slate-700 dark:text-slate-200 transition-colors">Jam log: {tVal}</p>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate mt-0.5 transition-colors">{lineSummary}</p>
                                   </div>
                                 </div>
                               </div>
@@ -587,23 +585,23 @@ export const ImportModal: React.FC<ImportModalProps> = ({
               onChange={(e) => setClipboardText(e.target.value)}
               placeholder="Paste di sini..."
               rows={10}
-              className="w-full bg-slate-50/50 border border-slate-200 focus:border-teal-500 rounded-2xl p-4 focus:bg-white focus:outline-none transition text-sm font-mono text-slate-750 resize-none leading-relaxed"
+              className="w-full bg-slate-50/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:border-teal-500 dark:focus:border-teal-500 rounded-2xl p-4 focus:bg-white dark:focus:bg-slate-900 focus:outline-none transition text-sm font-mono text-slate-750 dark:text-slate-200 resize-none leading-relaxed"
             />
           </div>
         )}
       </div>
 
       {/* Button handlers bar */}
-      <div className="bg-slate-50 p-4 sm:px-6 sm:py-4 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-3 select-none">
+      <div className="bg-slate-50 dark:bg-slate-800 p-4 sm:px-6 sm:py-4 border-t border-slate-200/60 dark:border-slate-700/60 flex flex-col sm:flex-row items-center justify-between gap-3 select-none transition-colors">
         {activeTab === 'sheet' && !isLoadingSheet && sheetRows.length > 0 && (
-          <div className="text-xs font-semibold text-slate-500 font-sans text-center sm:text-left">
+          <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 font-sans text-center sm:text-left transition-colors">
             {sheetRows.filter((_, idx) => selectedIndices[idx]).length} TTV dipilih
           </div>
         )}
         <div className="flex gap-2.5 w-full sm:w-auto ml-auto justify-end">
           <button
             onClick={onClose}
-            className="flex-1 sm:flex-initial px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-slate-250 hover:bg-slate-100 text-slate-705 text-xs sm:text-sm font-semibold transition font-sans"
+            className="flex-1 sm:flex-initial px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl border border-slate-250 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-705 dark:text-slate-300 text-xs sm:text-sm font-semibold transition font-sans"
           >
             Batal
           </button>
