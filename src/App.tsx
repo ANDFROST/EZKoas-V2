@@ -312,7 +312,7 @@ export default function App() {
         ivDrugNames: entry.ivDrugNames ? entry.ivDrugNames.join('; ') : '',
         ivDrugRates: entry.ivDrugRates ? entry.ivDrugRates.join('; ') : '',
         keluhan: entry.keluhan || '',
-        
+
         // Balance Cairan
         bcMakanType: entry.balanceCairan?.makanType || '',
         bcMakanCount: entry.balanceCairan?.makanCount?.toString() || '',
@@ -549,7 +549,7 @@ export default function App() {
                   EZKOAS
                 </h1>
                 <span className="bg-teal-50 border border-teal-100 text-teal-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none">
-                  V2.1.0
+                  V2.8.12
                 </span>
               </div>
               <p className="hidden sm:block text-[10px] text-slate-450 font-sans leading-relaxed mt-0.5">
@@ -838,7 +838,7 @@ export default function App() {
                   onClick={() => { setIsDarkMode(!isDarkMode); setIsLeftNavOpen(false); }}
                   className="w-full py-3.5 px-4 rounded-xl font-bold text-xs text-left transition flex items-center gap-2 text-teal-400 hover:bg-teal-900 hover:text-teal-200 cursor-pointer"
                 >
-                  {isDarkMode ? <Sun className="w-3.5 h-3.5 shrink-0" /> : <Moon className="w-3.5 h-3.5 shrink-0" />} 
+                  {isDarkMode ? <Sun className="w-3.5 h-3.5 shrink-0" /> : <Moon className="w-3.5 h-3.5 shrink-0" />}
                   {isDarkMode ? 'Mode Terang' : 'Mode Gelap'}
                 </button>
                 <button
