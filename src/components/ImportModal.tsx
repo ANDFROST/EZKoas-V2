@@ -4,7 +4,10 @@ import {
   parseClipboardPatients,
   normalizeGender,
   formatTime,
-  GOOGLE_SHEETS_TTV_WEBAPP_URL
+  GOOGLE_SHEETS_TTV_WEBAPP_URL,
+  getRowValue,
+  formatSheetDate,
+  mapSheetRowToPatient
 } from '../utils';
 import {
   Import,
@@ -67,7 +70,8 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     try {
       const response = await fetch(GOOGLE_SHEETS_TTV_WEBAPP_URL);
       if (response.ok) {
-        const data = await response.json();
+        const rawData = await response.json();
+        const data = Array.isArray(rawData) ? rawData.reverse() : rawData;
         setSheetRows(data);
 
         // Pre-select nothing by default
@@ -77,7 +81,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
         });
         setSelectedIndices(initialSelected);
       } else {
-        showNotification('Gagal menghubungi server Google Sheets.', 'error');
+        showNotification('Gagal menghubungi server.', 'error');
       }
     } catch (e) {
       showNotification('Kesalahan jaringan saat mengunduh data.', 'error');
@@ -85,31 +89,6 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     setIsLoadingSheet(false);
   };
 
-  // Safe field checks
-  const getRowValue = (row: SpreadsheetRow, keys: string[]): string => {
-    for (const key of keys) {
-      const val = (row as any)[key];
-      if (val !== undefined && val !== null) {
-        const text = String(val).trim();
-        if (text) return text;
-      }
-    }
-    return '';
-  };
-
-  // Convert standard date string to DD/MM/YY
-  const formatSheetDate = (value: string): string => {
-    const normalized = value.replace(/\//g, '-').replace(/\./g, '-').trim();
-    const parsed = Date.parse(normalized);
-    if (!isNaN(parsed)) {
-      const dt = new Date(parsed);
-      const dd = String(dt.getDate()).padStart(2, '0');
-      const mm = String(dt.getMonth() + 1).padStart(2, '0');
-      const yy = String(dt.getFullYear()).substring(2);
-      return `${dd}/${mm}/${yy}`;
-    }
-    return value;
-  };
 
   // Re-build groupings of spreadsheet rows under specific unique key
   const getPatientKey = (row: SpreadsheetRow): string => {
@@ -218,122 +197,6 @@ export const ImportModal: React.FC<ImportModalProps> = ({
     }));
   };
 
-  // Convert Sheet row structure back to typed PatientRecord
-  const mapSheetRowToPatient = (row: SpreadsheetRow): PatientRecord => {
-    const nameVal = getRowValue(row, ['Nama', 'Name', 'Patient', 'Nama Pasien']);
-    const rmVal = getRowValue(row, ['No RM', 'No. RM', 'RM']);
-    const roomVal = getRowValue(row, ['Ruang Rawat', 'Ruang', 'Room']);
-    const ageVal = getRowValue(row, ['Umur', 'Age', 'Usia']);
-    const genderVal = normalizeGender(getRowValue(row, ['Jenis Kelamin', 'Gender', 'Sex']));
-
-    const isFollowTtv = getRowValue(row, ['FollowTtv', 'Follow TTV', 'isFollowTtv']).toLowerCase() === 'true' || getRowValue(row, ['FollowTtv', 'Follow TTV', 'isFollowTtv']).toLowerCase() === 'ya';
-    const isFollowGds = getRowValue(row, ['FollowGds', 'Follow GDS', 'isFollowGds']).toLowerCase() === 'true' || getRowValue(row, ['FollowGds', 'Follow GDS', 'isFollowGds']).toLowerCase() === 'ya';
-    const isFollowUop = getRowValue(row, ['FollowUop', 'Follow UOP', 'isFollowUop']).toLowerCase() === 'true' || getRowValue(row, ['FollowUop', 'Follow UOP', 'isFollowUop']).toLowerCase() === 'ya';
-    const isFollowBalance = getRowValue(row, ['FollowBalance', 'Follow Balance', 'isFollowBalance']).toLowerCase() === 'true' || getRowValue(row, ['FollowBalance', 'Follow Balance', 'isFollowBalance']).toLowerCase() === 'ya';
-
-    const followTtvInterval = getRowValue(row, ['FollowTtvInterval', 'Follow TTV Interval', 'Interval TTV']) || '3 Jam';
-    const followGdsInterval = getRowValue(row, ['FollowGdsInterval', 'Follow GDS Interval', 'Interval GDS']) || '3 Jam';
-    const followUopInterval = getRowValue(row, ['FollowUopInterval', 'Follow UOP Interval', 'Interval UOP']) || '3 Jam';
-    const followBalanceInterval = getRowValue(row, ['FollowBalanceInterval', 'Follow Balance Interval', 'Interval Balance']) || '3 Jam';
-
-    const rawTime = getRowValue(row, ['VitalsTime', 'Waktu', 'Time', 'Waktu TTV']);
-    const mappedTime = rawTime ? formatTime(rawTime) : '';
-
-    const bpVal = getRowValue(row, ['BP', 'TD', 'Tekanan Darah']).replace(/mmhg/gi, '').trim();
-    const hrVal = getRowValue(row, ['HR', 'Heart Rate']);
-    const rrVal = getRowValue(row, ['RR', 'Respiratory Rate']);
-    const spo2Val = getRowValue(row, ['SpO2', 'SPO2', 'SpO2%']).replace(/%/g, '').trim();
-
-    const o2MethodVal = getRowValue(row, ['O2Method', 'O2 Method', 'Metode O2']);
-    let mapO2: VitalsEntry['o2Method'] = 'Room Air (RA)';
-    if (o2MethodVal.toLowerCase().includes('nasal') || o2MethodVal.toLowerCase().includes('nk')) mapO2 = 'Nasal Cannula (NK)';
-    if (o2MethodVal.toLowerCase().includes('non') || o2MethodVal.toLowerCase().includes('nrm')) mapO2 = 'Non Rebreathing Mask (NRM)';
-    if (o2MethodVal.toLowerCase().includes('trake')) mapO2 = 'Trakeostomi';
-    if (o2MethodVal.toLowerCase().includes('vent')) mapO2 = 'Ventilator';
-
-    const lpmVal = getRowValue(row, ['LPM', 'Lpm', 'flow']).replace(/[^0-9.]/g, '');
-    const tempVal = getRowValue(row, ['Temp', 'Temperature', 'Suhu']).replace(/[^0-9.]/g, '');
-
-    const gdsChecked = getRowValue(row, ['GDSChecked', 'isGdsChecked', 'Cek GDS']).toLowerCase() === 'true' || getRowValue(row, ['GDSChecked', 'isGdsChecked', 'Cek GDS']).toLowerCase() === 'ya';
-    const gdsV = getRowValue(row, ['GDSValue', 'GDS', 'Nilai GDS']).replace(/[^0-9.]/g, '');
-
-    const uopChecked = getRowValue(row, ['Cek UOP', 'UOPChecked', 'isUopChecked']).toLowerCase() === 'true' || getRowValue(row, ['Cek UOP', 'UOPChecked', 'isUopChecked']).toLowerCase() === 'ya';
-    const uopV = getRowValue(row, ['Nilai UOP', 'UOPValue', 'UOP']).replace(/[^0-9.]/g, '');
-
-    const isOnIV = getRowValue(row, ['IsOnIVDrug', 'OnIVDrug', 'isOnIVDrug', 'Pakai Obat IV']).toLowerCase() === 'true' || getRowValue(row, ['IsOnIVDrug', 'OnIVDrug', 'isOnIVDrug', 'Pakai Obat IV']).toLowerCase() === 'ya';
-
-    // Parse semicolon list for IV medications
-    const rawIvNames = getRowValue(row, ['IVDrugNames', 'IV Drug Names', 'Nama Obat IV', 'ivDrugNames']);
-    const rawIvRates = getRowValue(row, ['IVDrugRates', 'IV Drug Rates', 'Rate Obat IV', 'ivDrugRates']);
-
-    const ivDrugNames = rawIvNames ? rawIvNames.split(/[;|/]+/).map((s) => s.trim()).filter(Boolean) : [];
-    const ivDrugRates = rawIvRates ? rawIvRates.split(/[;|/]+/).map((s) => s.trim().replace(/,/g, '.')).filter(Boolean) : [];
-
-    const keluhanVal = getRowValue(row, ['Keluhan', 'Complaint', 'Notes']);
-
-    const entry: VitalsEntry = {
-      time: mappedTime,
-      bp: bpVal,
-      sens: getRowValue(row, ['Sens', 'Sensitivity']),
-      gcs: getRowValue(row, ['GCS', 'Glasgow']),
-      hr: hrVal,
-      rr: rrVal,
-      spo2: spo2Val,
-      o2Method: mapO2,
-      lpm: lpmVal,
-      temp: tempVal,
-      isGdsChecked: gdsChecked || !!gdsV,
-      gdsValue: gdsV,
-      isUopChecked: uopChecked || !!uopV,
-      uopValue: uopV,
-      isOnIVDrug: isOnIV || ivDrugNames.length > 0,
-      ivDrugNames,
-      ivDrugRates,
-      keluhan: keluhanVal,
-      createdAt: Date.now(),
-      balanceCairan: {
-        makanType: (getRowValue(row, ['BC Makan Type', 'bcMakanType']) as any) || 'Makan',
-        makanCount: Number(getRowValue(row, ['BC Makan Count', 'bcMakanCount'])) || 0,
-        makanValue: Number(getRowValue(row, ['BC Makan Value (cc)', 'bcMakanValue'])) || 0,
-        minumOption: (getRowValue(row, ['BC Minum Option', 'bcMinumOption']) as any) || 'None',
-        minumValue: Number(getRowValue(row, ['BC Minum Value (cc)', 'bcMinumValue'])) || 0,
-        ivfdOption: (getRowValue(row, ['BC IVFD Option', 'bcIvfdOption']) as any) || 'None',
-        ivfdValue: Number(getRowValue(row, ['BC IVFD Value (cc)', 'bcIvfdValue'])) || 0,
-        transfusiBags: Number(getRowValue(row, ['BC Transfusi Bags', 'bcTransfusiBags'])) || 0,
-        transfusiValue: Number(getRowValue(row, ['BC Transfusi Value (cc)', 'bcTransfusiValue'])) || 0,
-        syringePumpCc: Number(getRowValue(row, ['BC Syringe Pump Cc', 'bcSyringePumpCc'])) || 0,
-        syringePumpValue: Number(getRowValue(row, ['BC Syringe Pump Value (cc)', 'bcSyringePumpValue'])) || 0,
-        babType: (getRowValue(row, ['BC BAB Type', 'bcBabType']) as any) || 'Keras/biasa',
-        babCount: Number(getRowValue(row, ['BC BAB Count', 'bcBabCount'])) || 0,
-        babValue: Number(getRowValue(row, ['BC BAB Value (cc)', 'bcBabValue'])) || 0,
-        uopOption: (getRowValue(row, ['BC UOP Option', 'bcUopOption']) as any) || 'None',
-        uopValue: Number(getRowValue(row, ['BC UOP Value (cc)', 'bcUopValue'])) || 0,
-        muntahCount: Number(getRowValue(row, ['BC Muntah Count', 'bcMuntahCount'])) || 0,
-        muntahValue: Number(getRowValue(row, ['BC Muntah Value (cc)', 'bcMuntahValue'])) || 0,
-        iwl: getRowValue(row, ['BC Ada IWL', 'bcIwl']).toLowerCase() === 'ya' || getRowValue(row, ['BC Ada IWL', 'bcIwl']).toLowerCase() === 'true',
-        iwlValue: Number(getRowValue(row, ['BC IWL Value (cc)', 'bcIwlValue'])) || 0,
-      }
-    };
-
-    return {
-      room: roomVal,
-      rm: rmVal,
-      name: nameVal,
-      gender: genderVal,
-      age: ageVal,
-      weight: getRowValue(row, ['Berat Badan', 'Weight']),
-      height: getRowValue(row, ['Tinggi Badan', 'Height']),
-      isFollowTtv,
-      followTtvInterval,
-      isFollowGds,
-      followGdsInterval,
-      isFollowUop,
-      followUopInterval,
-      isFollowBalance,
-      followBalanceInterval,
-      vitals: [entry]
-    };
-  };
 
   // Perform sheet rows import
   const executeSheetImport = () => {
@@ -345,7 +208,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
 
     const mapped = selectedRows.map((r) => mapSheetRowToPatient(r));
     onImportCompleted(mapped);
-    showNotification(`Berhasil mengimpor ${selectedRows.length} catatan vitals dari Google Sheets!`, 'success');
+    showNotification(`Berhasil mengimpor ${selectedRows.length} catatan vitals dari Database!`, 'success');
   };
 
   // Perform clipboard text analytical import
@@ -494,7 +357,7 @@ export const ImportModal: React.FC<ImportModalProps> = ({
                           </button>
 
                           <div className="min-w-0 flex-1 cursor-pointer select-none" onClick={() => toggleGroupExpanded(group.key)}>
-                             <div className="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm truncate transition-colors">{group.label}</div>
+                            <div className="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm truncate transition-colors">{group.label}</div>
                             <div className="text-[10px] text-slate-400 font-medium font-sans mt-0.5 flex items-center gap-1">
                               <span>Total vitals: {group.itemIndices.length} records</span>
                               {formattedDate && <span>• Tanggal masuk: {formattedDate}</span>}

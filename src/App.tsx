@@ -4,9 +4,11 @@ import { formatPatientRecord, formatTime, GOOGLE_SHEETS_TTV_WEBAPP_URL } from '.
 import { PatientForm } from './components/PatientForm';
 import { PatientList } from './components/PatientList';
 import { ImportModal } from './components/ImportModal';
+import { RealtimeDashboardModal } from './components/RealtimeDashboardModal';
 import { MedicalProtocolsRef } from './components/MedicalProtocolsRef';
 import { FeedbackModal } from './components/FeedbackModal';
 import {
+  Activity,
   Stethoscope,
   Plus,
   Import,
@@ -82,6 +84,7 @@ export default function App() {
   const [showSupportModal, setShowSupportModal] = useState(false);
   const [showProtocolsModal, setShowProtocolsModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showRealtimeDashboard, setShowRealtimeDashboard] = useState(false);
 
   // List filters
   const [filterFolketOnly, setFilterFolketOnly] = useState(false);
@@ -224,6 +227,26 @@ export default function App() {
     triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien berlabel Folket!`, 'success');
   };
 
+  const copyFolketOnlyWithIzin = () => {
+    const folketMatches = patients.filter(
+      (p) =>
+        (p.name || '').toLowerCase().includes('folket') ||
+        (p.room || '').toLowerCase().includes('folket') ||
+        p.isFollowTtv || p.isFollowGds || p.isFollowUop || p.isFollowBalance ||
+        p.vitals.some((v) => (v.keluhan || '').toLowerCase().includes('folket'))
+    );
+
+    if (folketMatches.length === 0) {
+      triggerNotification('Tidak ada pasien berlabel "Folket" ditemukan.', 'error');
+      return;
+    }
+
+    const combined = folketMatches.map((p) => formatPatientRecord(p)).join('\n\n------------------\n\n');
+    const fullText = `Izin kak/bang, izin mengirimkan folket atas nama:\n\n${combined}`;
+    navigator.clipboard.writeText(fullText);
+    triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien Folket + Izin!`, 'success');
+  };
+
   const resetAllData = () => {
     if (
       confirm(
@@ -350,7 +373,7 @@ export default function App() {
         body: formData.toString()
       })
         .then(() => {
-          console.log('Synchronized patient record to google sheet back-office macro successfully.');
+          console.log('Synchronized patient record to database back-office macro successfully.');
         })
         .catch((e) => {
           console.warn('Sync sheets macro error (benign in client environment):', e);
@@ -549,7 +572,7 @@ export default function App() {
                   EZKOAS
                 </h1>
                 <span className="bg-teal-50 border border-teal-100 text-teal-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none">
-                  V2.8.12
+                  V2.9.2
                 </span>
               </div>
               <p className="hidden sm:block text-[10px] text-slate-450 font-sans leading-relaxed mt-0.5">
@@ -685,7 +708,7 @@ export default function App() {
                   <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs transition-colors">
                     <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
                       <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span>Salin Masal ke WhatsApp:</span>
+                      <span>Salin Masal ke Clipboard:</span>
                     </span>
                     <div className="flex flex-wrap gap-2">
                       <button
@@ -709,6 +732,13 @@ export default function App() {
                         <Layers className="w-3.5 h-3.5 text-amber-600" />
                         <span>Copy Hanya Folket</span>
                       </button>
+                      <button
+                        onClick={copyFolketOnlyWithIzin}
+                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      >
+                        <UserCheck className="w-3.5 h-3.5 text-orange-600" />
+                        <span>Copy Folket + Izin</span>
+                      </button>
                     </div>
 
                     <div className="ml-auto flex items-center gap-2">
@@ -721,6 +751,22 @@ export default function App() {
                     </div>
                   </div>
                 )}
+
+                {/* Realtime Vitals Dashboard Button */}
+                <button
+                  onClick={() => setShowRealtimeDashboard(true)}
+                  className="w-full bg-slate-900 dark:bg-slate-950 border border-slate-800 hover:bg-slate-800 text-white py-4 px-5 rounded-2xl font-bold font-sans text-sm transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)] bg-[length:250%_250%,100%_100%] opacity-20 pointer-events-none" />
+                  <Activity className="w-5 h-5 text-emerald-400 group-hover:animate-pulse relative z-10" />
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <span>Lihat TTV secara Realtime</span>
+                    <span className="bg-amber-500/20 border border-amber-500/30 text-amber-300 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">
+                      BETA
+                    </span>
+                  </span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping absolute right-6 top-1/2 -translate-y-1/2" />
+                </button>
 
                 {/* Utility Tools launcher row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -871,7 +917,7 @@ export default function App() {
 
       {/* Global custom Toast notifier absolute alert box */}
       {notification && (
-        <div className="fixed bottom-6 right-6 z-50 animate-fade-in select-none">
+        <div className="fixed bottom-6 right-6 z-[100] animate-fade-in select-none">
           <div className="bg-slate-900 border border-slate-800 p-4.5 rounded-2xl text-white text-xs max-w-sm flex items-center gap-3 shadow-xl">
             <span className="text-base">
               {notification.type === 'success' ? '✅' : notification.type === 'error' ? '❌' : 'ℹ️'}
@@ -1005,6 +1051,16 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {showRealtimeDashboard && (
+        <RealtimeDashboardModal
+          onClose={() => setShowRealtimeDashboard(false)}
+          onImport={(importedList) => {
+            handleImportCompleted(importedList);
+            triggerNotification('Berhasil mengimpor TTV dari Live Feed!', 'success');
+          }}
+        />
       )}
     </div>
   );

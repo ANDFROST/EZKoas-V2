@@ -130,7 +130,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ onClose, showNotif
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-xl p-3 flex gap-2.5 text-amber-800 dark:text-amber-200 text-[11px] leading-relaxed transition-colors">
               <ShieldAlert className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
               <p>
-                <strong>Belum Diatur:</strong> URL integrasi Google Docs belum dipasang di kode. Pesan saat ini hanya akan disimulasikan.
+                <strong>Belum Diatur:</strong> Error
               </p>
             </div>
           )}
