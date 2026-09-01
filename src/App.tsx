@@ -356,7 +356,16 @@ export default function App() {
         bcMuntahCount: entry.balanceCairan?.muntahCount?.toString() || '',
         bcMuntahValue: entry.balanceCairan?.muntahValue?.toString() || '',
         bcIwl: entry.balanceCairan?.iwl ? 'true' : 'false',
-        bcIwlValue: entry.balanceCairan?.iwlValue?.toString() || ''
+        bcIwlValue: entry.balanceCairan?.iwlValue?.toString() || '',
+
+        // Pemeriksaan Paru
+        spType: entry.sp?.type || '',
+        spRegions: entry.sp ? JSON.stringify(entry.sp.regions) : '',
+        stRh: entry.st ? JSON.stringify(entry.st.rh) : '',
+        stWh: entry.st ? JSON.stringify(entry.st.wh) : '',
+        stPfr: entry.st ? JSON.stringify(entry.st.pleuralFrictionRub) : '',
+        stStridor: entry.st ? JSON.stringify(entry.st.stridor) : '',
+        stHippocrates: entry.st ? JSON.stringify(entry.st.hippocratesSuccusion) : ''
       };
 
       const formData = new URLSearchParams();

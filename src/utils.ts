@@ -77,6 +77,87 @@ function normalizeAge(raw: string): string {
   return cleaned;
 }
 
+export function formatSP(sp?: import('./types').SuaraPernapasan): string {
+  if (!sp || !sp.type) return '';
+  const abnormalities: string[] = [];
+  
+  const regionsMap: Record<string, string> = {
+    apexRight: 'apex hemitoraks kanan',
+    midRight: 'medial hemitoraks kanan',
+    lowerRight: 'basal hemitoraks kanan',
+    apexLeft: 'apex hemitoraks kiri',
+    midLeft: 'medial hemitoraks kiri',
+    lowerLeft: 'basal hemitoraks kiri'
+  };
+
+  const getSpLocationString = (regions: string[]) => {
+    const rightRegions = regions.filter(r => r.endsWith('Right'));
+    const leftRegions = regions.filter(r => r.endsWith('Left'));
+
+    const res: string[] = [];
+
+    if (rightRegions.length === 3 && leftRegions.length === 3) {
+      return 'bilateral';
+    }
+
+    // Sinistra first
+    if (leftRegions.length === 3) {
+      res.push('hemithoraks kiri');
+    } else {
+      res.push(...leftRegions.map(r => regionsMap[r]));
+    }
+
+    // Dextra second
+    if (rightRegions.length === 3) {
+      res.push('hemithoraks kanan');
+    } else {
+      res.push(...rightRegions.map(r => regionsMap[r]));
+    }
+
+    return res.join(', ');
+  };
+
+  const melemahRegions = Object.keys(sp.regions).filter((k) => sp.regions[k as import('./types').LungRegion] === 'Melemah');
+  const menguatRegions = Object.keys(sp.regions).filter((k) => sp.regions[k as import('./types').LungRegion] === 'Menguat');
+
+  const melemahStr = getSpLocationString(melemahRegions);
+  const menguatStr = getSpLocationString(menguatRegions);
+
+  if (melemahStr) abnormalities.push(`melemah di ${melemahStr}`);
+  if (menguatStr) abnormalities.push(`menguat di ${menguatStr}`);
+
+  if (abnormalities.length > 0) {
+    return `${sp.type} (${abnormalities.join(' dan ')})`;
+  }
+  return sp.type;
+}
+
+export function formatST(st?: import('./types').SuaraTambahan): string {
+  if (!st) return '';
+  const parts: string[] = [];
+  
+  // Rh and Wh always shown — format: (sinistra/dextra)
+  parts.push(`Rh (${st.rh.left ? '+' : '-'}/${st.rh.right ? '+' : '-'})`);
+  parts.push(`Wh (${st.wh.left ? '+' : '-'}/${st.wh.right ? '+' : '-'})`);
+
+  // PFR only shown if positive
+  if (st.pleuralFrictionRub.left || st.pleuralFrictionRub.right) {
+    parts.push(`PFR (${st.pleuralFrictionRub.left ? '+' : '-'}/${st.pleuralFrictionRub.right ? '+' : '-'})`);
+  }
+
+  // Stridor only shown if positive
+  if (st.stridor.left || st.stridor.right) {
+    parts.push(`Stridor (${st.stridor.left ? '+' : '-'}/${st.stridor.right ? '+' : '-'})`);
+  }
+
+  // Hippocrates Succusion only shown if positive
+  if (st.hippocratesSuccusion.left || st.hippocratesSuccusion.right) {
+    parts.push(`HS (${st.hippocratesSuccusion.left ? '+' : '-'}/${st.hippocratesSuccusion.right ? '+' : '-'})`);
+  }
+
+  return parts.join(', ');
+}
+
 // Konversi vitals ke string EZKOAS yang diformat
 export function formatVitalsEntry(v: VitalsEntry): string {
   const lines: string[] = [];
@@ -123,6 +204,16 @@ export function formatVitalsEntry(v: VitalsEntry): string {
 
   if (v.temp) lines.push(`Temp: ${v.temp} C`);
   if (v.isGdsChecked && v.gdsValue) lines.push(`GDS: ${v.gdsValue} mg/dL`);
+
+  if (v.sp) {
+    const spStr = formatSP(v.sp);
+    if (spStr) lines.push(`SP: ${spStr}`);
+  }
+  
+  if (v.st) {
+    const stStr = formatST(v.st);
+    if (stStr) lines.push(`ST: ${stStr}`);
+  }
 
   if (v.isOnIVDrug && v.ivDrugNames.length > 0) {
     for (let i = 0; i < v.ivDrugNames.length; i++) {

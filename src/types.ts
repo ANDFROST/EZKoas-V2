@@ -29,6 +29,22 @@ export interface BalanceCairan {
   iwlValue: number;
 }
 
+export type LungRegion = 'apexRight' | 'midRight' | 'lowerRight' | 'apexLeft' | 'midLeft' | 'lowerLeft';
+export type SpStatus = 'Normal' | 'Melemah' | 'Menguat';
+
+export interface SuaraPernapasan {
+  type: 'Vesikuler' | 'Trakeal' | 'Bronkial' | 'Bronkovesikuler' | '';
+  regions: Record<LungRegion, SpStatus>;
+}
+
+export interface SuaraTambahan {
+  rh: { right: boolean; left: boolean };
+  wh: { right: boolean; left: boolean };
+  pleuralFrictionRub: { right: boolean; left: boolean };
+  stridor: { right: boolean; left: boolean };
+  hippocratesSuccusion: { right: boolean; left: boolean };
+}
+
 export interface VitalsEntry {
   time: string;
   bp: string;
@@ -50,6 +66,8 @@ export interface VitalsEntry {
   isUopChecked?: boolean;
   uopValue?: string;
   balanceCairan?: BalanceCairan;
+  sp?: SuaraPernapasan;
+  st?: SuaraTambahan;
 }
 
 export interface PatientRecord {
@@ -120,4 +138,6 @@ export interface SpreadsheetRow {
   IVDrugNames?: string;
   IVDrugRates?: string;
   Keluhan?: string;
+  SP?: string;
+  ST?: string;
 }

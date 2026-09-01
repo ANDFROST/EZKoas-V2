@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { PatientRecord, VitalsEntry, BalanceCairan, SpreadsheetRow } from '../types';
+import { PatientRecord, VitalsEntry, BalanceCairan, SpreadsheetRow, SuaraPernapasan, SuaraTambahan } from '../types';
 import { formatTime, normalizeGender, GOOGLE_SHEETS_SCRIPT_URL } from '../utils';
 import { GcsCalculator } from './GcsCalculator';
 import { BalanceCairanModal } from './BalanceCairanModal';
 import { MedicalProtocolsRef } from './MedicalProtocolsRef';
 import { ImportOnlineModal, ImportOnlineResult } from './ImportOnlineModal';
+import { LungRegionSelector } from './LungRegionSelector';
 import {
   FileText,
   User,
@@ -114,6 +115,10 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   const [showProtocolsRef, setShowProtocolsRef] = useState(false);
   const [showFollowModal, setShowFollowModal] = useState(false);
   const [showImportOnlineModal, setShowImportOnlineModal] = useState(false);
+  const [showLungModal, setShowLungModal] = useState(false);
+
+  const [spData, setSpData] = useState<SuaraPernapasan | undefined>(undefined);
+  const [stData, setStData] = useState<SuaraTambahan | undefined>(undefined);
 
   // Sliding-scale recommendations
   const [gdsRecommendation, setGdsRecommendation] = useState<{ message: string; suggestedRate?: string } | null>(null);
@@ -183,6 +188,13 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
         if (entry.balanceCairan) {
           setBalanceCairan(entry.balanceCairan);
+        }
+
+        if (entry.sp) {
+          setSpData(entry.sp);
+        }
+        if (entry.st) {
+          setStData(entry.st);
         }
       }
     }
@@ -342,7 +354,9 @@ export const PatientForm: React.FC<PatientFormProps> = ({
       createdAt: patientIndex !== null && vitalsIndex !== null && savedPatients[patientIndex].vitals[vitalsIndex]
         ? savedPatients[patientIndex].vitals[vitalsIndex].createdAt
         : Date.now(),
-      balanceCairan
+      balanceCairan,
+      sp: spData,
+      st: stData
     };
 
     let pRecord: PatientRecord;
@@ -750,7 +764,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               </div>
             </div>
 
-            {/* Temperature */}
+            {/* Temperature & Lung sounds */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Suhu (Temperature)</label>
@@ -764,6 +778,18 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   />
                   <span className="text-xs bg-slate-50 dark:bg-slate-800 px-3 py-2.5 border-l border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 shrink-0 font-semibold transition-colors">°C</span>
                 </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Pemeriksaan Paru (SP & ST)</label>
+                <button
+                  type="button"
+                  onClick={() => setShowLungModal(true)}
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 font-sans transition-colors flex items-center justify-between"
+                >
+                  <span className="truncate">{spData || stData ? 'Telah Diperiksa' : 'Belum Diperiksa'}</span>
+                  <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded transition-colors">Check</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1090,6 +1116,21 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             onApply={handleApplyOnlineData}
             onClose={() => setShowImportOnlineModal(false)}
             showNotification={showNotification}
+          />
+        </div>
+      )}
+
+      {showLungModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4 overflow-y-auto">
+          <LungRegionSelector
+            initialSp={spData}
+            initialSt={stData}
+            onClose={() => setShowLungModal(false)}
+            onSave={(sp, st) => {
+              setSpData(sp);
+              setStData(st);
+              setShowLungModal(false);
+            }}
           />
         </div>
       )}
