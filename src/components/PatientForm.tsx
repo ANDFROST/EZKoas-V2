@@ -6,6 +6,7 @@ import { BalanceCairanModal } from './BalanceCairanModal';
 import { MedicalProtocolsRef } from './MedicalProtocolsRef';
 import { ImportOnlineModal, ImportOnlineResult } from './ImportOnlineModal';
 import { LungRegionSelector } from './LungRegionSelector';
+import { RoomSelectorModal } from './RoomSelectorModal';
 import {
   FileText,
   User,
@@ -28,7 +29,8 @@ import {
   Calculator,
   Loader2,
   Syringe,
-  Info
+  Info,
+  RotateCcw
 } from 'lucide-react';
 
 interface PatientFormProps {
@@ -116,6 +118,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   const [showFollowModal, setShowFollowModal] = useState(false);
   const [showImportOnlineModal, setShowImportOnlineModal] = useState(false);
   const [showLungModal, setShowLungModal] = useState(false);
+  const [showRoomModal, setShowRoomModal] = useState(false);
 
   const [spData, setSpData] = useState<SuaraPernapasan | undefined>(undefined);
   const [stData, setStData] = useState<SuaraTambahan | undefined>(undefined);
@@ -442,31 +445,20 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             <p className="text-slate-500 text-xs font-sans mt-0.5">Isilah form di bawah ini!</p>
           </div>
         </div>
-      </div>
 
-      {/* Lookup database trigger */}
-      {patientIndex === null && (
-        <div className="bg-gradient-to-br from-teal-50 dark:from-teal-900/30 to-emerald-50/50 dark:to-emerald-900/20 p-4 rounded-2xl border border-teal-100 dark:border-teal-800 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-teal-100 rounded-xl flex items-center justify-center shrink-0">
-              <Search className="w-5 h-5 text-teal-600" />
-            </div>
-            <div>
-              <h3 className="font-bold text-teal-900 dark:text-teal-100 text-sm flex items-center gap-1.5">
-                Cari Identitas Pasien
-                <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none shrink-0">BETA</span>
-              </h3>
-              <p className="text-xs text-teal-700/80 mt-0.5">Otomatis isi identitas pasien dari file koyan terbaru</p>
-            </div>
-          </div>
+        {/* Lookup database trigger (Compact mode) */}
+        {patientIndex === null && (
           <button
             onClick={() => setShowImportOnlineModal(true)}
-            className="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-bold rounded-xl text-xs transition shadow-sm shrink-0 shadow-teal-600/20"
+            className="flex items-center gap-2 px-3 py-2 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 border border-teal-200 dark:border-teal-800 rounded-xl transition-colors active:scale-95 self-start sm:self-auto"
+            title="Cari Identitas Pasien dari File Koyan"
           >
-            Cari Pasien
+            <Search className="w-4 h-4" />
+            <span className="text-xs font-bold">Cari Pasien</span>
+            <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full leading-none">BETA</span>
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Main Two Column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -482,13 +474,22 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             <div className="grid grid-cols-2 gap-4 text-xs font-sans">
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Ruangan / Kamar</label>
-                <input
-                  type="text"
-                  placeholder="Misal: RA4 1.2.3"
-                  value={room}
-                  onChange={(e) => setRoom(e.target.value)}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Misal: RA4 1.2.3"
+                    value={room}
+                    onChange={(e) => setRoom(e.target.value)}
+                    className="flex-1 min-w-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-teal-500 transition-colors"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowRoomModal(true)}
+                    className="shrink-0 px-3 py-2.5 bg-teal-50 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 border border-teal-200 dark:border-teal-800 rounded-xl font-bold text-xs hover:bg-teal-100 dark:hover:bg-teal-900/50 transition-colors"
+                  >
+                    Pilih Ruangan
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-1">
@@ -782,14 +783,26 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Pemeriksaan Paru (SP & ST)</label>
-                <button
-                  type="button"
-                  onClick={() => setShowLungModal(true)}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 font-sans transition-colors flex items-center justify-between"
-                >
-                  <span className="truncate">{spData || stData ? 'Telah Diperiksa' : 'Belum Diperiksa'}</span>
-                  <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded transition-colors">Check</span>
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowLungModal(true)}
+                    className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 font-sans transition-colors flex items-center justify-between"
+                  >
+                    <span className="truncate">{spData || stData ? 'Telah Diperiksa' : 'Belum Diperiksa'}</span>
+                    <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded transition-colors">Check</span>
+                  </button>
+                  {(spData || stData) && (
+                    <button
+                      type="button"
+                      onClick={() => { setSpData(undefined); setStData(undefined); }}
+                      className="shrink-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-rose-500 rounded-xl px-3 flex items-center justify-center hover:bg-rose-50 dark:hover:bg-rose-900/20 hover:border-rose-200 dark:hover:border-rose-800 transition-colors"
+                      title="Reset Pemeriksaan Paru"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -1118,6 +1131,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
             showNotification={showNotification}
           />
         </div>
+      )}
+
+      {showRoomModal && (
+        <RoomSelectorModal
+          onClose={() => setShowRoomModal(false)}
+          onSelect={(roomStr) => {
+            setRoom(roomStr);
+            setShowRoomModal(false);
+          }}
+        />
       )}
 
       {showLungModal && (
