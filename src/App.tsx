@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { PatientRecord, VitalsEntry } from './types';
+import { PatientRecord, VitalsEntry, PatientFolder } from './types';
 import { formatPatientRecord, formatTime, GOOGLE_SHEETS_TTV_WEBAPP_URL } from './utils';
 import { PatientForm } from './components/PatientForm';
 import { PatientList } from './components/PatientList';
@@ -37,13 +37,22 @@ import {
   FileSpreadsheet,
   MessageSquareText,
   Moon,
-  Sun
+  Sun,
+  FolderPlus,
+  FolderOpen,
+  Folder,
+  Trash2,
+  Pencil
 } from 'lucide-react';
 
 const STORAGE_KEY = 'ezkoas_patients_data';
 
 export default function App() {
-  const [patients, setPatients] = useState<PatientRecord[]>([]);
+  const [folders, setFolders] = useState<PatientFolder[]>([]);
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+
+  const activeFolder = folders.find(f => f.id === activeFolderId) || null;
+  const patients = activeFolder ? activeFolder.patients : [];
 
   // Dark mode state
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -97,7 +106,38 @@ export default function App() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        setPatients(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          if (parsed.length > 0 && !('patients' in parsed[0])) {
+            // Legacy migration: array of PatientRecord
+            const legacyFolder: PatientFolder = {
+              id: 'folder-' + Date.now(),
+              name: 'Folder Utama',
+              createdAt: Date.now(),
+              patients: parsed as PatientRecord[]
+            };
+            setFolders([legacyFolder]);
+            setActiveFolderId(legacyFolder.id);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify([legacyFolder]));
+          } else {
+            // Modern format: array of PatientFolder
+            setFolders(parsed);
+            if (parsed.length > 0) {
+              setActiveFolderId(parsed[0].id);
+            }
+          }
+        }
+      } else {
+        // Initial state
+        const defaultFolder: PatientFolder = {
+          id: 'folder-' + Date.now(),
+          name: 'Folder Utama',
+          createdAt: Date.now(),
+          patients: []
+        };
+        setFolders([defaultFolder]);
+        setActiveFolderId(defaultFolder.id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([defaultFolder]));
       }
     } catch (e) {
       console.error('Error loading localStorage data', e);
@@ -105,13 +145,21 @@ export default function App() {
   }, []);
 
   // Helper function to update state and synchronize changes with LocalStorage
-  const savePatientsAndPersist = (updatedList: PatientRecord[]) => {
-    setPatients(updatedList);
+  const saveFoldersAndPersist = (updatedFolders: PatientFolder[]) => {
+    setFolders(updatedFolders);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedList));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedFolders));
     } catch (e) {
       console.error('Error saving data to localStorage', e);
     }
+  };
+
+  const savePatientsAndPersist = (updatedList: PatientRecord[]) => {
+    if (!activeFolderId) return;
+    const updatedFolders = folders.map(f =>
+      f.id === activeFolderId ? { ...f, patients: updatedList } : f
+    );
+    saveFoldersAndPersist(updatedFolders);
   };
 
   // Toast notifier
@@ -247,14 +295,75 @@ export default function App() {
     triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien Folket + Izin!`, 'success');
   };
 
+  const handleCreateFolder = () => {
+    const folderName = prompt('Masukkan nama folder baru (contoh: Folket Pagi, ICU, dll):');
+    if (folderName && folderName.trim() !== '') {
+      const newFolder: PatientFolder = {
+        id: 'folder-' + Date.now(),
+        name: folderName.trim(),
+        createdAt: Date.now(),
+        patients: []
+      };
+      const newFolders = [...folders, newFolder];
+      saveFoldersAndPersist(newFolders);
+      setActiveFolderId(newFolder.id);
+      triggerNotification(`Folder "${newFolder.name}" berhasil dibuat.`, 'success');
+    }
+  };
+
+  const handleDeleteFolder = () => {
+    if (!activeFolder) return;
+    if (folders.length <= 1) {
+      triggerNotification('Tidak bisa menghapus satu-satunya folder tersisa.', 'error');
+      return;
+    }
+    if (confirm(`Apakah Anda yakin ingin menghapus folder "${activeFolder.name}" beserta semua isi data pasien di dalamnya?`)) {
+      const newFolders = folders.filter(f => f.id !== activeFolderId);
+      saveFoldersAndPersist(newFolders);
+      setActiveFolderId(newFolders[0].id);
+      triggerNotification(`Folder "${activeFolder.name}" telah dihapus.`, 'success');
+    }
+  };
+
+  const handleRenameFolder = () => {
+    if (!activeFolder) return;
+    const newName = prompt('Masukkan nama baru untuk folder ini:', activeFolder.name);
+    if (newName && newName.trim() !== '' && newName.trim() !== activeFolder.name) {
+      const updatedFolders = folders.map(f =>
+        f.id === activeFolderId ? { ...f, name: newName.trim() } : f
+      );
+      saveFoldersAndPersist(updatedFolders);
+      triggerNotification(`Folder berhasil diubah menjadi "${newName.trim()}".`, 'success');
+    }
+  };
+
+  const resetFolderTtv = () => {
+    if (!activeFolder) return;
+    if (confirm(`Peringatan: Seluruh data Vitals/TTV di dalam folder "${activeFolder.name}" akan dihapus, tetapi identitas pasien akan dipertahankan. Lanjutkan?`)) {
+      const clearedPatients = activeFolder.patients.map(p => ({
+        ...p,
+        vitals: []
+      }));
+      savePatientsAndPersist(clearedPatients);
+      triggerNotification(`TTV pada folder "${activeFolder.name}" berhasil direset.`, 'success');
+    }
+  };
+
   const resetAllData = () => {
     if (
       confirm(
-        'SEMUA DATA PASIEN YANG TERSIMPAN AKAN DIHAPUS SECARA PERMANEN.\nApakah Anda yakin ingin menghapus seluruh database EZKOAS?'
+        'SEMUA DATA (FOLDER & PASIEN) YANG TERSIMPAN AKAN DIHAPUS SECARA PERMANEN.\nApakah Anda yakin ingin menghapus seluruh database EZKOAS?'
       )
     ) {
-      savePatientsAndPersist([]);
-      triggerNotification('Seluruh data pasien telah dibersihkan secara permanen.', 'success');
+      const defaultFolder: PatientFolder = {
+        id: 'folder-' + Date.now(),
+        name: 'Folder Utama',
+        createdAt: Date.now(),
+        patients: []
+      };
+      saveFoldersAndPersist([defaultFolder]);
+      setActiveFolderId(defaultFolder.id);
+      triggerNotification('Seluruh data pasien & folder telah dibersihkan secara permanen.', 'success');
     }
   };
 
@@ -363,6 +472,7 @@ export default function App() {
         spRegions: entry.sp ? JSON.stringify(entry.sp.regions) : '',
         stRh: entry.st ? JSON.stringify(entry.st.rh) : '',
         stWh: entry.st ? JSON.stringify(entry.st.wh) : '',
+        stCrackles: entry.st && entry.st.crackles ? JSON.stringify(entry.st.crackles) : '',
         stPfr: entry.st ? JSON.stringify(entry.st.pleuralFrictionRub) : '',
         stStridor: entry.st ? JSON.stringify(entry.st.stridor) : '',
         stHippocrates: entry.st ? JSON.stringify(entry.st.hippocratesSuccusion) : ''
@@ -481,6 +591,19 @@ export default function App() {
     };
   }, [patients]);
 
+  const allPatientsDirectory = React.useMemo(() => {
+    const map = new Map<string, PatientRecord>();
+    folders.forEach(f => {
+      f.patients.forEach(p => {
+        const key = p.rm ? p.rm : p.name;
+        if (key && !map.has(key)) {
+          map.set(key, { ...p, vitals: [] });
+        }
+      });
+    });
+    return Array.from(map.values());
+  }, [folders]);
+
   return (
     <div className="min-h-screen bg-[#f3f4f6] dark:bg-slate-950 text-slate-800 dark:text-slate-200 flex font-sans selection:bg-teal-100 dark:selection:bg-teal-900 selection:text-teal-900 dark:selection:text-teal-100 overflow-x-hidden transition-colors duration-200">
       {/* Sidebar Navigation Rail (Desktop Only) */}
@@ -581,7 +704,7 @@ export default function App() {
                   EZKOAS
                 </h1>
                 <span className="bg-teal-50 border border-teal-100 text-teal-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none">
-                  V2.9.2
+                  V3.1.1
                 </span>
               </div>
               <p className="hidden sm:block text-[10px] text-slate-450 font-sans leading-relaxed mt-0.5">
@@ -610,6 +733,7 @@ export default function App() {
               patientIndex={selectedPatientIdx}
               vitalsIndex={selectedVitalsIdx}
               savedPatients={patients}
+              allPatientsDirectory={allPatientsDirectory}
               onCancel={() => setActivePane(selectedPatientIdx !== null ? 'list' : 'dashboard')}
               onSave={handleSaveForm}
               showNotification={triggerNotification}
@@ -620,7 +744,14 @@ export default function App() {
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex items-center justify-between shadow-xs select-none flex-wrap gap-3 transition-colors">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-teal-600 animate-pulse" />
-                  <span className="font-extrabold text-xs text-slate-500 uppercase tracking-wider">Data Pasien yang Tersimpan</span>
+                  <div>
+                    <span className="font-extrabold text-xs text-slate-500 uppercase tracking-wider">Data Pasien yang Tersimpan</span>
+                    {activeFolder && (
+                      <span className="ml-2 text-[11px] font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-900/30 px-2 py-0.5 rounded-full border border-teal-200 dark:border-teal-800">
+                        📁 {activeFolder.name}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
@@ -657,6 +788,63 @@ export default function App() {
           ) : (
             /* activePane === 'dashboard' - Main Dashboard Menu */
             <div className="space-y-6">
+              {/* Folder Management Section */}
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs p-5 transition-colors">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-900/30 border border-teal-100 dark:border-teal-800/50 flex items-center justify-center">
+                      <Folder className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Folder Aktif</p>
+                      <select
+                        value={activeFolderId || ''}
+                        onChange={(e) => setActiveFolderId(e.target.value)}
+                        className="mt-1 bg-transparent text-slate-900 dark:text-white font-extrabold text-lg outline-none cursor-pointer border-b-2 border-transparent hover:border-teal-300 transition"
+                      >
+                        {folders.map(f => (
+                          <option key={f.id} value={f.id} className="text-slate-900">
+                            {f.name} ({f.patients.length} Pasien)
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+                    <button
+                      onClick={resetFolderTtv}
+                      className="flex-1 sm:flex-none px-4 py-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-amber-200 dark:border-amber-800"
+                      title="Reset TTV seluruh pasien di folder ini"
+                    >
+                      <ListRestart className="w-4 h-4" />
+                      Reset TTV
+                    </button>
+                    <button
+                      onClick={handleCreateFolder}
+                      className="flex-1 sm:flex-none px-4 py-2 bg-teal-50 hover:bg-teal-100 dark:bg-teal-900/30 dark:hover:bg-teal-900/50 text-teal-700 dark:text-teal-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-teal-200 dark:border-teal-800"
+                    >
+                      <FolderPlus className="w-4 h-4" />
+                      Buat Folder
+                    </button>
+                    <button
+                      onClick={handleRenameFolder}
+                      className="flex-1 sm:flex-none px-4 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700"
+                      title="Ganti nama folder aktif"
+                    >
+                      <Pencil className="w-4 h-4" />
+                      Rename
+                    </button>
+                    <button
+                      onClick={handleDeleteFolder}
+                      className="flex-1 sm:flex-none px-4 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-red-200 dark:border-red-900/50"
+                      title="Hapus Folder Ini"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               {/* Launcher Cards stack and collided queue-metrics panel */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 

@@ -137,21 +137,26 @@ export function formatST(st?: import('./types').SuaraTambahan): string {
   const parts: string[] = [];
   
   // Rh and Wh always shown — format: (sinistra/dextra)
-  parts.push(`Rh (${st.rh.left ? '+' : '-'}/${st.rh.right ? '+' : '-'})`);
-  parts.push(`Wh (${st.wh.left ? '+' : '-'}/${st.wh.right ? '+' : '-'})`);
+  parts.push(`Rh (${st.rh?.left ? '+' : '-'}/${st.rh?.right ? '+' : '-'})`);
+  parts.push(`Wh (${st.wh?.left ? '+' : '-'}/${st.wh?.right ? '+' : '-'})`);
+
+  // Crackles only shown if positive
+  if (st.crackles && (st.crackles.left || st.crackles.right)) {
+    parts.push(`Crackles (${st.crackles.left ? '+' : '-'}/${st.crackles.right ? '+' : '-'})`);
+  }
 
   // PFR only shown if positive
-  if (st.pleuralFrictionRub.left || st.pleuralFrictionRub.right) {
+  if (st.pleuralFrictionRub && (st.pleuralFrictionRub.left || st.pleuralFrictionRub.right)) {
     parts.push(`PFR (${st.pleuralFrictionRub.left ? '+' : '-'}/${st.pleuralFrictionRub.right ? '+' : '-'})`);
   }
 
   // Stridor only shown if positive
-  if (st.stridor.left || st.stridor.right) {
+  if (st.stridor && (st.stridor.left || st.stridor.right)) {
     parts.push(`Stridor (${st.stridor.left ? '+' : '-'}/${st.stridor.right ? '+' : '-'})`);
   }
 
   // Hippocrates Succusion only shown if positive
-  if (st.hippocratesSuccusion.left || st.hippocratesSuccusion.right) {
+  if (st.hippocratesSuccusion && (st.hippocratesSuccusion.left || st.hippocratesSuccusion.right)) {
     parts.push(`HS (${st.hippocratesSuccusion.left ? '+' : '-'}/${st.hippocratesSuccusion.right ? '+' : '-'})`);
   }
 

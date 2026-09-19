@@ -40,6 +40,7 @@ export interface SuaraPernapasan {
 export interface SuaraTambahan {
   rh: { right: boolean; left: boolean };
   wh: { right: boolean; left: boolean };
+  crackles?: { right: boolean; left: boolean };
   pleuralFrictionRub: { right: boolean; left: boolean };
   stridor: { right: boolean; left: boolean };
   hippocratesSuccusion: { right: boolean; left: boolean };
@@ -87,6 +88,13 @@ export interface PatientRecord {
   isFollowBalance: boolean;
   followBalanceInterval: string;
   vitals: VitalsEntry[];
+}
+
+export interface PatientFolder {
+  id: string;
+  name: string;
+  createdAt: number;
+  patients: PatientRecord[];
 }
 
 export interface SpreadsheetRow {

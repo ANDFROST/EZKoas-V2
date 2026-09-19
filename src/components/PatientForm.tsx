@@ -37,6 +37,7 @@ interface PatientFormProps {
   patientIndex: number | null;
   vitalsIndex: number | null;
   savedPatients: PatientRecord[];
+  allPatientsDirectory?: PatientRecord[];
   onSave: (patient: PatientRecord, updatedVitals: VitalsEntry) => void;
   onCancel: () => void;
   showNotification: (msg: string, type: 'success' | 'dev' | 'error') => void;
@@ -60,6 +61,7 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   patientIndex,
   vitalsIndex,
   savedPatients,
+  allPatientsDirectory = [],
   onSave,
   onCancel,
   showNotification
@@ -119,9 +121,70 @@ export const PatientForm: React.FC<PatientFormProps> = ({
   const [showImportOnlineModal, setShowImportOnlineModal] = useState(false);
   const [showLungModal, setShowLungModal] = useState(false);
   const [showRoomModal, setShowRoomModal] = useState(false);
+  const [showDirectoryModal, setShowDirectoryModal] = useState(false);
+  const [directorySearch, setDirectorySearch] = useState('');
 
   const [spData, setSpData] = useState<SuaraPernapasan | undefined>(undefined);
   const [stData, setStData] = useState<SuaraTambahan | undefined>(undefined);
+
+  // Focus state for previous values bubble
+  const [focusedField, setFocusedField] = useState<keyof VitalsEntry | 'lung' | 'ivDrugs' | null>(null);
+
+  // Compute previous vitals
+  const previousVitals = useMemo(() => {
+    if (patientIndex !== null && savedPatients[patientIndex]) {
+      const patient = savedPatients[patientIndex];
+      if (vitalsIndex !== null) {
+        if (vitalsIndex > 0) return patient.vitals[vitalsIndex - 1];
+      } else {
+        if (patient.vitals.length > 0) return patient.vitals[patient.vitals.length - 1];
+      }
+    }
+    return null;
+  }, [patientIndex, vitalsIndex, savedPatients]);
+
+  const renderPreviousValueBubble = (field: keyof VitalsEntry | 'lung' | 'ivDrugs', unit: string = '') => {
+    if (focusedField !== field || !previousVitals) return null;
+
+    let displayValue = '';
+
+    if (field === 'lung') {
+      const sp = previousVitals.sp ? 'SP terisi' : '';
+      const st = previousVitals.st ? 'ST terisi' : '';
+      const both = [sp, st].filter(Boolean).join(', ');
+      if (!both) return null;
+      displayValue = both;
+    } else if (field === 'spo2') {
+      if (!previousVitals.spo2) return null;
+      const methodMap: Record<string, string> = {
+        'Room Air (RA)': 'RA',
+        'Nasal Cannula (NK)': 'NK',
+        'Non Rebreathing Mask (NRM)': 'NRM',
+        'Trakeostomi': 'Trakeostomi',
+        'Ventilator': 'Ventilator'
+      };
+      const methodShort = methodMap[previousVitals.o2Method] || previousVitals.o2Method;
+      const lpmStr = previousVitals.lpm && !['Room Air (RA)', 'Ventilator'].includes(previousVitals.o2Method) ? ` ${previousVitals.lpm} lpm` : '';
+      displayValue = `${previousVitals.spo2}% on ${methodShort}${lpmStr}`;
+    } else if (field === 'ivDrugs') {
+      if (!previousVitals.isOnIVDrug || !previousVitals.ivDrugNames || previousVitals.ivDrugNames.length === 0) return null;
+      const drugs = previousVitals.ivDrugNames.map((name, idx) => `${name} ${previousVitals.ivDrugRates?.[idx] || '?'} cc/j`).join(', ');
+      displayValue = `⚠️ Drip sblm: ${drugs}`;
+    } else {
+      if (!previousVitals[field as keyof VitalsEntry]) return null;
+      displayValue = `${String(previousVitals[field as keyof VitalsEntry])} ${unit}`.trim();
+    }
+
+    const timeStr = previousVitals.time ? `(${previousVitals.time})` : '';
+
+    return (
+      <div className="absolute bottom-full left-0 mb-1 z-10 whitespace-nowrap bg-indigo-600/90 backdrop-blur-sm text-white text-[10px] px-2.5 py-1.5 rounded-lg shadow-lg animate-in fade-in zoom-in duration-200 pointer-events-none flex items-center gap-1.5 border border-indigo-500/30">
+        <span className="font-bold tracking-wide">{displayValue}</span>
+        {timeStr && <span className="opacity-80 tracking-wide font-mono">{timeStr}</span>}
+        <div className="absolute top-full left-4 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-indigo-600/90 drop-shadow-sm"></div>
+      </div>
+    );
+  };
 
   // Sliding-scale recommendations
   const [gdsRecommendation, setGdsRecommendation] = useState<{ message: string; suggestedRate?: string } | null>(null);
@@ -277,6 +340,26 @@ export const PatientForm: React.FC<PatientFormProps> = ({
     setAge(data.age);
     setGender(data.gender);
     setShowImportOnlineModal(false);
+  };
+
+  const handleApplyFromDirectory = (p: PatientRecord) => {
+    setName(p.name);
+    setRm(p.rm);
+    setRoom(p.room);
+    setAge(p.age);
+    setGender(p.gender);
+    if (p.weight) setWeight(p.weight);
+    if (p.height) setHeight(p.height);
+    setIsFollowTtv(p.isFollowTtv);
+    setFollowTtvInterval(p.followTtvInterval || '3 Jam');
+    setIsFollowGds(p.isFollowGds);
+    setFollowGdsInterval(p.followGdsInterval || '3 Jam');
+    setIsFollowUop(p.isFollowUop);
+    setFollowUopInterval(p.followUopInterval || '3 Jam');
+    setIsFollowBalance(p.isFollowBalance);
+    setFollowBalanceInterval(p.followBalanceInterval || '3 Jam');
+    setShowDirectoryModal(false);
+    showNotification(`Identitas "${p.name}" berhasil diterapkan.`, 'success');
   };
 
   // Manage custom drugs row array
@@ -448,15 +531,27 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
         {/* Lookup database trigger (Compact mode) */}
         {patientIndex === null && (
-          <button
-            onClick={() => setShowImportOnlineModal(true)}
-            className="flex items-center gap-2 px-3 py-2 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 border border-teal-200 dark:border-teal-800 rounded-xl transition-colors active:scale-95 self-start sm:self-auto"
-            title="Cari Identitas Pasien dari File Koyan"
-          >
-            <Search className="w-4 h-4" />
-            <span className="text-xs font-bold">Cari Pasien</span>
-            <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full leading-none">BETA</span>
-          </button>
+          <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+            {allPatientsDirectory.length > 0 && (
+              <button
+                onClick={() => { setDirectorySearch(''); setShowDirectoryModal(true); }}
+                className="flex items-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 rounded-xl transition-colors active:scale-95"
+                title="Pilih identitas dari pasien yang pernah tersimpan di folder lain"
+              >
+                <Database className="w-4 h-4" />
+                <span className="text-xs font-bold">Isi dari yang pernah Tersimpan</span>
+              </button>
+            )}
+            <button
+              onClick={() => setShowImportOnlineModal(true)}
+              className="flex items-center gap-2 px-3 py-2 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/50 border border-teal-200 dark:border-teal-800 rounded-xl transition-colors active:scale-95"
+              title="Cari Identitas Pasien dari File Koyan"
+            >
+              <Search className="w-4 h-4" />
+              <span className="text-xs font-bold">Cari Pasien dari Ruangan</span>
+              <span className="bg-amber-100 border border-amber-200 text-amber-700 font-mono text-[9px] font-bold uppercase px-1.5 py-0.5 rounded-full leading-none">BETA</span>
+            </button>
+          </div>
         )}
       </div>
 
@@ -616,10 +711,13 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
             {/* Consciousness & GCS Calculator Trigger */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="space-y-1">
+              <div className="space-y-1 relative">
+                {renderPreviousValueBubble('sens')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Tingkat Kesadaran (Sens)</label>
                 <select
                   value={sens}
+                  onFocus={() => setFocusedField('sens')}
+                  onBlur={() => setFocusedField(null)}
                   onChange={(e) => setSens(e.target.value)}
                   className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
                 >
@@ -670,13 +768,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
             {/* TD, HR, RR each on a separate row */}
             <div className="grid grid-cols-1 gap-4 text-xs font-sans">
-              <div className="space-y-1">
+              <div className="space-y-1 relative">
+                {renderPreviousValueBubble('bp', 'mmHg')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Tanda Darah (TD) / Tensi</label>
                 <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="120/80"
                     value={bp}
+                    onFocus={() => setFocusedField('bp')}
+                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setBp(e.target.value.replace(/[^0-9/]/g, ''))}
                     className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none font-mono"
                   />
@@ -684,13 +785,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 relative">
+                {renderPreviousValueBubble('hr', 'x/m')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Heart Rate (HR) / Nadi</label>
                 <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="80"
                     value={hr}
+                    onFocus={() => setFocusedField('hr')}
+                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setHr(e.target.value.replace(/[^0-9]/g, ''))}
                     className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none font-mono"
                   />
@@ -698,13 +802,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 relative">
+                {renderPreviousValueBubble('rr', 'x/m')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Respiratory Rate (RR) / Napas</label>
                 <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="20"
                     value={rr}
+                    onFocus={() => setFocusedField('rr')}
+                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setRr(e.target.value.replace(/[^0-9]/g, ''))}
                     className="w-full px-3.5 py-2.5 text-sm bg-transparent text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none font-mono"
                   />
@@ -715,13 +822,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
             {/* SpO2, Oxygen Method, LPM */}
             <div className="grid grid-cols-12 gap-2 text-xs">
-              <div className="col-span-3 space-y-1">
+              <div className="col-span-3 space-y-1 relative">
+                {renderPreviousValueBubble('spo2', '%')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px] block truncate">SpO2 %</label>
                 <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="98"
                     value={spo2}
+                    onFocus={() => setFocusedField('spo2')}
+                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => {
                       const val = e.target.value.replace(/[^0-9]/g, '');
                       if (val === '' || parseInt(val, 10) <= 100) {
@@ -767,13 +877,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
 
             {/* Temperature & Lung sounds */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
-              <div className="space-y-1">
+              <div className="space-y-1 relative">
+                {renderPreviousValueBubble('temp', '°C')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Suhu (Temperature)</label>
                 <div className="flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus-within:border-emerald-500 overflow-hidden transition-colors">
                   <input
                     type="text"
                     placeholder="36.5"
                     value={temp}
+                    onFocus={() => setFocusedField('temp')}
+                    onBlur={() => setFocusedField(null)}
                     onChange={(e) => setTemp(e.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'))}
                     className="w-full px-3.5 py-2.5 text-sm focus:outline-none font-mono"
                   />
@@ -781,11 +894,16 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1 relative">
+                {renderPreviousValueBubble('lung')}
                 <label className="font-bold text-slate-500 uppercase tracking-widest text-[9px]">Pemeriksaan Paru (SP & ST)</label>
                 <div className="flex gap-2">
                   <button
                     type="button"
+                    onMouseEnter={() => setFocusedField('lung')}
+                    onMouseLeave={() => setFocusedField(null)}
+                    onFocus={() => setFocusedField('lung')}
+                    onBlur={() => setFocusedField(null)}
                     onClick={() => setShowLungModal(true)}
                     className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 font-sans transition-colors flex items-center justify-between"
                   >
@@ -833,18 +951,25 @@ export const PatientForm: React.FC<PatientFormProps> = ({
                   <span>🧪 Cek GDS</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOnIVDrug(!isOnIVDrug);
-                  }}
-                  className={`flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isOnIVDrug
-                    ? 'border-teal-600 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 shadow-sm'
-                    : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    }`}
-                >
-                  <span>💉 Terpasang Drip &amp; Pump?</span>
-                </button>
+                <div className="relative">
+                  {renderPreviousValueBubble('ivDrugs')}
+                  <button
+                    type="button"
+                    onMouseEnter={() => setFocusedField('ivDrugs')}
+                    onMouseLeave={() => setFocusedField(null)}
+                    onFocus={() => setFocusedField('ivDrugs')}
+                    onBlur={() => setFocusedField(null)}
+                    onClick={() => {
+                      setIsOnIVDrug(!isOnIVDrug);
+                    }}
+                    className={`w-full flex items-center justify-center gap-2 px-2.5 py-3 rounded-xl border font-bold text-xs font-sans transition-all active:scale-[0.98] cursor-pointer ${isOnIVDrug
+                      ? 'border-teal-600 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 shadow-sm'
+                      : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      }`}
+                  >
+                    <span>💉 Terpasang Drip &amp; Pump?</span>
+                  </button>
+                </div>
 
                 <button
                   type="button"
@@ -1285,6 +1410,85 @@ export const PatientForm: React.FC<PatientFormProps> = ({
               >
                 Selesai Atur
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Directory Patient Picker Modal */}
+      {showDirectoryModal && (
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] flex flex-col border border-slate-200 dark:border-slate-700 overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 flex items-center justify-center">
+                  <Database className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-800 dark:text-slate-100">Pilih Pasien dari Direktori</h3>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Pasien dari semua folder yang pernah tersimpan</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowDirectoryModal(false)}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition text-slate-400"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Search */}
+            <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2">
+                <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Cari nama atau No. RM..."
+                  value={directorySearch}
+                  onChange={(e) => setDirectorySearch(e.target.value)}
+                  autoFocus
+                  className="flex-1 bg-transparent text-sm text-slate-800 dark:text-white placeholder:text-slate-400 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Patient List */}
+            <div className="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+              {allPatientsDirectory
+                .filter(p => {
+                  const q = directorySearch.toLowerCase();
+                  return !q || p.name.toLowerCase().includes(q) || p.rm.toLowerCase().includes(q) || p.room.toLowerCase().includes(q);
+                })
+                .map((p, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleApplyFromDirectory(p)}
+                    className="w-full px-5 py-3.5 flex items-center gap-4 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-left transition group"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center shrink-0 text-teal-700 dark:text-teal-300 font-bold text-xs group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/50 transition">
+                      {(p.name || '?').charAt(0).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm text-slate-800 dark:text-slate-100 truncate">{p.name || '—'}</p>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        {p.rm && <span className="text-[11px] text-slate-400 font-mono">RM: {p.rm}</span>}
+                        {p.room && <span className="text-[11px] text-slate-400">• {p.room}</span>}
+                        <span className="text-[11px] text-slate-400">• {p.gender === 'Laki-laki (L)' ? 'L' : 'P'}, {p.age} th</span>
+                      </div>
+                    </div>
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold opacity-0 group-hover:opacity-100 transition shrink-0">Pilih →</span>
+                  </button>
+                ))}
+              {allPatientsDirectory.filter(p => {
+                const q = directorySearch.toLowerCase();
+                return !q || p.name.toLowerCase().includes(q) || p.rm.toLowerCase().includes(q) || p.room.toLowerCase().includes(q);
+              }).length === 0 && (
+                  <div className="py-12 text-center text-slate-400 text-sm">
+                    <Database className="w-8 h-8 mx-auto mb-3 opacity-40" />
+                    <p className="font-medium">Tidak ada pasien ditemukan</p>
+                  </div>
+                )}
             </div>
           </div>
         </div>

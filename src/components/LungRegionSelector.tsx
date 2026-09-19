@@ -20,16 +20,18 @@ const DEFAULT_SP: SuaraPernapasan = {
 const DEFAULT_ST: SuaraTambahan = {
   rh: { right: false, left: false },
   wh: { right: false, left: false },
+  crackles: { right: false, left: false },
   pleuralFrictionRub: { right: false, left: false },
   stridor: { right: false, left: false },
   hippocratesSuccusion: { right: false, left: false },
 };
 
-type StField = 'rh' | 'wh' | 'pleuralFrictionRub' | 'stridor' | 'hippocratesSuccusion';
+type StField = 'rh' | 'wh' | 'crackles' | 'pleuralFrictionRub' | 'stridor' | 'hippocratesSuccusion';
 
 const ST_FIELDS: { key: StField; label: string; shortLabel: string; color: string; activeColor: string }[] = [
   { key: 'rh', label: 'Ronkhi', shortLabel: 'Rh', color: 'bg-slate-100 dark:bg-slate-700 text-slate-500', activeColor: 'bg-rose-500 text-white' },
   { key: 'wh', label: 'Wheezing', shortLabel: 'Wh', color: 'bg-slate-100 dark:bg-slate-700 text-slate-500', activeColor: 'bg-amber-500 text-white' },
+  { key: 'crackles', label: 'Crackles', shortLabel: 'Crk', color: 'bg-slate-100 dark:bg-slate-700 text-slate-500', activeColor: 'bg-emerald-600 text-white' },
   { key: 'pleuralFrictionRub', label: 'PFR', shortLabel: 'PFR', color: 'bg-slate-100 dark:bg-slate-700 text-slate-500', activeColor: 'bg-purple-500 text-white' },
   { key: 'stridor', label: 'Stridor', shortLabel: 'Str', color: 'bg-slate-100 dark:bg-slate-700 text-slate-500', activeColor: 'bg-blue-500 text-white' },
   { key: 'hippocratesSuccusion', label: 'Hippoc. Succ.', shortLabel: 'HS', color: 'bg-slate-100 dark:bg-slate-700 text-slate-500', activeColor: 'bg-teal-600 text-white' },
@@ -62,10 +64,13 @@ export const LungRegionSelector: React.FC<LungRegionSelectorProps> = ({ initialS
   };
 
   const handleStSideToggle = (field: StField, side: 'right' | 'left') => {
-    setSt(prev => ({
-      ...prev,
-      [field]: { ...prev[field], [side]: !(prev[field] as { right: boolean; left: boolean })[side] }
-    }));
+    setSt(prev => {
+      const currentFieldState = prev[field] || { right: false, left: false };
+      return {
+        ...prev,
+        [field]: { ...currentFieldState, [side]: !currentFieldState[side] }
+      };
+    });
   };
 
   const resetSP = () => setSp(DEFAULT_SP);
@@ -86,16 +91,19 @@ export const LungRegionSelector: React.FC<LungRegionSelectorProps> = ({ initialS
 
   // Formatted ST preview (sinistra/dextra)
   const stPreviewParts: string[] = [
-    `Rh (${st.rh.left ? '+' : '-'}/${st.rh.right ? '+' : '-'})`,
-    `Wh (${st.wh.left ? '+' : '-'}/${st.wh.right ? '+' : '-'})`,
+    `Rh (${st.rh?.left ? '+' : '-'}/${st.rh?.right ? '+' : '-'})`,
+    `Wh (${st.wh?.left ? '+' : '-'}/${st.wh?.right ? '+' : '-'})`,
   ];
-  if (st.pleuralFrictionRub.left || st.pleuralFrictionRub.right) {
+  if (st.crackles?.left || st.crackles?.right) {
+    stPreviewParts.push(`Crackles (${st.crackles.left ? '+' : '-'}/${st.crackles.right ? '+' : '-'})`);
+  }
+  if (st.pleuralFrictionRub?.left || st.pleuralFrictionRub?.right) {
     stPreviewParts.push(`PFR (${st.pleuralFrictionRub.left ? '+' : '-'}/${st.pleuralFrictionRub.right ? '+' : '-'})`);
   }
-  if (st.stridor.left || st.stridor.right) {
+  if (st.stridor?.left || st.stridor?.right) {
     stPreviewParts.push(`Stridor (${st.stridor.left ? '+' : '-'}/${st.stridor.right ? '+' : '-'})`);
   }
-  if (st.hippocratesSuccusion.left || st.hippocratesSuccusion.right) {
+  if (st.hippocratesSuccusion?.left || st.hippocratesSuccusion?.right) {
     stPreviewParts.push(`HS (${st.hippocratesSuccusion.left ? '+' : '-'}/${st.hippocratesSuccusion.right ? '+' : '-'})`);
   }
 
@@ -242,7 +250,7 @@ export const LungRegionSelector: React.FC<LungRegionSelectorProps> = ({ initialS
                       {side === 'left' ? 'Kiri (Sinistra)' : 'Kanan (Dextra)'}
                     </div>
                     {ST_FIELDS.map(({ key, label, color, activeColor }) => {
-                      const isActive = (st[key] as { right: boolean; left: boolean })[side];
+                      const isActive = !!st[key]?.[side];
                       return (
                         <button
                           key={key}
