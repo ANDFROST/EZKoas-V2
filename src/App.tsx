@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PatientRecord, VitalsEntry, PatientFolder } from './types';
-import { formatPatientRecord, formatTime, GOOGLE_SHEETS_TTV_WEBAPP_URL } from './utils';
+import { formatPatientRecord, formatPatientRecordFormat2, formatTime, GOOGLE_SHEETS_TTV_WEBAPP_URL } from './utils';
 import { PatientForm } from './components/PatientForm';
 import { PatientList } from './components/PatientList';
 import { ImportModal } from './components/ImportModal';
@@ -42,7 +42,12 @@ import {
   FolderOpen,
   Folder,
   Trash2,
-  Pencil
+  Pencil,
+  SlidersHorizontal,
+  Eye,
+  EyeOff,
+  ChevronDown,
+  MoreVertical
 } from 'lucide-react';
 
 const STORAGE_KEY = 'ezkoas_patients_data';
@@ -98,8 +103,40 @@ export default function App() {
   // List filters
   const [filterFolketOnly, setFilterFolketOnly] = useState(false);
 
+  // Copy format template (1 = Format 1 default, 2 = Format 2 nama dulu)
+  const [copyFormat, setCopyFormat] = useState<1 | 2>(() => {
+    try {
+      const stored = localStorage.getItem('ezkoas_copy_format');
+      return stored === '2' ? 2 : 1;
+    } catch {
+      return 1;
+    }
+  });
+
+
+
+  const getFormatter = () => copyFormat === 2 ? formatPatientRecordFormat2 : formatPatientRecord;
+
+  // null = hidden, 1 = show Format 1 example, 2 = show Format 2 example
+  const [previewFormat, setPreviewFormat] = useState<null | 1 | 2>(null);
+  const togglePreview = (f: 1 | 2) => setPreviewFormat(prev => prev === f ? null : f);
+
   // Custom Toast notification states
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'dev' | 'error' } | null>(null);
+
+  // Active Folder options dropdown menu state
+  const [isFolderActionsOpen, setIsFolderActionsOpen] = useState(false);
+  const folderActionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (folderActionsRef.current && !folderActionsRef.current.contains(event.target as Node)) {
+        setIsFolderActionsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Load patient list on load
   useEffect(() => {
@@ -240,9 +277,10 @@ export default function App() {
       triggerNotification('Tidak ada data pasien untuk disalin.', 'error');
       return;
     }
-    const combined = patients.map((p) => formatPatientRecord(p)).join('\n\n------------------\n\n');
+    const fmt = getFormatter();
+    const combined = patients.map((p) => fmt(p)).join('\n\n------------------\n\n');
     navigator.clipboard.writeText(combined);
-    triggerNotification(`Berhasil meng-copy ${patients.length} data pasien!`, 'success');
+    triggerNotification(`Berhasil meng-copy ${patients.length} data pasien! (Format ${copyFormat})`, 'success');
   };
 
   const copyWithIzin = () => {
@@ -250,10 +288,11 @@ export default function App() {
       triggerNotification('Tidak ada data pasien untuk disalin.', 'error');
       return;
     }
-    const combined = patients.map((p) => formatPatientRecord(p)).join('\n\n------------------\n\n');
+    const fmt = getFormatter();
+    const combined = patients.map((p) => fmt(p)).join('\n\n------------------\n\n');
     const fullText = `Izin kak/bang, izin mengirimkan folket atas nama:\n\n${combined}`;
     navigator.clipboard.writeText(fullText);
-    triggerNotification(`Berhasil meng-copy ${patients.length} data pasien + Format Izin!`, 'success');
+    triggerNotification(`Berhasil meng-copy ${patients.length} data pasien + Format Izin! (Format ${copyFormat})`, 'success');
   };
 
   const copyFolketOnly = () => {
@@ -270,9 +309,10 @@ export default function App() {
       return;
     }
 
-    const combined = folketMatches.map((p) => formatPatientRecord(p)).join('\n\n------------------\n\n');
+    const fmt = getFormatter();
+    const combined = folketMatches.map((p) => fmt(p)).join('\n\n------------------\n\n');
     navigator.clipboard.writeText(combined);
-    triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien berlabel Folket!`, 'success');
+    triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien berlabel Folket! (Format ${copyFormat})`, 'success');
   };
 
   const copyFolketOnlyWithIzin = () => {
@@ -289,10 +329,11 @@ export default function App() {
       return;
     }
 
-    const combined = folketMatches.map((p) => formatPatientRecord(p)).join('\n\n------------------\n\n');
+    const fmt = getFormatter();
+    const combined = folketMatches.map((p) => fmt(p)).join('\n\n------------------\n\n');
     const fullText = `Izin kak/bang, izin mengirimkan folket atas nama:\n\n${combined}`;
     navigator.clipboard.writeText(fullText);
-    triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien Folket + Izin!`, 'success');
+    triggerNotification(`Berhasil meng-copy ${folketMatches.length} pasien Folket + Izin! (Format ${copyFormat})`, 'success');
   };
 
   const handleCreateFolder = () => {
@@ -704,7 +745,7 @@ export default function App() {
                   EZKOAS
                 </h1>
                 <span className="bg-teal-50 border border-teal-100 text-teal-700 font-mono text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full leading-none">
-                  V3.1.1
+                  V3.3.2
                 </span>
               </div>
               <p className="hidden sm:block text-[10px] text-slate-450 font-sans leading-relaxed mt-0.5">
@@ -796,7 +837,7 @@ export default function App() {
                       <Folder className="w-5 h-5 text-teal-600 dark:text-teal-400" />
                     </div>
                     <div>
-                      <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Folder Aktif</p>
+                      <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Active Folder</p>
                       <select
                         value={activeFolderId || ''}
                         onChange={(e) => setActiveFolderId(e.target.value)}
@@ -810,37 +851,53 @@ export default function App() {
                       </select>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 w-full sm:w-auto flex-wrap">
+                  {/* Folder Actions Dropdown */}
+                  <div className="relative" ref={folderActionsRef}>
                     <button
-                      onClick={resetFolderTtv}
-                      className="flex-1 sm:flex-none px-4 py-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-amber-200 dark:border-amber-800"
-                      title="Reset TTV seluruh pasien di folder ini"
+                      onClick={() => setIsFolderActionsOpen(!isFolderActionsOpen)}
+                      className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 flex items-center justify-center border border-slate-200 dark:border-slate-700 cursor-pointer shadow-xs transition"
+                      title="Opsi & Aksi Folder"
                     >
-                      <ListRestart className="w-4 h-4" />
-                      Reset TTV
+                      <MoreVertical className="w-5 h-5 text-slate-600 dark:text-slate-300" />
                     </button>
-                    <button
-                      onClick={handleCreateFolder}
-                      className="flex-1 sm:flex-none px-4 py-2 bg-teal-50 hover:bg-teal-100 dark:bg-teal-900/30 dark:hover:bg-teal-900/50 text-teal-700 dark:text-teal-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-teal-200 dark:border-teal-800"
-                    >
-                      <FolderPlus className="w-4 h-4" />
-                      Buat Folder
-                    </button>
-                    <button
-                      onClick={handleRenameFolder}
-                      className="flex-1 sm:flex-none px-4 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700"
-                      title="Ganti nama folder aktif"
-                    >
-                      <Pencil className="w-4 h-4" />
-                      Rename
-                    </button>
-                    <button
-                      onClick={handleDeleteFolder}
-                      className="flex-1 sm:flex-none px-4 py-2 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 border border-red-200 dark:border-red-900/50"
-                      title="Hapus Folder Ini"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+
+                    {isFolderActionsOpen && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-30 space-y-0.5">
+                        <button
+                          onClick={() => { setIsFolderActionsOpen(false); handleCreateFolder(); }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-700 dark:hover:text-teal-300 flex items-center gap-2.5 transition cursor-pointer"
+                        >
+                          <FolderPlus className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                          New Folder
+                        </button>
+
+                        <button
+                          onClick={() => { setIsFolderActionsOpen(false); handleRenameFolder(); }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60 flex items-center gap-2.5 transition cursor-pointer"
+                        >
+                          <Pencil className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                          Rename Folder
+                        </button>
+
+                        <button
+                          onClick={() => { setIsFolderActionsOpen(false); resetFolderTtv(); }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-bold text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/30 flex items-center gap-2.5 transition cursor-pointer"
+                        >
+                          <ListRestart className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                          Reset Folder TTV
+                        </button>
+
+                        <div className="border-t border-slate-100 dark:border-slate-700/80 my-1" />
+
+                        <button
+                          onClick={() => { setIsFolderActionsOpen(false); handleDeleteFolder(); }}
+                          className="w-full text-left px-3.5 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center gap-2.5 transition cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                          Hapus Folder
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -902,49 +959,146 @@ export default function App() {
 
                 {/* Fast Copy Toolbar Bar */}
                 {patients.length > 0 && (
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl flex flex-wrap gap-2.5 items-center select-none font-sans text-xs shadow-xs transition-colors">
-                    <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
-                      <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
-                      <span>Salin Masal ke Clipboard:</span>
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={copyStandard}
-                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                      >
-                        <Copy className="w-3.5 h-3.5 text-teal-600" />
-                        <span>Copy TTV</span>
-                      </button>
-                      <button
-                        onClick={copyWithIzin}
-                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                      >
-                        <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Copy TTV + Izin</span>
-                      </button>
-                      <button
-                        onClick={copyFolketOnly}
-                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                      >
-                        <Layers className="w-3.5 h-3.5 text-amber-600" />
-                        <span>Copy Hanya Folket</span>
-                      </button>
-                      <button
-                        onClick={copyFolketOnlyWithIzin}
-                        className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
-                      >
-                        <UserCheck className="w-3.5 h-3.5 text-orange-600" />
-                        <span>Copy Folket + Izin</span>
-                      </button>
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xs overflow-hidden transition-colors">
+                    {/* Format Copy Selector */}
+                    <div className="px-4 pt-3 pb-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 space-y-2">
+                      {/* Label row */}
+                      <div className="flex items-center gap-2">
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider select-none">Format Copy</span>
+                      </div>
+                      {/* Format choice buttons */}
+                      <div className="flex gap-2">
+                        {/* Format 1 button */}
+                        <div className="flex items-stretch gap-1">
+                          <button
+                            onClick={() => { setCopyFormat(1); try { localStorage.setItem('ezkoas_copy_format', '1'); } catch { } }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-l-lg border-2 font-bold text-[11px] transition-all cursor-pointer focus:outline-none ${
+                              copyFormat === 1
+                                ? 'bg-teal-600 border-teal-600 text-white shadow-sm'
+                                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-teal-400'
+                            }`}
+                          >
+                            {copyFormat === 1 && <span className="text-xs">✓</span>}
+                            Format 1
+                          </button>
+                          <button
+                            onClick={() => togglePreview(1)}
+                            className={`flex items-center px-2 rounded-r-lg border-2 border-l-0 transition-all cursor-pointer focus:outline-none ${
+                              copyFormat === 1
+                                ? 'bg-teal-600 border-teal-600 text-white/80 hover:text-white hover:bg-teal-500'
+                                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-400 hover:border-teal-400 hover:text-teal-600'
+                            } ${previewFormat === 1 ? 'bg-teal-50 dark:bg-teal-900/30 border-teal-400 text-teal-600 dark:text-teal-400' : ''}`}
+                            title="Lihat contoh Format 1"
+                          >
+                            {previewFormat === 1 ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                        {/* Format 2 button */}
+                        <div className="flex items-stretch gap-1">
+                          <button
+                            onClick={() => { setCopyFormat(2); try { localStorage.setItem('ezkoas_copy_format', '2'); } catch { } }}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-l-lg border-2 font-bold text-[11px] transition-all cursor-pointer focus:outline-none ${
+                              copyFormat === 2
+                                ? 'bg-teal-600 border-teal-600 text-white shadow-sm'
+                                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-teal-400'
+                            }`}
+                          >
+                            {copyFormat === 2 && <span className="text-xs">✓</span>}
+                            Format 2
+                          </button>
+                          <button
+                            onClick={() => togglePreview(2)}
+                            className={`flex items-center px-2 rounded-r-lg border-2 border-l-0 transition-all cursor-pointer focus:outline-none ${
+                              copyFormat === 2
+                                ? 'bg-teal-600 border-teal-600 text-white/80 hover:text-white hover:bg-teal-500'
+                                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-400 hover:border-teal-400 hover:text-teal-600'
+                            } ${previewFormat === 2 ? 'bg-teal-50 dark:bg-teal-900/30 border-teal-400 text-teal-600 dark:text-teal-400' : ''}`}
+                            title="Lihat contoh Format 2"
+                          >
+                            {previewFormat === 2 ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </div>
+                      {/* Format preview panel */}
+                      {previewFormat !== null && (
+                        <div className="mt-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden">
+                          <div className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                            <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-500">Contoh Format {previewFormat}</span>
+                          </div>
+                          <pre className="font-mono text-[9.5px] leading-relaxed text-slate-500 dark:text-slate-400 whitespace-pre-wrap px-3 py-2.5">{
+                            previewFormat === 1
+                              ? `RA4 1.3.2 / 00995599 / SOFYAN / L / 52 thn / 70 kg
+
+TTV
+(13:43)
+Keluhan: Sesak napas
+Sens: CM
+TD: 120/80 mmHg
+HR: 88 x/i
+RR: 20 x/i
+SpO2: 99% RA
+Temp: 36.5 C`
+                              : `SOFYAN / RA4 1.3.2 / L / 00995599 / 52 thn / 70 kg
+
+(13:43)
+Sens: CM
+TD: 120/80 mmHg
+HR: 88 x/i
+RR: 20 x/i
+Temp: 36.5 C
+SpO2: 99% RA
+Keluhan: Sesak napas`
+                          }</pre>
+                        </div>
+                      )}
                     </div>
 
-                    <div className="ml-auto flex items-center gap-2">
-                      <button
-                        onClick={resetAllData}
-                        className="px-3.5 py-2 border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 text-red-750 dark:text-red-400 font-bold rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-xs cursor-pointer"
-                      >
-                        Hapus Semua Data
-                      </button>
+                    {/* Copy Buttons Row */}
+                    <div className="p-4 flex flex-wrap gap-2.5 items-center select-none font-sans text-xs">
+                      <span className="font-bold text-slate-500 select-none mr-1 flex items-center gap-1.5 text-[11px] uppercase tracking-wider">
+                        <FileSpreadsheet className="w-4 h-4 text-slate-400 shrink-0" />
+                        <span>Salin Masal ke Clipboard:</span>
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={copyStandard}
+                          className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        >
+                          <Copy className="w-3.5 h-3.5 text-teal-600" />
+                          <span>Copy TTV</span>
+                        </button>
+                        <button
+                          onClick={copyWithIzin}
+                          className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        >
+                          <UserCheck className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Copy TTV + Izin</span>
+                        </button>
+                        <button
+                          onClick={copyFolketOnly}
+                          className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        >
+                          <Layers className="w-3.5 h-3.5 text-amber-600" />
+                          <span>Copy Hanya Folket</span>
+                        </button>
+                        <button
+                          onClick={copyFolketOnlyWithIzin}
+                          className="px-3.5 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold font-sans rounded-lg transition-all flex items-center gap-1.5 shadow-xs cursor-pointer"
+                        >
+                          <UserCheck className="w-3.5 h-3.5 text-orange-600" />
+                          <span>Copy Folket + Izin</span>
+                        </button>
+                      </div>
+
+                      <div className="ml-auto flex items-center gap-2">
+                        <button
+                          onClick={resetAllData}
+                          className="px-3.5 py-2 border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 text-red-750 dark:text-red-400 font-bold rounded-lg hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-xs cursor-pointer"
+                        >
+                          Hapus Semua Data
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}

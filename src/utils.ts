@@ -339,6 +339,139 @@ export function formatPatientRecord(p: PatientRecord): string {
   return `${header}\n\nTTV\n${vitalsStr}`.trim();
 }
 
+// Konversi vitals ke string Format 2 (urutan berbeda, Keluhan di akhir)
+export function formatVitalsEntryFormat2(v: VitalsEntry): string {
+  const lines: string[] = [];
+
+  if (v.time) lines.push(`(${v.time})`);
+
+  if (v.sens || v.gcs) {
+    let sensLabel = v.sens;
+    if (v.sens === 'Compos mentis') {
+      sensLabel = 'CM';
+    } else if (v.sens === 'Dalam Penggunaan Obat (DPO)') {
+      sensLabel = 'DPO';
+    }
+
+    if (sensLabel && v.gcs) {
+      lines.push(`Sens: ${sensLabel} ${v.gcs}`);
+    } else if (sensLabel) {
+      lines.push(`Sens: ${sensLabel}`);
+    } else if (v.gcs) {
+      lines.push(`Sens: ${v.gcs}`);
+    }
+  }
+
+  if (v.bp) lines.push(`TD: ${v.bp} mmHg`);
+  if (v.hr) lines.push(`HR: ${v.hr} x/i`);
+  if (v.rr) lines.push(`RR: ${v.rr} x/i`);
+  if (v.temp) lines.push(`Temp: ${v.temp} C`);
+
+  if (v.spo2) {
+    let o2Abbr = '';
+    if (v.o2Method === 'Room Air (RA)') o2Abbr = 'RA';
+    else if (v.o2Method === 'Nasal Cannula (NK)') o2Abbr = 'NK';
+    else if (v.o2Method === 'Non Rebreathing Mask (NRM)') o2Abbr = 'NRM';
+    else if (v.o2Method === 'Trakeostomi') o2Abbr = 'Trakeostomi';
+    else if (v.o2Method === 'Ventilator') o2Abbr = 'Ventilator';
+
+    if (v.o2Method === 'Room Air (RA)' || v.o2Method === 'Ventilator') {
+      lines.push(`SpO2: ${v.spo2}% ${o2Abbr}`);
+    } else {
+      const lpmStr = v.lpm ? ` ${v.lpm} lpm` : '';
+      lines.push(`SpO2: ${v.spo2}% on ${o2Abbr}${lpmStr}`);
+    }
+  }
+
+  if (v.isGdsChecked && v.gdsValue) lines.push(`GDS: ${v.gdsValue} mg/dL`);
+
+  if (v.sp) {
+    const spStr = formatSP(v.sp);
+    if (spStr) lines.push(`SP: ${spStr}`);
+  }
+
+  if (v.st) {
+    const stStr = formatST(v.st);
+    if (stStr) lines.push(`ST: ${stStr}`);
+  }
+
+  if (v.isOnIVDrug && v.ivDrugNames.length > 0) {
+    for (let i = 0; i < v.ivDrugNames.length; i++) {
+      const rate = v.ivDrugRates && v.ivDrugRates[i] ? ` ${v.ivDrugRates[i]} cc/jam` : '';
+      lines.push(`Terpasang ${v.ivDrugNames[i]}${rate}`);
+    }
+  }
+
+  if (v.isUopChecked && v.uopValue) {
+    lines.push(`UOP: ${v.uopValue} cc/24j`);
+  }
+
+  // Keluhan di akhir (berbeda dari Format 1)
+  if (v.keluhan) lines.push(`Keluhan: ${v.keluhan}`);
+
+  let base = lines.join('\n');
+
+  if (v.balanceCairan) {
+    const b = v.balanceCairan;
+    const intake = b.makanValue + b.minumValue + b.ivfdValue + b.transfusiValue + b.syringePumpValue;
+    const output = b.babValue + b.uopValue + b.muntahValue + (b.iwl ? b.iwlValue : 0);
+    const balance = intake - output;
+
+    const sb: string[] = [];
+    sb.push(`\n*Intake: ${intake}*`);
+    sb.push(`Makan: ${b.makanValue} cc`);
+    sb.push(`Minum: ${b.minumValue} cc`);
+    sb.push(`IVFD: ${b.ivfdValue} cc`);
+    if (b.transfusiValue > 0) sb.push(`Transfusi: ${b.transfusiValue} cc`);
+    if (b.syringePumpValue > 0) sb.push(`Syringe Pump: ${b.syringePumpValue} cc`);
+
+    sb.push('');
+    sb.push(`*Output: ${output}*`);
+    if (b.babValue > 0) sb.push(`BAB: ${b.babValue} cc`);
+    if (b.uopValue > 0) sb.push(`UOP: ${b.uopValue} cc`);
+    if (b.muntahValue > 0) sb.push(`Muntah: ${b.muntahValue} cc`);
+    if (b.iwl && b.iwlValue > 0) sb.push(`IWL: ${b.iwlValue} cc`);
+
+    sb.push('');
+    sb.push(`*Balance Cairan = ${balance} cc*`);
+
+    base = (base + '\n' + sb.join('\n')).trim();
+  }
+
+  return base;
+}
+
+// Konversi PatientRecord ke string Format 2 (Nama dulu, tanpa label "TTV")
+export function formatPatientRecordFormat2(p: PatientRecord): string {
+  const headerParts: string[] = [];
+
+  // Nama dulu
+  if (p.name) headerParts.push(p.name);
+  if (p.room) headerParts.push(p.room);
+  headerParts.push(p.gender === 'Laki-laki (L)' ? 'L' : 'P');
+  if (p.rm) headerParts.push(p.rm);
+
+  if (p.age) {
+    const ageLower = p.age.toLowerCase();
+    const hasTimeUnit = ageLower.includes('th') || ageLower.includes('bl') || ageLower.includes('hr');
+    const ageStr = hasTimeUnit ? p.age : `${p.age} thn`;
+    headerParts.push(ageStr);
+  }
+
+  if (p.weight) headerParts.push(`${p.weight} kg`);
+  if (p.height) headerParts.push(`${p.height} cm`);
+
+  const followSummary = buildFollowKetatSummary(p);
+  if (followSummary) headerParts.push(followSummary);
+
+  const header = headerParts.join(' / ');
+  const sortedVitals = [...p.vitals].sort((a, b) => a.createdAt - b.createdAt);
+  const vitalsStr = sortedVitals.map((v) => formatVitalsEntryFormat2(v)).join('\n\n');
+
+  // Tanpa label "TTV"
+  return `${header}\n\n${vitalsStr}`.trim();
+}
+
 // --- PARSER UNTUK CLIPBOARD ---
 function extractInterval(text: string): string | null {
   const match = text.match(/(\d+\s*(?:jam|menit))/i);
